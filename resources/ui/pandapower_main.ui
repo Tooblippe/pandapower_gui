@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>743</width>
-    <height>479</height>
+    <width>817</width>
+    <height>520</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,9 +19,9 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>390</x>
-     <y>440</y>
-     <width>341</width>
+     <x>630</x>
+     <y>490</y>
+     <width>181</width>
      <height>32</height>
     </rect>
    </property>
@@ -40,18 +40,33 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>61</width>
-     <height>431</height>
+     <width>91</width>
+     <height>481</height>
     </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>91</width>
+     <height>0</height>
+    </size>
    </property>
    <property name="acceptDrops">
     <bool>true</bool>
    </property>
+   <property name="frameShadow">
+    <enum>QFrame::Plain</enum>
+   </property>
    <property name="dragEnabled">
     <bool>true</bool>
    </property>
+   <property name="dragDropOverwriteMode">
+    <bool>false</bool>
+   </property>
    <property name="dragDropMode">
-    <enum>QAbstractItemView::DragDrop</enum>
+    <enum>QAbstractItemView::DragOnly</enum>
+   </property>
+   <property name="defaultDropAction">
+    <enum>Qt::CopyAction</enum>
    </property>
    <property name="resizeMode">
     <enum>QListView::Adjust</enum>
@@ -63,6 +78,9 @@
     <property name="text">
      <string>Generator</string>
     </property>
+    <property name="textAlignment">
+     <set>AlignCenter</set>
+    </property>
     <property name="icon">
      <iconset>
       <normaloff>../icons_components/generator.PNG</normaloff>../icons_components/generator.PNG</iconset>
@@ -73,7 +91,22 @@
    </item>
    <item>
     <property name="text">
+     <string>Transformer</string>
+    </property>
+    <property name="textAlignment">
+     <set>AlignCenter</set>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../icons_components/trafo.png</normaloff>../icons_components/trafo.png</iconset>
+    </property>
+   </item>
+   <item>
+    <property name="text">
      <string>Load</string>
+    </property>
+    <property name="textAlignment">
+     <set>AlignCenter</set>
     </property>
     <property name="icon">
      <iconset>
@@ -84,23 +117,42 @@
   <widget class="QListWidget" name="network_scene">
    <property name="geometry">
     <rect>
-     <x>80</x>
+     <x>110</x>
      <y>10</y>
-     <width>651</width>
-     <height>431</height>
+     <width>701</width>
+     <height>481</height>
     </rect>
    </property>
    <property name="acceptDrops">
     <bool>false</bool>
    </property>
    <property name="dragDropMode">
-    <enum>QAbstractItemView::DragDrop</enum>
+    <enum>QAbstractItemView::DragOnly</enum>
+   </property>
+   <property name="defaultDropAction">
+    <enum>Qt::IgnoreAction</enum>
+   </property>
+   <property name="movement">
+    <enum>QListView::Free</enum>
    </property>
    <property name="resizeMode">
     <enum>QListView::Adjust</enum>
    </property>
    <property name="viewMode">
     <enum>QListView::IconMode</enum>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>180</y>
+     <width>431</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Drag and Drop here. Still snaps to grid, but then you can move it again.</string>
    </property>
   </widget>
  </widget>

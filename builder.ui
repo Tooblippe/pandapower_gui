@@ -14,7 +14,7 @@
    <string>pandapower gui</string>
   </property>
   <property name="currentIndex">
-   <number>0</number>
+   <number>5</number>
   </property>
   <widget class="QWidget" name="main">
    <attribute name="title">
@@ -556,6 +556,22 @@
    <attribute name="title">
     <string>Build</string>
    </attribute>
+  </widget>
+  <widget class="QWidget" name="interpreter">
+   <attribute name="title">
+    <string>Interpreter</string>
+   </attribute>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>721</width>
+      <height>521</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="interpreter_vbox"/>
+   </widget>
   </widget>
  </widget>
  <customwidgets>

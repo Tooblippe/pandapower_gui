@@ -23,7 +23,7 @@ class QIPythonWidget(RichIPythonWidget):
 
         def stop():
             kernel_client.stop_channels()
-            kernel_manager.shutdown_kernel()
+            kernel_manager.shutdown_kernel() 
             guisupport.get_app_qt4().exit()            
         self.exit_requested.connect(stop)
 
@@ -49,7 +49,8 @@ class ExampleWidget(QWidget):
         self.button = QPushButton('Another widget')
         ipyConsole = QIPythonWidget(customBanner="Welcome to the embedded ipython console\n")
         layout.addWidget(self.button)
-        layout.addWidget(ipyConsole)        
+        layout.addWidget(ipyConsole)       
+         
         # This allows the variable foo and method print_process_id to be accessed from the ipython console
         ipyConsole.pushVariables({"foo":43,"print_process_id":print_process_id})
         ipyConsole.printText("The variable 'foo' and the method 'print_process_id()' are available. Use the 'whos' command for information.")                           

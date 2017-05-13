@@ -1,32 +1,36 @@
-import sys
-
+# -*- coding: utf-8 -*-
+import sys, time
 import os
-os.environ['QT_API'] = 'pyqt'
+from itertools import combinations
+from cgi import escape
+import json
 import sip
-sip.setapi("QString", 2)
-sip.setapi("QVariant", 2)
-
-from PyQt4 import QtGui, uic
 import pandapower as pp
 import pandapower.networks
 
+# the order of this matters????
+sip.setapi("QString", 2)
+sip.setapi("QVariant", 2)
+from PyQt4 import QtGui, uic
 
-
-from PyQt4.QtGui  import *
+#from PyQt4.QtGui  import QWidget
+#os.environ['QT_API'] = 'pyqt'
 # Import the console machinery from ipython
-from qtconsole.rich_ipython_widget import RichJupyterWidget as RichIPythonWidget 
+# seems you need to import after qts
+from qtconsole.rich_ipython_widget import RichJupyterWidget as RichIPythonWidget
 from qtconsole.inprocess import QtInProcessKernelManager
 from IPython.lib import guisupport
 
-import code
-
-net = pp.create_empty_network()
-######
 class QIPythonWidget(RichIPythonWidget):
-    """ Convenience class for a live IPython console widget. We can replace the standard banner using the customBanner argument"""
-    def __init__(self,customBanner=None,*args,**kwargs):
-        if customBanner!=None: self.banner=customBanner
-        super(QIPythonWidget, self).__init__(*args,**kwargs)
+    
+    """ Convenience class for a live IPython console widget.
+        We can replace the standard banner using the customBanner argument
+    """
+
+    def __init__(self, customBanner=None, *args, **kwargs):
+        if customBanner != None:
+            self.banner = customBanner
+        super(QIPythonWidget, self).__init__(*args, **kwargs)
         self.kernel_manager = kernel_manager = QtInProcessKernelManager()
         kernel_manager.start_kernel()
         kernel_manager.kernel.gui = 'qt4'
@@ -34,53 +38,33 @@ class QIPythonWidget(RichIPythonWidget):
         kernel_client.start_channels()
 
         def stop():
+            "stop"
             kernel_client.stop_channels()
-            kernel_manager.shutdown_kernel() 
-            guisupport.get_app_qt4().exit()            
+            kernel_manager.shutdown_kernel()
+            guisupport.get_app_qt4().exit()
         self.exit_requested.connect(stop)
 
-    def pushVariables(self,variableDict):
-        """ Given a dictionary containing name / value pairs, push those variables to the IPython console widget """
+    def pushVariables(self, variableDict):
+        """ Given a dictionary containing name /
+            value pairs, push those variables to the IPython console widget
+        """
         self.kernel_manager.kernel.shell.push(variableDict)
     def clearTerminal(self):
         """ Clears the terminal """
-        self._control.clear()    
-    def printText(self,text):
+        self._control.clear()
+    def printText(self, text):
         """ Prints some plain text to the console """
-        self._append_plain_text(text)        
-    def executeCommand(self,command):
+        self._append_plain_text(text)
+    def executeCommand(self, command):
         """ Execute a command in the frame of the console widget """
-        self._execute(command,False)
-
-
-class ExampleWidget(QWidget):
-    """ Main GUI Widget including a button and IPython Console widget inside vertical layout """
-    def __init__(self, parent=None):
-        super(ExampleWidget, self).__init__(parent)
-        layout = QVBoxLayout(self)
-        self.button = QPushButton('Another widget')
-        ipyConsole = QIPythonWidget(customBanner="Welcome to the embedded ipython console\n")
-        layout.addWidget(self.button)
-        layout.addWidget(ipyConsole)       
-         
-        # This allows the variable foo and method print_process_id to be accessed from the ipython console
-        ipyConsole.pushVariables({"foo":43,"print_process_id":print_process_id})
-        ipyConsole.printText("The variable 'foo' and the method 'print_process_id()' are available. Use the 'whos' command for information.")                           
+        self._execute(command, False)
 
 
 
 
-##############33
-# -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2017 by University of Kassel and Fraunhofer Institute for Wind Energy and
-# Energy System Technology (IWES), Kassel. All rights reserved. Use of this source code is governed
-# by a BSD-style license that can be found in the LICENSE file.
-# File created my Massimo Di Pierro
 
-from itertools import combinations
-from cgi import escape
-import json
+
 
 class Raw(object):
     def __init__(self, html):
@@ -95,6 +79,7 @@ class Tag(object):
         return Raw('<%s%s>%s</%s>' % (self.name, attr.rstrip(), contents, self.name))
 
 def to_html(net, respect_switches=True, include_lines=True, include_trafos=True, show_tables=True):
+
 
     """
      Converts a pandapower network into an html page which contains a simplified representation
@@ -176,7 +161,13 @@ def to_html(net, respect_switches=True, include_lines=True, include_trafos=True,
     TABLE, TR, TH, TD, SCRIPT = Tag('table'), Tag('tr'), Tag('th'), Tag('td'), Tag('script')
     H2 = Tag('h2')
 
-    style = 'tr:first {background:#e1e1e1;} th,td {text-align:center; border:1px solid #e1e1e1;}'
+    style = '''
+            table {border-collapse: collapse;width: 100%;}
+            tr:first {background:#e1e1e1;}
+            th,td {text-align:left; border:1px solid #e1e1e1;}
+            th {background-color: #4CAF50;color: white;}
+            tr:nth-child(even){background-color: #f2f2f2;}
+            '''
 
     script = "var data = {nodes: new vis.DataSet(%s), edges: new vis.DataSet(%s)};" % (
         json.dumps(nodes), json.dumps(edges))
@@ -199,20 +190,21 @@ def to_html(net, respect_switches=True, include_lines=True, include_trafos=True,
         SCRIPT(Raw(script))
         )
 
-    return page.html
+    return page.html    
 
-#############
-class MyWindow(QtGui.QTabWidget):
+
+
+
+class pandapower_main_window(QtGui.QTabWidget):
+    """
+    Create main window
+    """
     def __init__(self):
-        super(MyWindow, self).__init__()
+        super(pandapower_main_window, self).__init__()
         uic.loadUi('builder.ui', self)
         self.net = pp.create_empty_network()
-        self.main_message.setText("<H1> Hallo, start by clicking Load Network and then Solve.. inspect and check results </H1>")
-        #embed interpreter
-        self.ipyConsole = QIPythonWidget(customBanner="Welcome to the embedded ipython console\n")
-        self.ipyConsole = QIPythonWidget(customBanner="variable net containts network")
-        self.interpreter_vbox.addWidget(self.ipyConsole)
-        self.ipyConsole.pushVariables({"net":self.net})
+        self.main_message.setText("Welcome to pandapower")
+        self.embed_interpreter()
 
         #show
         self.show()
@@ -224,7 +216,7 @@ class MyWindow(QtGui.QTabWidget):
         self.main_solve.clicked.connect(self.main_solve_clicked)
         self.main_basic.clicked.connect(self.main_basic_clicked)
 
-        #instepct
+        #inspect
         self.inspect_bus.clicked.connect(self.inspect_bus_clicked)
         self.inspect_lines.clicked.connect(self.inspect_lines_clicked)
         self.inspect_switch.clicked.connect(self.inspect_switch_clicked)
@@ -240,9 +232,11 @@ class MyWindow(QtGui.QTabWidget):
         self.inspect_xward.clicked.connect(self.inspect_xward_clicked)
         self.inspect_dcline.clicked.connect(self.inspect_dcline_clicked)
         self.inspect_measurement.clicked.connect(self.inspect_measurement_clicked)
+        
         #html
         self.html_show.clicked.connect(self.show_report)
-         #results
+        
+        #results
         self.res_bus.clicked.connect(self.res_bus_clicked)
         self.res_lines.clicked.connect(self.res_lines_clicked)
         self.res_switch.clicked.connect(self.res_switch_clicked)
@@ -259,7 +253,11 @@ class MyWindow(QtGui.QTabWidget):
         self.res_dcline.clicked.connect(self.res_dcline_clicked)
         self.res_measurement.clicked.connect(self.res_measurement_clicked)
 
-    #main
+    
+    def embed_interpreter(self):
+        self.ipyConsole = QIPythonWidget(customBanner="Welcome to the pandapower console\n type whos \n =========== \n")
+        self.interpreter_vbox.addWidget(self.ipyConsole)
+        self.ipyConsole.pushVariables({"net":self.net, "pp":pandapower})
 
     def main_empty_clicked(self):
         self.net = pp.create_empty_network()
@@ -282,8 +280,6 @@ class MyWindow(QtGui.QTabWidget):
     def main_basic_clicked(self):
         self.main_message.setText(str(pandapower.lf_info(self.net)))
         pandapower.lf_info(self.net)
-
-
 
     #inspect
     def inspect_bus_clicked(self):
@@ -375,7 +371,23 @@ class MyWindow(QtGui.QTabWidget):
     def res_measurement_clicked(self):
         self.res_message.setText(str(self.net.res_measurement))
 
+def splash():
+     # Create and display the splash screen
+    splash_pix = QtGui.QPixmap('resources/icons_components/splash.png')
+    from PyQt4.QtCore import Qt
+    splash = QtGui.QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
+    splash.setMask(splash_pix.mask())
+    splash.show()
+    app.processEvents()
+    time.sleep(4)
+    splash.hide()
+
+
 if __name__ == '__main__':
-    app = QtGui.QApplication(sys.argv)
-    window = MyWindow()
+    app = QtGui.QApplication(sys.argv)  
+
+    splash()
+   
+    #run app
+    window = pandapower_main_window()
     sys.exit(app.exec_())

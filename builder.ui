@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>766</width>
+    <width>772</width>
     <height>564</height>
    </rect>
   </property>
@@ -14,17 +14,17 @@
    <string>pandapower gui</string>
   </property>
   <property name="currentIndex">
-   <number>5</number>
+   <number>0</number>
   </property>
   <widget class="QWidget" name="main">
    <attribute name="title">
-    <string>Main</string>
+    <string>Main Menu</string>
    </attribute>
    <widget class="QPushButton" name="main_load">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>60</y>
+      <y>50</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -36,18 +36,21 @@
    <widget class="QTextBrowser" name="main_message">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>20</y>
-      <width>501</width>
-      <height>421</height>
+      <x>110</x>
+      <y>10</y>
+      <width>641</width>
+      <height>521</height>
      </rect>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
     </property>
    </widget>
    <widget class="QPushButton" name="main_solve">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>100</y>
+      <y>90</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -60,7 +63,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
+      <y>10</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -73,7 +76,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>140</y>
+      <y>130</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -85,15 +88,15 @@
   </widget>
   <widget class="QWidget" name="inspect">
    <attribute name="title">
-    <string>Inspect</string>
+    <string>Network Model</string>
    </attribute>
    <widget class="QTextBrowser" name="inspect_message">
     <property name="geometry">
      <rect>
-      <x>120</x>
+      <x>110</x>
       <y>10</y>
-      <width>501</width>
-      <height>421</height>
+      <width>641</width>
+      <height>521</height>
      </rect>
     </property>
    </widget>
@@ -192,7 +195,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>260</y>
+      <y>250</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -205,7 +208,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>380</y>
+      <y>370</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -218,7 +221,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>320</y>
+      <y>310</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -231,7 +234,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>410</y>
+      <y>400</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -244,7 +247,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>440</y>
+      <y>430</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -257,7 +260,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>290</y>
+      <y>280</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -270,7 +273,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>350</y>
+      <y>340</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -295,15 +298,15 @@
   </widget>
   <widget class="QWidget" name="html">
    <attribute name="title">
-    <string>HTML</string>
+    <string>HTML Network Model</string>
    </attribute>
    <widget class="QWebView" name="html_webview">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>20</y>
-      <width>611</width>
-      <height>491</height>
+      <x>110</x>
+      <y>10</y>
+      <width>641</width>
+      <height>521</height>
      </rect>
     </property>
     <property name="url">
@@ -319,20 +322,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>30</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>HTML</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="html_show_2">
-    <property name="geometry">
-     <rect>
-      <x>510</x>
-      <y>490</y>
+      <y>10</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -344,13 +334,13 @@
   </widget>
   <widget class="QWidget" name="results">
    <attribute name="title">
-    <string>Results</string>
+    <string>Load Flow Results</string>
    </attribute>
    <widget class="QPushButton" name="res_bus">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>30</y>
+      <y>10</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -363,7 +353,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>370</y>
+      <y>340</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -376,9 +366,9 @@
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>20</y>
-      <width>621</width>
-      <height>481</height>
+      <y>10</y>
+      <width>651</width>
+      <height>521</height>
      </rect>
     </property>
    </widget>
@@ -386,7 +376,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>240</y>
+      <y>220</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -399,7 +389,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>180</y>
+      <y>160</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -412,7 +402,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>120</y>
+      <y>100</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -425,7 +415,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>460</y>
+      <y>430</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -438,7 +428,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>210</y>
+      <y>190</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -451,7 +441,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>310</y>
+      <y>280</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -464,7 +454,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>280</y>
+      <y>250</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -477,7 +467,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>400</y>
+      <y>370</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -490,7 +480,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>60</y>
+      <y>40</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -503,7 +493,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>340</y>
+      <y>310</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -516,7 +506,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>430</y>
+      <y>400</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -529,7 +519,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>90</y>
+      <y>70</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -542,7 +532,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>150</y>
+      <y>130</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -554,8 +544,203 @@
   </widget>
   <widget class="QWidget" name="build">
    <attribute name="title">
-    <string>Build</string>
+    <string>Network Builder</string>
    </attribute>
+   <widget class="QPushButton" name="build_trafo3w">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>220</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>3W-Transformer</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="build_measurement">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>430</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Measurement</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="build_ext_grid">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>160</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>External Grid</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="build_gen">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>250</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Generator</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="build_load">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Load</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="build_dcline">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>400</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>DC Line</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="build_switch">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Switch</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="build_impedance">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>310</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Impedance</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="build_shunt">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>280</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Shunt</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="build_lines">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Lines</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="build_trafo">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>190</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Transformer</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="build__xward">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>370</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Extended Ward</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="build_bus">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Bus</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="build_sgen">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>130</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Stat Gen</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="build_ward">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>340</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Ward</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QWidget" name="interpreter">
    <attribute name="title">
@@ -564,14 +749,45 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>10</x>
       <y>10</y>
-      <width>721</width>
+      <width>741</width>
       <height>521</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="interpreter_vbox"/>
    </widget>
+  </widget>
+  <widget class="QWidget" name="documenation">
+   <attribute name="title">
+    <string>Documentation</string>
+   </attribute>
+   <widget class="QWidget" name="verticalLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>751</width>
+      <height>521</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_6">
+     <item>
+      <widget class="QWebView" name="webView">
+       <property name="url">
+        <url>
+         <string>http://pandapower.readthedocs.io/en/v1.3.0/</string>
+        </url>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="tab">
+   <attribute name="title">
+    <string>About</string>
+   </attribute>
   </widget>
  </widget>
  <customwidgets>

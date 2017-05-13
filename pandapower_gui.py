@@ -1,11 +1,74 @@
 import sys
+
+import os
+os.environ['QT_API'] = 'pyqt'
+import sip
+sip.setapi("QString", 2)
+sip.setapi("QVariant", 2)
+
 from PyQt4 import QtGui, uic
 import pandapower as pp
 import pandapower.networks
 
 
 
+from PyQt4.QtGui  import *
+# Import the console machinery from ipython
+from qtconsole.rich_ipython_widget import RichJupyterWidget as RichIPythonWidget 
+from qtconsole.inprocess import QtInProcessKernelManager
+from IPython.lib import guisupport
+
+import code
+
 net = pp.create_empty_network()
+######
+class QIPythonWidget(RichIPythonWidget):
+    """ Convenience class for a live IPython console widget. We can replace the standard banner using the customBanner argument"""
+    def __init__(self,customBanner=None,*args,**kwargs):
+        if customBanner!=None: self.banner=customBanner
+        super(QIPythonWidget, self).__init__(*args,**kwargs)
+        self.kernel_manager = kernel_manager = QtInProcessKernelManager()
+        kernel_manager.start_kernel()
+        kernel_manager.kernel.gui = 'qt4'
+        self.kernel_client = kernel_client = self._kernel_manager.client()
+        kernel_client.start_channels()
+
+        def stop():
+            kernel_client.stop_channels()
+            kernel_manager.shutdown_kernel() 
+            guisupport.get_app_qt4().exit()            
+        self.exit_requested.connect(stop)
+
+    def pushVariables(self,variableDict):
+        """ Given a dictionary containing name / value pairs, push those variables to the IPython console widget """
+        self.kernel_manager.kernel.shell.push(variableDict)
+    def clearTerminal(self):
+        """ Clears the terminal """
+        self._control.clear()    
+    def printText(self,text):
+        """ Prints some plain text to the console """
+        self._append_plain_text(text)        
+    def executeCommand(self,command):
+        """ Execute a command in the frame of the console widget """
+        self._execute(command,False)
+
+
+class ExampleWidget(QWidget):
+    """ Main GUI Widget including a button and IPython Console widget inside vertical layout """
+    def __init__(self, parent=None):
+        super(ExampleWidget, self).__init__(parent)
+        layout = QVBoxLayout(self)
+        self.button = QPushButton('Another widget')
+        ipyConsole = QIPythonWidget(customBanner="Welcome to the embedded ipython console\n")
+        layout.addWidget(self.button)
+        layout.addWidget(ipyConsole)       
+         
+        # This allows the variable foo and method print_process_id to be accessed from the ipython console
+        ipyConsole.pushVariables({"foo":43,"print_process_id":print_process_id})
+        ipyConsole.printText("The variable 'foo' and the method 'print_process_id()' are available. Use the 'whos' command for information.")                           
+
+
+
 
 ##############33
 # -*- coding: utf-8 -*-
@@ -145,8 +208,16 @@ class MyWindow(QtGui.QTabWidget):
         uic.loadUi('builder.ui', self)
         self.net = pp.create_empty_network()
         self.main_message.setText("<H1> Hallo, start by clicking Load Network and then Solve.. inspect and check results </H1>")
-        
+        #embed interpreter
+        self.ipyConsole = QIPythonWidget(customBanner="Welcome to the embedded ipython console\n")
+        self.ipyConsole = QIPythonWidget(customBanner="variable net containts network")
+        self.interpreter_vbox.addWidget(self.ipyConsole)
+        self.ipyConsole.pushVariables({"net":self.net})
+
+        #show
         self.show()
+
+        #signals
         #main
         self.main_empty.clicked.connect(self.main_empty_clicked)
         self.main_load.clicked.connect(self.main_load_clicked)
@@ -192,13 +263,14 @@ class MyWindow(QtGui.QTabWidget):
 
     def main_empty_clicked(self):
         self.net = pp.create_empty_network()
+        self.ipyConsole.pushVariables({"net":self.net})
         self.main_message.setText(str(self.net))
 
     def main_load_clicked(self):
         self.net = pandapower.networks.example_simple()
         #self.net = pandapower.networks.create_cigre_network_mv(with_der="pv_wind")
         #self.net = pandapower.networks.case9241pegase()
-
+        self.ipyConsole.pushVariables({"net":self.net})
         self.main_message.setText(str(self.net))
 
     def main_solve_clicked(self):
@@ -304,7 +376,6 @@ class MyWindow(QtGui.QTabWidget):
         self.res_message.setText(str(self.net.res_measurement))
 
 if __name__ == '__main__':
-
     app = QtGui.QApplication(sys.argv)
     window = MyWindow()
     sys.exit(app.exec_())

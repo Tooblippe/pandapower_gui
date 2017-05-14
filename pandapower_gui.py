@@ -8,11 +8,23 @@ import sip
 import pandapower as pp
 import pandapower.networks
 
-# the order of this matters????
-sip.setapi("QString", 2)
-sip.setapi("QVariant", 2)
-from PyQt4 import QtGui, uic
 
+try:
+	import PyQt4
+	sip.setapi("QString", 2)
+	sip.setapi("QVariant", 2)
+	from PyQt4 import uic
+	from PyQt4.QtGui import QApplication, QTabWidget, QPixmap, QSplashScreen, QWidget
+	from PyQt4.QtCore import Qt
+	print("Using PyQt 4")
+	_which_qt="4"
+except ImportError:
+	from PyQt5 import uic
+	from PyQt5.QtGui import QPixmap
+	from PyQt5.QtWidgets import QApplication, QTabWidget, QSplashScreen, QWidget
+	from PyQt5.QtCore import Qt
+	print("Using PyQt 5")
+	_which_qt = "5"
 #from PyQt4.QtGui  import QWidget
 #os.environ['QT_API'] = 'pyqt'
 # Import the console machinery from ipython
@@ -20,6 +32,14 @@ from PyQt4 import QtGui, uic
 from qtconsole.rich_ipython_widget import RichJupyterWidget as RichIPythonWidget
 from qtconsole.inprocess import QtInProcessKernelManager
 from IPython.lib import guisupport
+
+style_html = """<style>
+            table       {border-collapse: collapse;width: 100%;}
+            tr:first    {background:#e1e1e1;}
+            th,td       {text-align:left; border:1px solid #e1e1e1;}
+            th          {background-color: #4CAF50;color: white;}
+            tr:nth-child(even){background-color: #f2f2f2;}
+            </style>"""
 
 class QIPythonWidget(RichIPythonWidget):
     
@@ -194,8 +214,35 @@ def to_html(net, respect_switches=True, include_lines=True, include_trafos=True,
 
 
 
+class add_bus_window(QWidget):
+    def __init__(self, net):
+        super(add_bus_window, self).__init__()
+        uic.loadUi('add_bus.ui', self)
+        self.add_bus.clicked.connect(self.add_bus_clicked)
+        self.net = net
 
-class pandapower_main_window(QtGui.QTabWidget):
+    def add_bus_clicked(self):
+        print("isja")
+        message = pp.create_bus( self.net, vn_kv=self.vn_kv.toPlainText(), name=self.name.toPlainText())     
+        print( message )
+
+
+class add_load_window(QWidget):
+    def __init__(self, net):
+        super(add_load_window, self).__init__()
+        uic.loadUi('add_load.ui', self)
+        self.add_load.clicked.connect(self.add_load_clicked)
+        self.net = net
+
+    def add_load_clicked(self):
+        print("isja")
+        print("----")
+        print(self.net.bus)
+        print("---")
+        message = pp.create_load( net=self.net, bus=int(self.bus_number.toPlainText()), p_kw=self.p_kw.toPlainText(), q_kvar=self.q_kvar.toPlainText())
+        print( message )
+
+class pandapower_main_window(QTabWidget):
     """
     Create main window
     """
@@ -203,7 +250,7 @@ class pandapower_main_window(QtGui.QTabWidget):
         super(pandapower_main_window, self).__init__()
         uic.loadUi('builder.ui', self)
         self.net = pp.create_empty_network()
-        self.main_message.setText("Welcome to pandapower")
+        self.main_message.setText("Welcome to pandapower version: "+pp.__version__ + "\n Qt vesrion: "+_which_qt )
         self.embed_interpreter()
 
         #show
@@ -253,6 +300,10 @@ class pandapower_main_window(QtGui.QTabWidget):
         self.res_dcline.clicked.connect(self.res_dcline_clicked)
         self.res_measurement.clicked.connect(self.res_measurement_clicked)
 
+        #build
+        self.build_bus.clicked.connect(self.build_bus_clicked)
+        self.build_load.clicked.connect(self.build_load_clicked)
+
     
     def embed_interpreter(self):
         self.ipyConsole = QIPythonWidget(customBanner="Welcome to the pandapower console\n type whos \n =========== \n")
@@ -262,7 +313,7 @@ class pandapower_main_window(QtGui.QTabWidget):
     def main_empty_clicked(self):
         self.net = pp.create_empty_network()
         self.ipyConsole.pushVariables({"net":self.net})
-        self.main_message.setText(str(self.net))
+        self.main_message.setText("New empty network created and available in variable 'net' ")
 
     def main_load_clicked(self):
         self.net = pandapower.networks.example_simple()
@@ -283,46 +334,46 @@ class pandapower_main_window(QtGui.QTabWidget):
 
     #inspect
     def inspect_bus_clicked(self):
-        self.inspect_message.setText(str(self.net.bus))
+        self.inspect_message.setText(str(self.net.bus.to_html()))
 
     def inspect_lines_clicked(self):
-        self.inspect_message.setText(str(self.net.line))
+        self.inspect_message.setText(str(self.net.line.to_html()))
 
     def inspect_switch_clicked(self):
-        self.inspect_message.setText(str(self.net.switch))
+        self.inspect_message.setText(str(self.net.switch.to_html()))
 
     def inspect_load_clicked(self):
-        self.inspect_message.setText(str(self.net.load))
+        self.inspect_message.setText(str(self.net.load.to_html()))
 
     def inspect_sgen_clicked(self):
-        self.inspect_message.setText(str(self.net.sgen))
+        self.inspect_message.setText(str(self.net.sgen.to_html()))
 
     def inspect_ext_grid_clicked(self):
-        self.inspect_message.setText(str(self.net.ext_grid))
+        self.inspect_message.setText(str(self.net.ext_grid.to_html()))
 
     def inspect_trafo_clicked(self):
-        self.inspect_message.setText(str(self.net.trafo))
+        self.inspect_message.setText(str(self.net.trafo.to_html()))
 
     def inspect_trafo3w_clicked(self):
-        self.inspect_message.setText(str(self.net.trafo3w))
+        self.inspect_message.setText(str(self.net.trafo3w.to_html()))
 
     def inspect_gen_clicked(self):
-        self.inspect_message.setText(str(self.net.gen))
+        self.inspect_message.setText(str(self.net.gen.to_html()))
 
     def inspect_shunt_clicked(self):
-        self.inspect_message.setText(str(self.net.shunt))
+        self.inspect_message.setText(str(self.net.shunt.to_html()))
 
     def inspect_ward_clicked(self):
-        self.inspect_message.setText(str(self.net.ward))
+        self.inspect_message.setText(str(self.net.ward.to_html()))
 
     def inspect_xward_clicked(self):
-        self.inspect_message.setText(str(self.net.xward))
+        self.inspect_message.setText(str(self.net.xward.to_html()))
 
     def inspect_dcline_clicked(self):
-        self.inspect_message.setText(str(self.net.dcline))
+        self.inspect_message.setText(str(self.net.dcline.to_html()))
 
     def inspect_measurement_clicked(self):
-        self.inspect_message.setText(str(self.net.measurement))
+        self.inspect_message.setText(str(self.net.measurement.to_html()))
 
     #html
     def show_report(self):
@@ -330,52 +381,60 @@ class pandapower_main_window(QtGui.QTabWidget):
 
     #res
     def res_bus_clicked(self):
-        self.res_message.setText(str(self.net.res_bus))
+        self.res_message.setHtml(str(self.net.res_bus.to_html()))
 
     def res_lines_clicked(self):
-        self.res_message.setText(str(self.net.res_line))
+        self.res_message.setHtml(str(self.net.res_line.to_html()))
 
     def res_switch_clicked(self):
-        self.res_message.setText(str(self.net.res_switch))
+        self.res_message.setHtml(str(self.net.res_switch.to_html()))
 
     def res_load_clicked(self):
-        self.res_message.setText(str(self.net.res_load))
+        self.res_message.setHtml(str(self.net.res_load.to_html()))
 
     def res_sgen_clicked(self):
-        self.res_message.setText(str(self.net.res_sgen))
+        self.res_message.setHtml(str(self.net.res_sgen.to_html()))
 
     def res_ext_grid_clicked(self):
-        self.res_message.setText(str(self.net.res_ext_grid))
+        self.res_message.setHtml(str(self.net.res_ext_grid.to_html()))
 
     def res_trafo_clicked(self):
-        self.res_message.setText(str(self.net.res_trafo))
+        self.res_message.setHtml(str(self.net.res_trafo.to_html()))
 
     def res_trafo3w_clicked(self):
-        self.res_message.setText(str(self.net.res_trafo3w))
+        self.res_message.setHtml(str(self.net.res_trafo3w.to_html()))
 
     def res_gen_clicked(self):
-        self.res_message.setText(str(self.net.res_gen))
+        self.res_message.setHtml(str(self.net.res_gen.to_html()))
 
     def res_shunt_clicked(self):
-        self.res_message.setText(str(self.net.res_shunt))
+        self.res_message.setHtml(str(self.net.res_shunt.to_html()))
 
     def res_ward_clicked(self):
-        self.res_message.setText(str(self.net.res_ward))
+        self.res_message.setHtml(str(self.net.res_ward.to_html()))
 
     def res_xward_clicked(self):
-        self.res_message.setText(str(self.net.res_xward))
+        self.res_message.setHtml(str(self.net.res_xward.to_html()))
 
     def res_dcline_clicked(self):
-        self.res_message.setText(str(self.net.res_dcline))
+        self.res_message.setHtml(str(self.net.res_dcline.to_html()))
 
     def res_measurement_clicked(self):
-        self.res_message.setText(str(self.net.res_measurement))
+        self.res_message.setHtml(str(self.net.res_measurement.to_html()))
+
+    #build
+    def build_bus_clicked(self):
+        self.build_bus_window = add_bus_window(self.net)
+        self.build_bus_window.show()
+
+    def build_load_clicked(self):
+        self.build_load_window = add_load_window(self.net)
+        self.build_load_window.show()
 
 def splash():
      # Create and display the splash screen
-    splash_pix = QtGui.QPixmap('resources/icons_components/splash.png')
-    from PyQt4.QtCore import Qt
-    splash = QtGui.QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
+    splash_pix = QPixmap('resources/icons_components/splash.png')
+    splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
     splash.setMask(splash_pix.mask())
     splash.show()
     app.processEvents()
@@ -384,7 +443,7 @@ def splash():
 
 
 if __name__ == '__main__':
-    app = QtGui.QApplication(sys.argv)  
+    app = QApplication(sys.argv)  
 
     splash()
    

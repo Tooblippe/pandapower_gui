@@ -14,6 +14,8 @@ tutorials/.ipynb_checkpoints
 .cache
 *__pycache__*
 .vs
+.vscode
+.vscode/
 *.pyproj
 *.user
 *.sln

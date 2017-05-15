@@ -1,5 +1,13 @@
 # -*- coding: utf-8 -*-
-import sys, time
+
+# Copyright (c) .....
+# All rights reserved. Use of this source code is governed
+# by a BSD-style license that can be found in the LICENSE file.
+# File created by Tobie Nortje
+
+
+import sys
+import time
 import os
 from itertools import combinations
 from cgi import escape
@@ -10,21 +18,23 @@ import pandapower.networks
 
 
 try:
-	import PyQt4
-	sip.setapi("QString", 2)
-	sip.setapi("QVariant", 2)
-	from PyQt4 import uic
-	from PyQt4.QtGui import QApplication, QTabWidget, QPixmap, QSplashScreen, QWidget
-	from PyQt4.QtCore import Qt
-	print("Using PyQt 4")
-	_which_qt="4"
+    import PyQt4
+    sip.setapi("QString", 2)
+    sip.setapi("QVariant", 2)
+    from PyQt4 import uic
+    from PyQt4.QtGui import QApplication, QTabWidget, QPixmap, QSplashScreen, QWidget
+    from PyQt4.QtCore import Qt
+    print("Using PyQt 4")
+    _WHICH_QT = "4"
 except ImportError:
-	from PyQt5 import uic
-	from PyQt5.QtGui import QPixmap
-	from PyQt5.QtWidgets import QApplication, QTabWidget, QSplashScreen, QWidget
-	from PyQt5.QtCore import Qt
-	print("Using PyQt 5")
-	_which_qt = "5"
+    from PyQt5 import uic
+    from PyQt5.QtGui import QPixmap
+    from PyQt5.QtWidgets import QApplication, QTabWidget, QSplashScreen, QWidget
+    from PyQt5.QtCore import Qt
+    print("Using PyQt 5")
+    _WHICH_QT = "5"
+
+
 #from PyQt4.QtGui  import QWidget
 #os.environ['QT_API'] = 'pyqt'
 # Import the console machinery from ipython
@@ -33,7 +43,8 @@ from qtconsole.rich_ipython_widget import RichJupyterWidget as RichIPythonWidget
 from qtconsole.inprocess import QtInProcessKernelManager
 from IPython.lib import guisupport
 
-style_html = """<style>
+
+STYLE_HTML = """<style>
             table       {border-collapse: collapse;width: 100%;}
             tr:first    {background:#e1e1e1;}
             th,td       {text-align:left; border:1px solid #e1e1e1;}
@@ -41,12 +52,11 @@ style_html = """<style>
             tr:nth-child(even){background-color: #f2f2f2;}
             </style>"""
 
+
 class QIPythonWidget(RichIPythonWidget):
-    
     """ Convenience class for a live IPython console widget.
         We can replace the standard banner using the customBanner argument
     """
-
     def __init__(self, customBanner=None, *args, **kwargs):
         if customBanner != None:
             self.banner = customBanner
@@ -80,27 +90,21 @@ class QIPythonWidget(RichIPythonWidget):
         self._execute(command, False)
 
 
-
-
-
-
-
-
 class Raw(object):
     def __init__(self, html):
         self.html = html
+
 
 class Tag(object):
     def __init__(self, name):
         self.name = name
     def __call__(self, *args, **kwargs):
-        attr = ' '+' '.join('%s="%s"' % (k,escape(v)) for k,v in kwargs.items())
+        attr = ' '+' '.join('%s="%s"' % (k, escape(v)) for k, v in kwargs.items())
         contents = ''.join(a.html if isinstance(a, Raw) else escape(str(a)) for a in args)
         return Raw('<%s%s>%s</%s>' % (self.name, attr.rstrip(), contents, self.name))
 
+
 def to_html(net, respect_switches=True, include_lines=True, include_trafos=True, show_tables=True):
-
-
     """
      Converts a pandapower network into an html page which contains a simplified representation
      of a network's topology, reduced to nodes and edges. Busses are being represented by nodes
@@ -129,7 +133,6 @@ def to_html(net, respect_switches=True, include_lines=True, include_trafos=True,
          open('C:\\index.html', "w").write(html)
 
     """
-
     nodes = [{'id':int(id), 'label':str(id)} for id in net.bus[net.bus.in_service==1].index]
     edges = []
 
@@ -209,12 +212,28 @@ def to_html(net, respect_switches=True, include_lines=True, include_trafos=True,
         SCRIPT(src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.js"),
         SCRIPT(Raw(script))
         )
-
     return page.html    
 
+class add_ext_grid_window(QWidget):
+    """ add external grid window """
+    def __init__(self, net):
+        super(add_ext_grid_window, self).__init__()
+        uic.loadUi('add_ext_grid.ui', self)
+        self.add_ext_grid.clicked.connect(self.add_ext_grid_clicked)
+        self.net = net
 
+    def add_ext_grid_clicked(self):
+        """ Add the external grid """
+        #(0,0) = (1,1)
+        bus = self.parameter_table.item(1, 2)
+        vm_pu = self.parameter_table.item(2, 2)
+        #print(bus.text())
+        #print(vm_pu.text())
+        message = pp.create_ext_grid(self.net, bus=int(bus.text()), vm_pu=float(vm_pu.text()))
+        print(message)
 
 class add_bus_window(QWidget):
+    """ add a bus """
     def __init__(self, net):
         super(add_bus_window, self).__init__()
         uic.loadUi('add_bus.ui', self)
@@ -222,12 +241,33 @@ class add_bus_window(QWidget):
         self.net = net
 
     def add_bus_clicked(self):
-        print("isja")
-        message = pp.create_bus( self.net, vn_kv=self.vn_kv.toPlainText(), name=self.name.toPlainText())     
-        print( message )
+        """ Add a bus """
+        message = pp.create_bus(self.net, vn_kv=self.vn_kv.toPlainText(),
+                                name=self.name.toPlainText())
+        print(message)
+
+class add_s_line_window(QWidget):
+    """ add a standard line """
+    def __init__(self, net):
+        super(add_s_line_window, self).__init__()
+        uic.loadUi('add_s_line.ui', self)
+        self.add_s_line.clicked.connect(self.add_s_line_clicked)
+        self.net = net
+
+    def add_s_line_clicked(self):
+        """ Adds a line """
+        from_bus = int(self.from_bus.toPlainText())
+        to_bus = int(self.to_bus.toPlainText())
+        length_km = float(self.length_km.toPlainText())
+        standard_type = self.standard_type.toPlainText()
+        name = self.name.toPlainText()
+        message = pp.create_line(self.net, from_bus=from_bus, to_bus=to_bus,
+                                 length_km=length_km, std_type=standard_type, name=name)
+        print(message)
 
 
 class add_load_window(QWidget):
+    """ load window """
     def __init__(self, net):
         super(add_load_window, self).__init__()
         uic.loadUi('add_load.ui', self)
@@ -235,22 +275,22 @@ class add_load_window(QWidget):
         self.net = net
 
     def add_load_clicked(self):
-        print("isja")
-        print("----")
+        """ add a load """
         print(self.net.bus)
-        print("---")
-        message = pp.create_load( net=self.net, bus=int(self.bus_number.toPlainText()), p_kw=self.p_kw.toPlainText(), q_kvar=self.q_kvar.toPlainText())
-        print( message )
+        message = pp.create_load(net=self.net, bus=int(self.bus_number.toPlainText()),
+                                 p_kw=self.p_kw.toPlainText(), q_kvar=self.q_kvar.toPlainText())
+        print(message)
+
 
 class pandapower_main_window(QTabWidget):
-    """
-    Create main window
-    """
+    """ Create main window """
     def __init__(self):
         super(pandapower_main_window, self).__init__()
         uic.loadUi('builder.ui', self)
         self.net = pp.create_empty_network()
-        self.main_message.setText("Welcome to pandapower version: "+pp.__version__ + "\n Qt vesrion: "+_which_qt )
+        self.main_message.setText("Welcome to pandapower version: " +
+                                  pp.__version__ + "\nQt vesrion: "+_WHICH_QT +
+                                  "\nNetwork variable stored in : net")
         self.embed_interpreter()
 
         #show
@@ -279,14 +319,14 @@ class pandapower_main_window(QTabWidget):
         self.inspect_xward.clicked.connect(self.inspect_xward_clicked)
         self.inspect_dcline.clicked.connect(self.inspect_dcline_clicked)
         self.inspect_measurement.clicked.connect(self.inspect_measurement_clicked)
-        
+
         #html
         self.html_show.clicked.connect(self.show_report)
-        
+
         #results
         self.res_bus.clicked.connect(self.res_bus_clicked)
         self.res_lines.clicked.connect(self.res_lines_clicked)
-        self.res_switch.clicked.connect(self.res_switch_clicked)
+        #self.res_switch.clicked.connect(self.res_switch_clicked)
         self.res_load.clicked.connect(self.res_load_clicked)
         self.res_sgen.clicked.connect(self.res_sgen_clicked)
         self.res_ext_grid.clicked.connect(self.res_ext_grid_clicked)
@@ -298,15 +338,18 @@ class pandapower_main_window(QTabWidget):
         self.res_ward.clicked.connect(self.res_ward_clicked)
         self.res_xward.clicked.connect(self.res_xward_clicked)
         self.res_dcline.clicked.connect(self.res_dcline_clicked)
-        self.res_measurement.clicked.connect(self.res_measurement_clicked)
+        #self.res_measurement.clicked.connect(self.res_measurement_clicked)
 
         #build
+        self.build_ext_grid.clicked.connect(self.build_ext_grid_clicked)
         self.build_bus.clicked.connect(self.build_bus_clicked)
         self.build_load.clicked.connect(self.build_load_clicked)
+        # need to split lines and parameter lines.. change the form to deal with it
+        self.build_lines.clicked.connect(self.build_s_line_clicked)
 
-    
     def embed_interpreter(self):
-        self.ipyConsole = QIPythonWidget(customBanner="Welcome to the pandapower console\n type whos \n =========== \n")
+        """ embed an Ipyton QT Console Interpreter """
+        self.ipyConsole = QIPythonWidget(customBanner="Welcome to the pandapower console\nType whos to get lit of variables \n =========== \n")
         self.interpreter_vbox.addWidget(self.ipyConsole)
         self.ipyConsole.pushVariables({"net":self.net, "pp":pandapower})
 
@@ -386,8 +429,8 @@ class pandapower_main_window(QTabWidget):
     def res_lines_clicked(self):
         self.res_message.setHtml(str(self.net.res_line.to_html()))
 
-    def res_switch_clicked(self):
-        self.res_message.setHtml(str(self.net.res_switch.to_html()))
+    #def res_switch_clicked(self):
+    #    self.res_message.setHtml(str(self.net.res_switch.to_html()))
 
     def res_load_clicked(self):
         self.res_message.setHtml(str(self.net.res_load.to_html()))
@@ -419,10 +462,14 @@ class pandapower_main_window(QTabWidget):
     def res_dcline_clicked(self):
         self.res_message.setHtml(str(self.net.res_dcline.to_html()))
 
-    def res_measurement_clicked(self):
-        self.res_message.setHtml(str(self.net.res_measurement.to_html()))
+    #def res_measurement_clicked(self):
+    #    self.res_message.setHtml(str(self.net.res_measurement.to_html()))
 
     #build
+    def build_ext_grid_clicked(self):
+        self.build_ext_grid_window = add_ext_grid_window(self.net)
+        self.build_ext_grid_window.show()
+
     def build_bus_clicked(self):
         self.build_bus_window = add_bus_window(self.net)
         self.build_bus_window.show()
@@ -430,6 +477,11 @@ class pandapower_main_window(QTabWidget):
     def build_load_clicked(self):
         self.build_load_window = add_load_window(self.net)
         self.build_load_window.show()
+
+    def build_s_line_clicked(self):
+        self.build_s_line_window = add_s_line_window(self.net)
+        self.build_s_line_window.show()
+
 
 def splash():
      # Create and display the splash screen
@@ -443,10 +495,7 @@ def splash():
 
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)  
-
+    app = QApplication(sys.argv)
     splash()
-   
-    #run app
     window = pandapower_main_window()
     sys.exit(app.exec_())

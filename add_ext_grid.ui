@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>899</width>
+    <height>651</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Add External Grid</string>
+  </property>
+  <widget class="QPushButton" name="add_ext_grid">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Add ext grid</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="edit_ext_grid">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>40</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Edit ext grid</string>
+   </property>
+  </widget>
+  <widget class="QWebView" name="webView">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>10</y>
+     <width>431</width>
+     <height>611</height>
+    </rect>
+   </property>
+   <property name="url">
+    <url>
+     <string>http://pandapower.readthedocs.io/en/v1.3.0/elements/ext_grid.html#external-grid</string>
+    </url>
+   </property>
+  </widget>
+  <widget class="QWebView" name="webView_2">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>140</y>
+     <width>361</width>
+     <height>281</height>
+    </rect>
+   </property>
+   <property name="url">
+    <url>
+     <string>http://pandapower.readthedocs.io/en/v1.3.0/_images/ext_grid.png</string>
+    </url>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="parameter_table">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>10</y>
+     <width>361</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <row>
+    <property name="text">
+     <string>name</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>bus*</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>vm_pu*</string>
+    </property>
+   </row>
+   <column>
+    <property name="text">
+     <string>Datatype</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Value Range</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Value</string>
+    </property>
+   </column>
+   <item row="0" column="0">
+    <property name="text">
+     <string>string</string>
+    </property>
+   </item>
+   <item row="0" column="2">
+    <property name="text">
+     <string/>
+    </property>
+    <property name="background">
+     <brush brushstyle="NoBrush">
+      <color alpha="255">
+       <red>255</red>
+       <green>255</green>
+       <blue>0</blue>
+      </color>
+     </brush>
+    </property>
+   </item>
+   <item row="1" column="0">
+    <property name="text">
+     <string>integer</string>
+    </property>
+   </item>
+   <item row="2" column="0">
+    <property name="text">
+     <string>float</string>
+    </property>
+   </item>
+   <item row="2" column="1">
+    <property name="text">
+     <string>&gt;0</string>
+    </property>
+   </item>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QWebView</class>
+   <extends>QWidget</extends>
+   <header>QtWebKitWidgets/QWebView</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

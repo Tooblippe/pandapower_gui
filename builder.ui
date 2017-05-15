@@ -778,7 +778,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>340</y>
+      <y>310</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -791,7 +791,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>220</y>
+      <y>190</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -804,7 +804,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>160</y>
+      <y>130</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -817,7 +817,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>100</y>
+      <y>70</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -826,24 +826,11 @@
      <string>Load</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="res_measurement">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>430</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Measurement</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="res_trafo">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>190</y>
+      <y>160</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -856,7 +843,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>280</y>
+      <y>250</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -869,7 +856,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>250</y>
+      <y>220</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -882,7 +869,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>370</y>
+      <y>340</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -908,7 +895,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>310</y>
+      <y>280</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -921,7 +908,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>400</y>
+      <y>370</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -930,24 +917,11 @@
      <string>DC Line</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="res_switch">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>70</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Switch</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="res_sgen">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>130</y>
+      <y>100</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -1198,9 +1172,9 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>120</x>
+      <x>10</x>
       <y>10</y>
-      <width>741</width>
+      <width>711</width>
       <height>521</height>
      </rect>
     </property>

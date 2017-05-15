@@ -520,6 +520,14 @@ def splash(n=2):
 
 
 if __name__ == '__main__':
+    #temp fix for local to html
+    try:
+        #use to_html function in versions > 1.3.0
+        to_html
+    except:
+        #use local html function in this file
+        to_html = to_html2
+
     app = QApplication(sys.argv)
     splash()
     window = pandapower_main_window()

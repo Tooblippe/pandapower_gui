@@ -16,6 +16,11 @@ import sip
 import pandapower as pp
 import pandapower.networks
 
+try:
+    from pandapower.html import _net_to_html as to_html
+    print("Using net_to_html from version >> 1.3.0")
+except:
+    print("Will be using build in to_html function, will be deprecated")
 
 try:
     import PyQt4
@@ -42,15 +47,6 @@ except ImportError:
 from qtconsole.rich_ipython_widget import RichJupyterWidget as RichIPythonWidget
 from qtconsole.inprocess import QtInProcessKernelManager
 from IPython.lib import guisupport
-
-
-STYLE_HTML = """<style>
-            table       {border-collapse: collapse;width: 100%;}
-            tr:first    {background:#e1e1e1;}
-            th,td       {text-align:left; border:1px solid #e1e1e1;}
-            th          {background-color: #4CAF50;color: white;}
-            tr:nth-child(even){background-color: #f2f2f2;}
-            </style>"""
 
 
 class QIPythonWidget(RichIPythonWidget):
@@ -104,7 +100,7 @@ class Tag(object):
         return Raw('<%s%s>%s</%s>' % (self.name, attr.rstrip(), contents, self.name))
 
 
-def to_html(net, respect_switches=True, include_lines=True, include_trafos=True, show_tables=True):
+def to_html2(net, respect_switches=True, include_lines=True, include_trafos=True, show_tables=True):
     """
      Converts a pandapower network into an html page which contains a simplified representation
      of a network's topology, reduced to nodes and edges. Busses are being represented by nodes
@@ -301,7 +297,9 @@ class pandapower_main_window(QTabWidget):
         self.main_empty.clicked.connect(self.main_empty_clicked)
         self.main_load.clicked.connect(self.main_load_clicked)
         self.main_solve.clicked.connect(self.main_solve_clicked)
-        self.main_basic.clicked.connect(self.main_basic_clicked)
+        #temp assign to losses
+        #self.main_basic.clicked.connect(self.main_basic_clicked)
+        self.main_basic.clicked.connect(self.losses_summary)
 
         #inspect
         self.inspect_bus.clicked.connect(self.inspect_bus_clicked)
@@ -374,6 +372,33 @@ class pandapower_main_window(QTabWidget):
     def main_basic_clicked(self):
         self.main_message.setText(str(pandapower.lf_info(self.net)))
         pandapower.lf_info(self.net)
+
+    def losses_summary(self):
+        """ print the losses in each element that has losses """
+        # get total losses
+        losses = 0.0
+        for i in self.net:
+            if 'res' in i:
+                if 'pl_kw' in self.net[i]:
+                    if not self.net[i]['pl_kw'].empty:
+                        print(i)
+                        #self.report_message.append(i)
+                        self.report_message.append(i)
+                        self.report_message.append(self.net[i]['pl_kw'].to_string())
+                        print(self.net[i]['pl_kw'])
+                        losses += self.net[i]['pl_kw'].sum()
+        self.report_message.append("Total Losses (kW)")
+        self.report_message.append(str(losses))
+
+        # get total load
+        total_load_kw = self.net.res_gen + self.net.res_sgen + self.net.res_ext_grid
+        self.report_message.append("Total nett load flowing in network")
+        self.report_message.append(str(total_load_kw['p_kw']))
+
+        #losses percentage
+        self.report_message.append("% losses")
+        loss_pct = losses / total_load_kw['p_kw']
+        self.report_message.append(str(loss_pct))
 
     #inspect
     def inspect_bus_clicked(self):
@@ -483,14 +508,14 @@ class pandapower_main_window(QTabWidget):
         self.build_s_line_window.show()
 
 
-def splash():
+def splash(n=2):
      # Create and display the splash screen
     splash_pix = QPixmap('resources/icons_components/splash.png')
     splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
     splash.setMask(splash_pix.mask())
     splash.show()
     app.processEvents()
-    time.sleep(4)
+    time.sleep(n)
     splash.hide()
 
 

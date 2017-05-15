@@ -14,7 +14,7 @@
    <string>pandapower gui</string>
   </property>
   <property name="currentIndex">
-   <number>4</number>
+   <number>6</number>
   </property>
   <widget class="QWidget" name="main">
    <attribute name="title">
@@ -957,7 +957,7 @@
   </widget>
   <widget class="QWidget" name="build">
    <attribute name="title">
-    <string>Network Builder</string>
+    <string>Add Elements</string>
    </attribute>
    <widget class="QPushButton" name="build_trafo3w">
     <property name="geometry">
@@ -1179,6 +1179,21 @@
      </rect>
     </property>
     <layout class="QVBoxLayout" name="interpreter_vbox"/>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="report">
+   <attribute name="title">
+    <string>Report</string>
+   </attribute>
+   <widget class="QTextBrowser" name="report_message">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>30</y>
+      <width>631</width>
+      <height>451</height>
+     </rect>
+    </property>
    </widget>
   </widget>
   <widget class="QWidget" name="documenation">

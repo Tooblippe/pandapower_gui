@@ -218,7 +218,7 @@ class add_ext_grid_window(QWidget):
     """ add external grid window """
     def __init__(self, net):
         super(add_ext_grid_window, self).__init__()
-        uic.loadUi('add_ext_grid.ui', self)
+        uic.loadUi('resources/ui/add_ext_grid.ui', self)
         self.add_ext_grid.clicked.connect(self.add_ext_grid_clicked)
         self.net = net
 
@@ -236,7 +236,7 @@ class add_bus_window(QWidget):
     """ add a bus """
     def __init__(self, net):
         super(add_bus_window, self).__init__()
-        uic.loadUi('add_bus.ui', self)
+        uic.loadUi('resources/ui/add_bus.ui', self)
         self.add_bus.clicked.connect(self.add_bus_clicked)
         self.net = net
 
@@ -250,7 +250,7 @@ class add_s_line_window(QWidget):
     """ add a standard line """
     def __init__(self, net):
         super(add_s_line_window, self).__init__()
-        uic.loadUi('add_s_line.ui', self)
+        uic.loadUi('resources/ui/add_s_line.ui', self)
         self.add_s_line.clicked.connect(self.add_s_line_clicked)
         self.net = net
 
@@ -270,7 +270,7 @@ class add_load_window(QWidget):
     """ load window """
     def __init__(self, net):
         super(add_load_window, self).__init__()
-        uic.loadUi('add_load.ui', self)
+        uic.loadUi('resources/ui/add_load.ui', self)
         self.add_load.clicked.connect(self.add_load_clicked)
         self.net = net
 
@@ -286,7 +286,7 @@ class pandapower_main_window(QTabWidget):
     """ Create main window """
     def __init__(self):
         super(pandapower_main_window, self).__init__()
-        uic.loadUi('builder.ui', self)
+        uic.loadUi('resources/ui/builder.ui', self)
         self.net = pp.create_empty_network()
         self.main_message.setText("Welcome to pandapower version: " +
                                   pp.__version__ + "\nQt vesrion: "+_WHICH_QT +

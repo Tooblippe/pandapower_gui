@@ -7,7 +7,7 @@ from PyQt4.QtGui import *
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 
-Ui_MainWindow, QMainWindow = loadUiType('builder_collections.ui')
+Ui_MainWindow, QMainWindow = loadUiType('_dev_branch/builder_collections.ui')
 
 import pandapower.plotting as plot
 import pandapower as pp
@@ -95,11 +95,6 @@ class NetworkBuilder(QMainWindow, Ui_MainWindow):
                 self.update_trafo_collections()
                 self.draw_collections()
 
-def main(net):
-   app = QApplication(sys.argv)
-   ex = SliderWidget(net)
-   ex.show()
-   sys.exit(app.exec_())
 
 if __name__ == '__main__':
     net = pp.create_empty_network()
@@ -114,7 +109,7 @@ if __name__ == '__main__':
 
     app = QApplication(sys.argv)
     ex = NetworkBuilder(net)
-    self = ex
+    #self = ex
 #    self.redraw_collections()
     ex.show()
     sys.exit(app.exec_())

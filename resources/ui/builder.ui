@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>994</width>
-    <height>575</height>
+    <width>1058</width>
+    <height>624</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>pandapower gui</string>
   </property>
   <property name="currentIndex">
-   <number>6</number>
+   <number>4</number>
   </property>
   <widget class="QWidget" name="main">
    <attribute name="title">
@@ -1154,15 +1154,84 @@
      <string>Ward</string>
     </property>
    </widget>
-   <widget class="QTextBrowser" name="textBrowser">
+   <widget class="QTextBrowser" name="buidl_message">
     <property name="geometry">
      <rect>
       <x>110</x>
       <y>10</y>
-      <width>601</width>
+      <width>221</width>
       <height>441</height>
      </rect>
     </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>20</y>
+      <width>120</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>GroupBox</string>
+    </property>
+    <widget class="QRadioButton" name="Bus">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>82</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Bus</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="Line">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>82</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Line</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="Trafo">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>80</y>
+       <width>82</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Trafo</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="main_frame" native="true">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>10</y>
+      <width>791</width>
+      <height>551</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <layout class="QVBoxLayout" name="gridLayout"/>
    </widget>
   </widget>
   <widget class="QWidget" name="interpreter">

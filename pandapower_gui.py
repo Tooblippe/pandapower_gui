@@ -7,8 +7,14 @@
 
 
 import sys
-import time
 import os
+
+# for pandpower repo
+# p = os.path.abspath('..') +"/pandapower"
+# sys.path.append( p )
+
+import time
+
 from itertools import combinations
 from cgi import escape
 import json
@@ -34,9 +40,10 @@ try:
     _WHICH_QT = "4"
 except ImportError:
     from PyQt5 import uic
-    from PyQt5.QtGui import QPixmap
-    from PyQt5.QtWidgets import QApplication, QTabWidget, QSplashScreen, QWidget
-    from PyQt5.QtCore import Qt
+    from PyQt5 import QtWebEngineWidgets as QtWebKitWidgets #deprecated update
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
+    from PyQt5.QtCore import *
     print("Using PyQt 5")
     _WHICH_QT = "5"
 
@@ -49,7 +56,8 @@ from IPython.lib import guisupport
 #collections and plotting from turner
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
-Ui_MainWindow, QMainWindow = loadUiType('_dev_branch/builder_collections.ui')
+
+#Ui_MainWindow, QMainWindow = loadUiType('_dev_branch/builder_collections.ui')
 import pandapower.plotting as plot
 import pandapower as pp
 import matplotlib.pyplot as plt
@@ -630,9 +638,9 @@ if __name__ == '__main__':
 
     #temp collections
     net = pp.create_empty_network()
-    b1 = pp.create_bus(net, 10, geodata=(5,10))
-    b2 = pp.create_bus(net, 0.4, geodata=(5,15))
-    b3 = pp.create_bus(net, 0.4, geodata=(0,22))
+    b1 = pp.create_bus(net, 10, geodata=(5, 10))
+    b2 = pp.create_bus(net, 0.4, geodata=(5, 15))
+    b3 = pp.create_bus(net, 0.4, geodata=(0, 22))
     b4 = pp.create_bus(net, 0.4, geodata=(8, 20))
 
     pp.create_line(net, b2, b3, 2.0, std_type="NAYY 4x50 SE")

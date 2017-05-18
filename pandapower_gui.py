@@ -15,6 +15,7 @@ import json
 import sip
 import pandapower as pp
 import pandapower.networks
+from functools import partial
 
 try:
     from pandapower.html import _net_to_html as to_html
@@ -217,7 +218,7 @@ def to_html2(net, respect_switches=True, include_lines=True, include_trafos=True
         SCRIPT(src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.js"),
         SCRIPT(Raw(script))
         )
-    return page.html    
+    return page.html
 
 class add_ext_grid_window(QWidget):
     """ add external grid window """
@@ -239,19 +240,31 @@ class add_ext_grid_window(QWidget):
 
 class add_bus_window(QWidget):
     """ add a bus """
-    def __init__(self, net, geodata):
+    def __init__(self, net, geodata, update, index=None):
         super(add_bus_window, self).__init__()
         uic.loadUi('resources/ui/add_bus.ui', self)
-        self.add_bus.clicked.connect(self.add_bus_clicked)
-        self.net = net
+        self.ok.clicked.connect(self.ok_action)
+        self.cancel.clicked.connect(self.close)
         self.geodata = geodata
+        self.index = index
+        self.net = net
+        self.update = update
+        if self.index is not None:
+            self.vn_kv.setText(str(self.net.bus.vn_kv.at[self.index]))
+            self.name.setText(str(self.net.bus.name.at[self.index]))
 
-    def add_bus_clicked(self):
+    def ok_action(self):
         """ Add a bus """
-        message = pp.create_bus(self.net, vn_kv=self.vn_kv.toPlainText(),
-                                name=self.name.toPlainText(), geodata=self.geodata)
-        print(message)
-        
+        vn_kv = self.vn_kv.toPlainText()
+        name = self.name.toPlainText()
+        if self.index is None:
+            pp.create_bus(self.net, vn_kv=vn_kv, name=name, geodata=self.geodata)
+            self.update(True)
+        else:
+            self.net.bus.loc[self.index, ["vn_kv", "name"]] = [vn_kv, name]
+        self.close()
+
+
 
 class add_s_line_window(QWidget):
     """ add a standard line """
@@ -304,7 +317,8 @@ class pandapower_main_window(QTabWidget):
         self.last_bus = None
         self.create_main_frame()
         self.initialize_plot()
-        
+        self.doubleclick = False
+
 
         #show
         self.show()
@@ -518,8 +532,9 @@ class pandapower_main_window(QTabWidget):
         self.build_ext_grid_window = add_ext_grid_window(self.net)
         self.build_ext_grid_window.show()
 
-    def build_bus_clicked(self, geodata):
-        self.build_bus_window = add_bus_window(self.net, geodata)
+    def build_bus_clicked(self, geodata, index=None):
+        self.build_bus_window = add_bus_window(self.net, geodata=geodata, index=index,
+                                               update=self.update_bus_collection)
         self.build_bus_window.show()
 
     def build_load_clicked(self):
@@ -535,6 +550,7 @@ class pandapower_main_window(QTabWidget):
         self.collections = {}
         #if not self.last_bus is None:
         self.update_bus_collection()
+        self.update_load_collections()
         self.update_line_collection()
         self.update_trafo_collections()
         self.draw_collections()
@@ -549,9 +565,11 @@ class pandapower_main_window(QTabWidget):
             self.ax.add_collection(c)
         self.canvas.draw()
 
-    def update_bus_collection(self):
+    def update_bus_collection(self, redraw=False):
         self.collections["bus"] = plot.create_bus_collection(self.net, size=0.2, zorder=2, picker=True,
                                  color="k", infofunc=lambda x: ("bus", x))
+        if redraw:
+            self.draw_collections()
 
     def update_line_collection(self):
         self.collections["line"] = plot.create_line_collection(self.net, zorder=1, linewidths=2,
@@ -562,10 +580,15 @@ class pandapower_main_window(QTabWidget):
         self.collections["trafo1"] = t1
         self.collections["trafo2"] = t2
 
+    def update_load_collections(self):
+        l1, l2 = plot.create_load_symbol_collection(self.net)
+        self.collections["load1"] = l1
+        self.collections["load2"] = l2
+
     def create_main_frame(self):
         self.dpi = 100
         self.fig = plt.Figure()
-        self.canvas = FigureCanvas(self.fig) 
+        self.canvas = FigureCanvas(self.fig)
         self.ax = self.fig.add_subplot(111)
         self.ax.set_axis_bgcolor("white")
         # when a button is pressed on the canvas?
@@ -577,32 +600,53 @@ class pandapower_main_window(QTabWidget):
         self.fig.subplots_adjust(left=0.0, right=1, top=1, bottom=0, wspace=0.02, hspace=0.04)
 
     def on_press(self, event):
+        self.doubleclick = event.dblclick
+        self.last = "clicked"
         if self.Bus.isChecked():
             self.build_bus_clicked(geodata=(event.xdata, event.ydata))
-            #pp.create_bus(self.net, vn_kv=0.4, geodata=(event.xdata, event.ydata)
-            self.update_bus_collection()
-            self.draw_collections()
-
-
 
     def on_pick(self, event):
+        if self.doubleclick == False:
+            QTimer.singleShot(500,
+                               partial(self.performSingleClickAction, event))
+
+    def performSingleClickAction(self, event):
         collection = event.artist
-        element, idx = collection.info[event.ind[0]]
+        element, index = collection.info[event.ind[0]]
+        if self.doubleclick:
+            #ignore second click of doubleclick
+            if self.last == "doublecklicked":
+                self.last = "clicked"
+            else:
+                self.DoubleClickAction(event, element, index)
+        else:
+            self.SingleClickAction(event, element, index)
+
+
+
+    def DoubleClickAction(self, event, element, index):
+        #what to do when double clicking on an element
+        self.last = "doublecklicked"
+        if element == "bus":
+            self.build_bus_clicked(geodata=None, index=index)
+
+    def SingleClickAction(self, event, element, index):
+        #what to do when single clicking on an element
         if element != "bus":
             return
         if self.Line.isChecked():
             if self.last_bus is None:
-                self.last_bus = idx
-            elif self.last_bus != idx:
-                pp.create_line(self.net, self.last_bus, idx, length_km=1.0, std_type="NAYY 4x50 SE")
+                self.last_bus = index
+            elif self.last_bus != index:
+                pp.create_line(self.net, self.last_bus, index, length_km=1.0, std_type="NAYY 4x50 SE")
                 self.last_bus = None
                 self.update_line_collection()
                 self.draw_collections()
         if self.Trafo.isChecked():
             if self.last_bus is None:
-                self.last_bus = idx
-            elif self.last_bus != idx:
-                pp.create_transformer(self.net, self.last_bus, idx, std_type="0.25 MVA 10/0.4 kV")
+                self.last_bus = index
+            elif self.last_bus != index:
+                pp.create_transformer(self.net, self.last_bus, index, std_type="0.25 MVA 10/0.4 kV")
                 self.last_bus = None
                 self.update_trafo_collections()
                 self.draw_collections()
@@ -634,6 +678,7 @@ if __name__ == '__main__':
     b2 = pp.create_bus(net, 0.4, geodata=(5,15))
     b3 = pp.create_bus(net, 0.4, geodata=(0,22))
     b4 = pp.create_bus(net, 0.4, geodata=(8, 20))
+    pp.create_load(net, b4, p_kw=200)
 
     pp.create_line(net, b2, b3, 2.0, std_type="NAYY 4x50 SE")
     pp.create_line(net, b2, b4, 2.0, std_type="NAYY 4x50 SE")

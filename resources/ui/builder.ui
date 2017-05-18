@@ -14,7 +14,7 @@
    <string>pandapower gui</string>
   </property>
   <property name="currentIndex">
-   <number>0</number>
+   <number>4</number>
   </property>
   <widget class="QWidget" name="main">
    <attribute name="title">
@@ -475,7 +475,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>130</y>
+      <y>90</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -501,26 +501,13 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>170</y>
+      <y>130</y>
       <width>91</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>Losses Report</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="main_save">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>90</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Save Network</string>
+     <string>Basic Results</string>
     </property>
    </widget>
   </widget>

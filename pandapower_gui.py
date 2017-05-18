@@ -53,7 +53,7 @@ from pandapower.html import _net_to_html as to_html
 #plotting
 import matplotlib.pyplot as plt
 
-from sa_line_types import create_sa_line_types as new_types
+#from sa_line_types import create_sa_line_types as new_types
 
 class QIPythonWidget(RichJupyterWidget):
     """ Convenience class for a live IPython console widget.
@@ -259,7 +259,7 @@ class pandapower_main_window(QTabWidget):
 
     def main_empty_clicked(self):
         self.net = pp.create_empty_network()
-        new_types(self.net)
+        #new_types(self.net)
         self.ipyConsole.pushVariables({"net": self.net})
         self.main_message.setText(
             "New empty network created and available in variable 'net' ")

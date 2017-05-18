@@ -14,17 +14,7 @@ import sip
 
 from itertools import combinations
 from functools import partial
-# try:
-#     import PyQt4
-#     sip.setapi("QString", 2)
-#     sip.setapi("QVariant", 2)
-#     from PyQt4 import uic
-#     from PyQt4.QtGui import *
-#     from PyQt4.QtCore import *
-#     from PyQt4.uic import loadUiType
-#     print("Using PyQt 4")
-#     _WHICH_QT = "4"
-# except ImportError:
+
 from PyQt5 import uic
 from PyQt5 import *
 from PyQt5.QtGui import *
@@ -517,7 +507,6 @@ class pandapower_main_window(QTabWidget):
                 self.DoubleClickAction(event, element, index)
         else:
             self.SingleClickAction(event, element, index)
-
 
 
     def DoubleClickAction(self, event, element, index):

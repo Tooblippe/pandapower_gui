@@ -23,6 +23,7 @@ tutorials/.ipynb_checkpoints
 *.orig
 *.bat
 resources/sa_std_types/*
+sa_mv_types.py
 pandapower/*
 pandapower/plotting/plotly/mapbox_token.txt
 pandapower/plotting/plotly/temp-plot.html

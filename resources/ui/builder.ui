@@ -1159,7 +1159,7 @@
      <rect>
       <x>110</x>
       <y>10</y>
-      <width>221</width>
+      <width>131</width>
       <height>441</height>
      </rect>
     </property>
@@ -1174,22 +1174,9 @@
      </rect>
     </property>
     <property name="title">
-     <string>GroupBox</string>
+     <string>Create</string>
     </property>
     <widget class="QRadioButton" name="Bus">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>82</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Bus</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="Line">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -1199,10 +1186,10 @@
       </rect>
      </property>
      <property name="text">
-      <string>Line</string>
+      <string>Create Bus</string>
      </property>
     </widget>
-    <widget class="QRadioButton" name="Trafo">
+    <widget class="QRadioButton" name="Line">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -1212,7 +1199,36 @@
       </rect>
      </property>
      <property name="text">
-      <string>Trafo</string>
+      <string>Create Line</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="Trafo">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>110</y>
+       <width>82</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Create Trafo</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="Bus_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>82</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Edit Elements</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
    </widget>

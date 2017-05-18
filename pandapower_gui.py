@@ -549,8 +549,8 @@ def splash(n=2):
     splash.hide()
 
 
-if __name__ == '__main__':
-    # temp collections
+def create_dummy_collection():
+     # temp collections
     net = pp.create_empty_network()
     b1 = pp.create_bus(net, 10, geodata=(5, 10))
     b2 = pp.create_bus(net, 0.4, geodata=(5, 15))
@@ -560,8 +560,10 @@ if __name__ == '__main__':
     pp.create_line(net, b2, b3, 2.0, std_type="NAYY 4x50 SE")
     pp.create_line(net, b2, b4, 2.0, std_type="NAYY 4x50 SE")
     pp.create_transformer(net, b1, b2, std_type="0.63 MVA 10/0.4 kV")
-
+    return net
+    
+if __name__ == '__main__':
     app = QApplication(sys.argv)
     splash()
-    window = pandapower_main_window(net)
+    window = pandapower_main_window(create_dummy_collection())
     sys.exit(app.exec_())

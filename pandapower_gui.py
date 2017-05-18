@@ -3,7 +3,7 @@
 # Copyright (c) .....
 # All rights reserved. Use of this source code is governed
 # by a BSD-style license that can be found in the LICENSE file.
-# File created by Tobie Nortje
+# File created by Tobie Nortje ---
 
 
 import sys
@@ -11,6 +11,7 @@ import os
 import time
 import json
 import sip
+
 
 from itertools import combinations
 from functools import partial

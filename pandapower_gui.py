@@ -116,7 +116,7 @@ class add_bus_window(QWidget):
         self.ok.clicked.connect(self.ok_action)
         self.cancel.clicked.connect(self.close)
         
-        if not  geodata: geodata = (10,10)
+        #if not  geodata: geodata = (10,10)
         self.geodata = geodata
         self.index = index
         self.net = net

@@ -114,6 +114,8 @@ class add_bus_window(QWidget):
         uic.loadUi('resources/ui/add_bus.ui', self)
         self.ok.clicked.connect(self.ok_action)
         self.cancel.clicked.connect(self.close)
+        
+        if not  geodata: geodata = (10,10)
         self.geodata = geodata
         self.index = index
         self.net = net
@@ -268,12 +270,17 @@ class pandapower_main_window(QTabWidget):
     def main_load_clicked(self):
         file_to_open = ""
         file_to_open = QFileDialog.getOpenFileName()
-        print(file_to_open)
+        print(file_to_open[0])
         if file_to_open[0] != "":
-            net = None
-            net = pp.from_excel(file_to_open[0], convert=True)
+            self.net = pp.from_excel(file_to_open[0], convert=True)
             #self.net = pn.case1888rte()
+            self.ipyConsole.executeCommand("del(net)")
+            #self.ipyConsole.clearTerminal()
+            self.ipyConsole.printText("-"*40)
+            self.ipyConsole.printText("\nNew net loaded \n")
+            self.ipyConsole.printText("-"*40)+"/n")
             self.ipyConsole.pushVariables({"net": self.net})
+            self.ipyConsole.executeCommand("net")
             self.main_message.setText(str(self.net))
 
     def main_save_clicked(self):
@@ -561,7 +568,7 @@ def create_dummy_collection():
     pp.create_line(net, b2, b4, 2.0, std_type="NAYY 4x50 SE")
     pp.create_transformer(net, b1, b2, std_type="0.63 MVA 10/0.4 kV")
     return net
-    
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     splash()

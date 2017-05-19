@@ -181,9 +181,11 @@ class pandapower_main_window(QTabWidget):
         super(pandapower_main_window, self).__init__()
         uic.loadUi('resources/ui/builder.ui', self)
         self.net = net
-        self.main_message.setText("Welcome to pandapower version: " +
+        self.main_print_message("Welcome to pandapower version: " +
                                   pp.__version__ + "\nQt vesrion: " + _WHICH_QT +
                                   "\nNetwork variable stored in : net")
+
+        self.main_print_message(str(self.net))
         self.embed_interpreter()
 
         # collections builder setup
@@ -202,7 +204,7 @@ class pandapower_main_window(QTabWidget):
         self.main_solve.clicked.connect(self.main_solve_clicked)
         # temp assign to losses
         # self.main_basic.clicked.connect(self.main_basic_clicked)
-        self.main_basic.clicked.connect(self.losses_summary)
+        self.main_losses.clicked.connect(self.losses_summary)
 
         # inspect
         self.inspect_bus.clicked.connect(self.inspect_bus_clicked)
@@ -250,6 +252,15 @@ class pandapower_main_window(QTabWidget):
         # with it
         self.build_lines.clicked.connect(self.build_s_line_clicked)
 
+    def print_line_seperator(self, ch="=", n=40):
+        """ prints some characters """
+        return ch*n+"\n"
+
+    def main_print_message(self, message):
+        #self.main_message.append(self.print_line_seperator())
+        self.main_message.append(message)
+        self.main_message.append(self.print_line_seperator())
+
     def embed_interpreter(self):
         """ embed an Ipyton QT Console Interpreter """
         self.ipyConsole = QIPythonWidget(
@@ -265,8 +276,7 @@ class pandapower_main_window(QTabWidget):
         self.net = pp.create_empty_network()
         #new_types(self.net)
         self.ipyConsole.pushVariables({"net": self.net})
-        self.main_message.setText(
-            "New empty network created and available in variable 'net' ")
+        self.main_print_message("New empty network created and available in variable 'net' ")
 
     def main_load_clicked(self):
         file_to_open = ""
@@ -282,24 +292,32 @@ class pandapower_main_window(QTabWidget):
             self.ipyConsole.printText("-"*40+"\n\n")
             self.ipyConsole.pushVariables({"net": self.net})
             self.ipyConsole.executeCommand("net")
-            self.main_message.setText(str(self.net))
+            self.main_print_message(file_to_open[0] + " loaded")
+            self.main_print_message(str(self.net))
 
     def main_save_clicked(self):
         #filename = QFileDialog.getOpenFileName()
         filename = QFileDialog.getSaveFileName(self, 'Save net')
         print(filename[0])
-        pp.to_excel(self.net, filename[0])
-        self.main_message.setText("saved "+ filename[0])
+        try:
+            pp.to_excel(self.net, filename[0])
+            self.main_print_message("Saved case to: "+ filename[0])
+        except:
+            self.main_print_message("Case not saved, maybe empty?")
 
     def main_solve_clicked(self):
-        if not pp.runpp(self.net):
-            self.main_message.setText(str(self.net))
-        else:
-            self.main_message.setText("Not Solved")
+        try:
+            if not pp.runpp(self.net):
+                self.main_print_message(str(self.net))
+            else:
+                self.main_print_message("Case dit not solve")
+        except:
+            self.main_print_message("Case not solved, or empty case?")
 
-    def main_basic_clicked(self):
-        self.main_message.setText(str(pandapower.lf_info(self.net)))
-        pandapower.lf_info(self.net)
+    # def main_basic_losses(self):
+    #     self.main_message.setText(str(pandapower.lf_info(self.net)))
+    #     #pandapower.lf_info(self.net)
+    #     self.main_print_message( "Losses report generated. Check Report tab.")
 
     def losses_summary(self):
         """ print the losses in each element that has losses """
@@ -329,6 +347,8 @@ class pandapower_main_window(QTabWidget):
         self.report_message.append("% losses")
         loss_pct = losses / total_load_kw['p_kw']
         self.report_message.append(str(abs(loss_pct * 100)))
+        self.main_print_message( "Losses report generated. Check Report tab.")
+
 
     # inspect
     def inspect_bus_clicked(self):

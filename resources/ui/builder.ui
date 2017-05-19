@@ -14,7 +14,7 @@
    <string>pandapower gui</string>
   </property>
   <property name="currentIndex">
-   <number>4</number>
+   <number>0</number>
   </property>
   <widget class="QWidget" name="main">
    <attribute name="title">
@@ -497,7 +497,7 @@
      <string>Empty Network</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="main_basic">
+   <widget class="QPushButton" name="main_losses">
     <property name="geometry">
      <rect>
       <x>10</x>

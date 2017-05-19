@@ -276,7 +276,7 @@ class pandapower_main_window(QTabWidget):
 
     def main_empty_clicked(self):
         self.net = pp.create_empty_network()
-        #new_types(self.net)
+        self.clear_main_collection_builder()
         self.ipyConsole.pushVariables({"net": self.net})
         self.main_print_message("New empty network created and available in variable 'net' ")
 
@@ -502,8 +502,11 @@ class pandapower_main_window(QTabWidget):
         self.collections["load2"] = l2
                         
     def clear_main_collection_builder(self):
-        pass
+        self.ax.clear()
+        print("figure cleard")
+        self.collections = {}
         
+
     def create_main_collections_builder_frame(self):
         self.dpi = 100
         self.fig = plt.Figure()
@@ -522,7 +525,7 @@ class pandapower_main_window(QTabWidget):
     def on_press(self, event):
         self.doubleclick = event.dblclick
         self.last = "clicked"
-        if self.Bus.isChecked():
+        if self.create_bus.isChecked():
             self.build_bus_clicked(geodata=(event.xdata, event.ydata))
 
     def on_pick(self, event):
@@ -553,7 +556,7 @@ class pandapower_main_window(QTabWidget):
         #what to do when single clicking on an element
         if element != "bus":
             return
-        if self.Line.isChecked():
+        if self.create_line.isChecked():
             if self.last_bus is None:
                 self.last_bus = index
             elif self.last_bus != index:
@@ -561,7 +564,7 @@ class pandapower_main_window(QTabWidget):
                 self.last_bus = None
                 self.update_line_collection()
                 self.draw_collections()
-        if self.Trafo.isChecked():
+        if self.create_trafo.isChecked():
             if self.last_bus is None:
                 self.last_bus = index
             elif self.last_bus != index:

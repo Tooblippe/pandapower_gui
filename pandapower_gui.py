@@ -483,22 +483,22 @@ class pandapower_main_window(QTabWidget):
         self.canvas.draw()
 
     def update_bus_collection(self, redraw=False):
-        self.collections["bus"] = plot.create_bus_collection(self.net, size=0.2, zorder=2, picker=True,
-                                                             color="k", infofunc=lambda x: ("bus", x))
+        self.collections["bus"] = plot.create_bus_collection(self.net, size=0.15, zorder=2, picker=True,
+                                                             color="k",patch_type="rect", infofunc=lambda x: ("bus", x))
         if redraw:
             self.draw_collections()
             
     def update_line_collection(self):
-        self.collections["line"] = plot.create_line_collection(self.net, zorder=1, linewidths=2,
+        self.collections["line"] = plot.create_line_collection(self.net, zorder=1, linewidths=1,
                                                                picker=False, use_line_geodata=False, color="k")
 
     def update_trafo_collections(self):
-        t1, t2 = plot.create_trafo_symbol_collection(self.net)
+        t1, t2 = plot.create_trafo_symbol_collection(self.net, size=0.2)
         self.collections["trafo1"] = t1
         self.collections["trafo2"] = t2
 
     def update_load_collections(self):
-        l1, l2 = plot.create_load_symbol_collection(self.net)
+        l1, l2 = plot.create_load_symbol_collection(self.net,size=0.25)
         self.collections["load1"] = l1
         self.collections["load2"] = l2
                         

@@ -21,6 +21,7 @@ from PyQt5 import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+
 print("Using PyQt 5")
 _WHICH_QT = "5"
 _GUI_VERSION = "dev 0"
@@ -503,8 +504,9 @@ class pandapower_main_window(QTabWidget):
                         
     def clear_main_collection_builder(self):
         self.ax.clear()
-        print("figure cleard")
+        print("figure cleared")
         self.collections = {}
+        self.draw_collections()
         
 
     def create_main_collections_builder_frame(self):

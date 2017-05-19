@@ -1173,7 +1173,7 @@
      <string>Ward</string>
     </property>
    </widget>
-   <widget class="QTextBrowser" name="buidl_message">
+   <widget class="QTextBrowser" name="build_message">
     <property name="geometry">
      <rect>
       <x>10</x>

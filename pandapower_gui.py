@@ -562,7 +562,9 @@ class pandapower_main_window(QTabWidget):
             if self.last_bus is None:
                 self.last_bus = index
             elif self.last_bus != index:
-                pp.create_line(self.net, self.last_bus, index, length_km=1.0, std_type="NAYY 4x50 SE")
+                #pp.create_line(self.net, self.last_bus, index, length_km=1.0, std_type="NAYY 4x50 SE")
+                self.build_message.setText(str(self.last_bus)+"-"+str(index))
+                self.build_s_line_clicked()
                 self.last_bus = None
                 self.update_line_collection()
                 self.draw_collections()

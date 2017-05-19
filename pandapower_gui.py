@@ -280,6 +280,7 @@ class pandapower_main_window(QTabWidget):
         self.ipyConsole.pushVariables({"net": self.net})
         self.main_print_message("New empty network created and available in variable 'net' ")
 
+
     def main_load_clicked(self):
         file_to_open = ""
         file_to_open = QFileDialog.getOpenFileName()
@@ -500,6 +501,9 @@ class pandapower_main_window(QTabWidget):
         self.collections["load1"] = l1
         self.collections["load2"] = l2
                         
+    def clear_main_collection_builder(self):
+        pass
+        
     def create_main_collections_builder_frame(self):
         self.dpi = 100
         self.fig = plt.Figure()
@@ -509,7 +513,7 @@ class pandapower_main_window(QTabWidget):
         # when a button is pressed on the canvas?
         self.canvas.mpl_connect('button_press_event', self.on_press)
         self.canvas.mpl_connect('pick_event', self.on_pick)
-        mpl_toolbar = NavigationToolbar(self.canvas, self.main_frame)
+        mpl_toolbar = NavigationToolbar(self.canvas, self.main_build_frame)
         self.gridLayout.addWidget(self.canvas)
         self.gridLayout.addWidget(mpl_toolbar)
         self.fig.subplots_adjust(

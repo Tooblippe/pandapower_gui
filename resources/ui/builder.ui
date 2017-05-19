@@ -14,7 +14,7 @@
    <string>pandapower gui</string>
   </property>
   <property name="currentIndex">
-   <number>5</number>
+   <number>4</number>
   </property>
   <widget class="QWidget" name="main">
    <attribute name="title">
@@ -1254,7 +1254,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="main_frame" native="true">
+   <widget class="QWidget" name="main_build_frame" native="true">
     <property name="geometry">
      <rect>
       <x>240</x>

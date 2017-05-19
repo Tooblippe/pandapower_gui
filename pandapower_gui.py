@@ -23,7 +23,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 print("Using PyQt 5")
 _WHICH_QT = "5"
-
+_GUI_VERSION = "dev 0"
 
 # interpreter
 #from qtconsole.rich_ipython_widget import RichJupyterWidget as RichIPythonWidget
@@ -183,6 +183,7 @@ class pandapower_main_window(QTabWidget):
         self.net = net
         self.main_print_message("Welcome to pandapower version: " +
                                   pp.__version__ + "\nQt vesrion: " + _WHICH_QT +
+                                  "\nGUI version: "+_GUI_VERSION  + "\n"
                                   "\nNetwork variable stored in : net")
 
         self.main_print_message(str(self.net))
@@ -193,7 +194,8 @@ class pandapower_main_window(QTabWidget):
         self.create_main_collections_builder_frame()
         self.initialize_collections_plot()
         self.doubleclick = False
-        # show
+        # set firtst tab
+        self.setCurrentIndex(0)
         self.show()
 
         # signals

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1058</width>
+    <width>987</width>
     <height>624</height>
    </rect>
   </property>
@@ -14,7 +14,7 @@
    <string>pandapower gui</string>
   </property>
   <property name="currentIndex">
-   <number>0</number>
+   <number>5</number>
   </property>
   <widget class="QWidget" name="main">
    <attribute name="title">
@@ -39,7 +39,7 @@
       <x>110</x>
       <y>10</y>
       <width>861</width>
-      <height>541</height>
+      <height>581</height>
      </rect>
     </property>
     <property name="palette">
@@ -467,6 +467,9 @@
     <property name="cursor" stdset="0">
      <cursorShape>ArrowCursor</cursorShape>
     </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
     <property name="frameShadow">
      <enum>QFrame::Plain</enum>
     </property>
@@ -534,8 +537,11 @@
       <x>110</x>
       <y>10</y>
       <width>861</width>
-      <height>541</height>
+      <height>581</height>
      </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
     </property>
    </widget>
    <widget class="QPushButton" name="inspect_lines">
@@ -743,8 +749,8 @@
      <rect>
       <x>110</x>
       <y>10</y>
-      <width>871</width>
-      <height>551</height>
+      <width>861</width>
+      <height>581</height>
      </rect>
     </property>
     <property name="url">
@@ -1170,18 +1176,21 @@
    <widget class="QTextBrowser" name="buidl_message">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>10</y>
-      <width>141</width>
-      <height>441</height>
+      <x>10</x>
+      <y>470</y>
+      <width>221</width>
+      <height>131</height>
      </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
     </property>
    </widget>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>20</y>
+      <x>100</x>
+      <y>10</y>
       <width>120</width>
       <height>141</height>
      </rect>
@@ -1248,10 +1257,10 @@
    <widget class="QWidget" name="main_frame" native="true">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>240</x>
       <y>10</y>
-      <width>791</width>
-      <height>551</height>
+      <width>801</width>
+      <height>581</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -1270,10 +1279,10 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
+      <x>130</x>
+      <y>20</y>
       <width>711</width>
-      <height>521</height>
+      <height>561</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="interpreter_vbox"/>
@@ -1286,11 +1295,14 @@
    <widget class="QTextBrowser" name="report_message">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>30</y>
-      <width>631</width>
-      <height>451</height>
+      <x>120</x>
+      <y>10</y>
+      <width>851</width>
+      <height>571</height>
      </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
     </property>
    </widget>
   </widget>
@@ -1303,8 +1315,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>951</width>
-      <height>551</height>
+      <width>961</width>
+      <height>581</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_6">

@@ -4,6 +4,7 @@ A Graphical User Interface for the open source [pandapower](https://github.com/l
 ## Installation
 * Download this repo
 * Using git clone
+* This was typed on the repo
 
 ## How to run
 - this was typed in editor

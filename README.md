@@ -6,6 +6,7 @@ A Graphical User Interface for the open source [pandapower](https://github.com/l
 * Using git clone
 
 ## How to run
+- this was typed in editor
 It is important for now to run using the `python` interpreter.  It embeds an `IPython` console so if run from `IPython` or from somewhere were the `IPyton Qt Widget` is already running an error will be produced. See this [Multiple incompatible subclass instances of InProcessInteractiveShell](http://stackoverflow.com/questions/20243754/multiple-incompatible-subclass-instances-of-interactiveshellembed-are-being-crea)vv
 
 ```

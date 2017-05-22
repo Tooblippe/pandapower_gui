@@ -16,6 +16,7 @@ tutorials/.ipynb_checkpoints
 .vs
 .vscode
 .vscode/
+.vscode/*
 *.pyproj
 *.user
 *.sln

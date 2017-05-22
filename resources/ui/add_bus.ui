@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>852</width>
+    <width>853</width>
     <height>467</height>
    </rect>
   </property>
@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -34,20 +34,20 @@
       <rect>
        <x>15</x>
        <y>14</y>
-       <width>47</width>
-       <height>13</height>
+       <width>121</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="text">
-      <string>vn_kv</string>
+      <string>Bus Voltage - vn_kv</string>
      </property>
     </widget>
     <widget class="QTextEdit" name="vn_kv">
      <property name="geometry">
       <rect>
-       <x>48</x>
-       <y>12</y>
-       <width>51</width>
+       <x>130</x>
+       <y>10</y>
+       <width>131</width>
        <height>21</height>
       </rect>
      </property>
@@ -71,15 +71,15 @@
       </rect>
      </property>
      <property name="text">
-      <string>name</string>
+      <string>Bus Name</string>
      </property>
     </widget>
     <widget class="QTextEdit" name="name">
      <property name="geometry">
       <rect>
-       <x>50</x>
+       <x>130</x>
        <y>40</y>
-       <width>171</width>
+       <width>131</width>
        <height>21</height>
       </rect>
      </property>
@@ -88,6 +88,19 @@
      </property>
      <property name="verticalScrollBarPolicy">
       <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="vn_kv_label_2">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>10</y>
+       <width>121</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>[kV]</string>
      </property>
     </widget>
    </widget>

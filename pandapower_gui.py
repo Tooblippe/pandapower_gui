@@ -144,19 +144,22 @@ class add_s_line_window(QWidget):
     def __init__(self, net):
         super(add_s_line_window, self).__init__()
         uic.loadUi('resources/ui/add_s_line.ui', self)
-        self.add_s_line.clicked.connect(self.add_s_line_clicked)
+        for stdType in pp.std_types.available_std_types(net).index:
+            self.standard_type.addItem(stdType)
+        self.ok.clicked.connect(self.ok_action)
         self.net = net
 
-    def add_s_line_clicked(self):
+    def ok_action(self):
         """ Adds a line """
         from_bus = int(self.from_bus.toPlainText())
         to_bus = int(self.to_bus.toPlainText())
         length_km = float(self.length_km.toPlainText())
-        standard_type = self.standard_type.toPlainText()
+        standard_type = self.standard_type.currentText()
         name = self.name.toPlainText()
         message = pp.create_line(self.net, from_bus=from_bus, to_bus=to_bus,
                                  length_km=length_km, std_type=standard_type, name=name)
         print(message)
+        self.close()
 
 
 class add_load_window(QWidget):
@@ -176,7 +179,7 @@ class add_load_window(QWidget):
         print(message)
 
 
-class pandapower_main_window(QTabWidget):
+class pandapower_main_window(QMainWindow):
     """ Create main window """
     def __init__(self, net):
         super(pandapower_main_window, self).__init__()
@@ -196,7 +199,7 @@ class pandapower_main_window(QTabWidget):
         self.initialize_collections_plot()
         self.doubleclick = False
         # set firtst tab
-        self.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(0)
         self.show()
 
         # signals
@@ -553,6 +556,8 @@ class pandapower_main_window(QTabWidget):
         self.last = "doublecklicked"
         if element == "bus":
             self.build_bus_clicked(geodata=None, index=index)
+        if element == "line":
+            self.build_s_line_clicked()
 
     def SingleClickAction(self, event, element, index):
         #what to do when single clicking on an element

@@ -44,7 +44,8 @@ _WHICH_QT = "5"
 _GUI_VERSION = "dev 0"
 
 class QIPythonWidget(RichJupyterWidget):
-    """ Convenience class for a live IPython console widget.
+    """
+        Convenience class for a live IPython console widget.
         We can replace the standard banner using the customBanner argument
     """
 
@@ -83,16 +84,14 @@ class QIPythonWidget(RichJupyterWidget):
         """ Execute a command in the frame of the console widget """
         self._execute(command, False)
 
-class extGridDialog(QWidget):
+class addExtGridDialog(QWidget):
     """ add external grid window """
-
     def __init__(self, net):
-        super(extGridDialog, self).__init__()
+        super(addExtGridDialog, self).__init__()
         uic.loadUi('resources/ui/add_ext_grid.ui', self)
-        self.add_ext_grid.clicked.connect(self.add_ext_grid_clicked)
+        self.add_ext_grid.clicked.connect(self.gridOkAction)
         self.net = net
-
-    def add_ext_grid_clicked(self):
+    def gridOkAction(self):
         """ Add the external grid """
         #(0,0) = (1,1)
         bus = self.parameter_table.item(1, 2)
@@ -104,12 +103,12 @@ class extGridDialog(QWidget):
         print(message)
 
 
-class add_bus_window(QWidget):
+class addBusDialog(QWidget):
     """ add a bus """
     def __init__(self, net, geodata, update, index=None):
-        super(add_bus_window, self).__init__()
+        super(addBusDialog, self).__init__()
         uic.loadUi('resources/ui/add_bus.ui', self)
-        self.ok.clicked.connect(self.ok_action)
+        self.ok.clicked.connect(self.busOkAction)
         self.cancel.clicked.connect(self.close)
         #if not  geodata: geodata = (10,10)
         self.geodata = geodata
@@ -119,8 +118,7 @@ class add_bus_window(QWidget):
         if self.index is not None:
             self.vn_kv.setText(str(self.net.bus.vn_kv.at[self.index]))
             self.name.setText(str(self.net.bus.name.at[self.index]))
-
-    def ok_action(self):
+    def busOkAction(self):
         """ Add a bus """
         vn_kv = self.vn_kv.toPlainText()
         name = self.name.toPlainText()
@@ -134,7 +132,6 @@ class add_bus_window(QWidget):
 
 class addStandardLineDialog(QWidget):
     """ add a standard line """
-
     def __init__(self, net):
         super(addStandardLineDialog, self).__init__()
         uic.loadUi('resources/ui/add_s_line.ui', self)
@@ -143,10 +140,9 @@ class addStandardLineDialog(QWidget):
         for availableBus in net.bus.index:
             self.from_bus.addItem(str(availableBus))
             self.to_bus.addItem(str(availableBus))
-        self.ok.clicked.connect(self.ok_action)
+        self.ok.clicked.connect(self.standardLineOkAction)
         self.net = net
-
-    def ok_action(self):
+    def standardLineOkAction(self):
         """ Adds a line """
         from_bus = int(self.from_bus.currentText())
         to_bus = int(self.to_bus.currentText())
@@ -164,28 +160,29 @@ class addLoadDialog(QWidget):
     def __init__(self, net):
         super(addLoadDialog, self).__init__()
         uic.loadUi('resources/ui/add_load.ui', self)
-        self.add_load.clicked.connect(self.add_load_clicked)
+        self.add_load.clicked.connect(self.loadOkAction)
         self.net = net
-
-    def add_load_clicked(self):
+    def loadOkAction(self):
         """ add a load """
         print(self.net.bus)
         message = pp.create_load(net=self.net, bus=int(self.bus_number.toPlainText()),
                                  p_kw=self.p_kw.toPlainText(), q_kvar=self.q_kvar.toPlainText())
         print(message)
 
-
 class mainWindow(QMainWindow):
     """ Create main window """
     def __init__(self, net):
         super(mainWindow, self).__init__()
         uic.loadUi('resources/ui/builder.ui', self)
-        
+
         self.net = net
         self.mainPrintMessage("Welcome to pandapower version: " +
-                                  pp.__version__ + "\nQt vesrion: " + _WHICH_QT +
-                                  "\nGUI version: "+_GUI_VERSION  + "\n"
-                                  "\nNetwork variable stored in : net")
+                              pp.__version__ + 
+                              "\nQt vesrion: " + 
+                              _WHICH_QT +
+                              "\nGUI version: " +
+                              _GUI_VERSION  + "\n" +
+                              "\nNetwork variable stored in : net")
 
         self.mainPrintMessage(str(self.net))
         self.embedIpythonInterpreter()
@@ -205,8 +202,6 @@ class mainWindow(QMainWindow):
         self.main_load.clicked.connect(self.mainLoadClicked)
         self.main_save.clicked.connect(self.mainSaveClicked)
         self.main_solve.clicked.connect(self.mainSolveClicked)
-        # temp assign to losses
-        # self.main_basic.clicked.connect(self.main_basic_clicked)
         self.main_losses.clicked.connect(self.lossesSummary)
 
         # inspect
@@ -228,12 +223,11 @@ class mainWindow(QMainWindow):
             self.inspect_measurement_clicked)
 
         # html
-        self.html_show.clicked.connect(self.showNetHtml)
+        self.html_show.clicked.connect(self.showHtmlReport)
 
         # results
         self.res_bus.clicked.connect(self.res_bus_clicked)
         self.res_lines.clicked.connect(self.res_lines_clicked)
-        # self.res_switch.clicked.connect(self.res_switch_clicked)
         self.res_load.clicked.connect(self.res_load_clicked)
         self.res_sgen.clicked.connect(self.res_sgen_clicked)
         self.res_ext_grid.clicked.connect(self.res_ext_grid_clicked)
@@ -245,7 +239,6 @@ class mainWindow(QMainWindow):
         self.res_ward.clicked.connect(self.res_ward_clicked)
         self.res_xward.clicked.connect(self.res_xward_clicked)
         self.res_dcline.clicked.connect(self.res_dcline_clicked)
-        # self.res_measurement.clicked.connect(self.res_measurement_clicked)
 
         # build
         self.build_ext_grid.clicked.connect(self.buildExtGridClicked)
@@ -265,7 +258,10 @@ class mainWindow(QMainWindow):
     def embedIpythonInterpreter(self):
         """ embed an Ipyton QT Console Interpreter """
         self.ipyConsole = QIPythonWidget(
-            customBanner="Welcome to the pandapower console\nType whos to get lit of variables \n =========== \n")
+            customBanner="""Welcome to the pandapower console\nType
+                            whos to get lit of variables
+                            \n =========== \n""")
+
         self.interpreter_vbox.addWidget(self.ipyConsole)
         self.ipyConsole.pushVariables({"net": self.net, "pp": pp})
 
@@ -278,7 +274,6 @@ class mainWindow(QMainWindow):
         self.clearMainCollectionBuilder()
         self.ipyConsole.pushVariables({"net": self.net})
         self.mainPrintMessage("New empty network created and available in variable 'net' ")
-
 
     def mainLoadClicked(self):
         file_to_open = ""
@@ -315,11 +310,6 @@ class mainWindow(QMainWindow):
                 self.mainPrintMessage("Case dit not solve")
         except:
             self.mainPrintMessage("Case not solved, or empty case?")
-
-    # def main_basic_losses(self):
-    #     self.main_message.setText(str(pandapower.lf_info(self.net)))
-    #     #pandapower.lf_info(self.net)
-    #     self.mainPrintMessage( "Losses report generated. Check Report tab.")
 
     def lossesSummary(self):
         """ print the losses in each element that has losses """
@@ -396,7 +386,7 @@ class mainWindow(QMainWindow):
         self.inspect_message.setText(str(self.net.measurement.to_html()))
 
     # html
-    def showNetHtml(self):
+    def showHtmlReport(self):
         self.html_webview.setHtml(to_html(self.net))
 
     # res
@@ -444,12 +434,12 @@ class mainWindow(QMainWindow):
 
     # build
     def buildExtGridClicked(self):
-        self.build_ext_grid_window = extGridDialog(self.net)
+        self.build_ext_grid_window = addExtGridDialog(self.net)
         self.build_ext_grid_window.show()
 
     def buildBusClicked(self, geodata, index=None):
-        self.build_bus_window = add_bus_window(self.net, geodata=geodata, index=index,
-                                               update=self.updateBusCollection)
+        self.build_bus_window = addBusDialog(self.net, geodata=geodata, index=index,
+                                              update=self.updateBusCollection)
         self.build_bus_window.show()
 
     def buildLoadClicked(self):
@@ -481,8 +471,10 @@ class mainWindow(QMainWindow):
         self.canvas.draw()
 
     def updateBusCollection(self, redraw=False):
-        self.collections["bus"] = plot.create_bus_collection(self.net, size=0.15, zorder=2, picker=True,
-                                                             color="k",patch_type="rect", infofunc=lambda x: ("bus", x))
+        self.collections["bus"] = \
+        plot.create_bus_collection(self.net, size=0.15, zorder=2, picker=True,
+                                   color="k", patch_type="rect", 
+                                   infofunc=lambda x: ("bus", x))
         if redraw:
             self.drawCollections()
             

@@ -116,7 +116,6 @@ class add_bus_window(QWidget):
         uic.loadUi('resources/ui/add_bus.ui', self)
         self.ok.clicked.connect(self.ok_action)
         self.cancel.clicked.connect(self.close)
-        
         #if not  geodata: geodata = (10,10)
         self.geodata = geodata
         self.index = index
@@ -144,15 +143,18 @@ class add_s_line_window(QWidget):
     def __init__(self, net):
         super(add_s_line_window, self).__init__()
         uic.loadUi('resources/ui/add_s_line.ui', self)
-        for stdType in pp.std_types.available_std_types(net).index:
-            self.standard_type.addItem(stdType)
+        for stdLineType in pp.std_types.available_std_types(net).index:
+            self.standard_type.addItem(stdLineType)
+        for availableBus in net.bus.index:
+            self.from_bus.addItem(str(availableBus))
+            self.to_bus.addItem(str(availableBus))
         self.ok.clicked.connect(self.ok_action)
         self.net = net
 
     def ok_action(self):
         """ Adds a line """
-        from_bus = int(self.from_bus.toPlainText())
-        to_bus = int(self.to_bus.toPlainText())
+        from_bus = int(self.from_bus.currentText())
+        to_bus = int(self.to_bus.currentText())
         length_km = float(self.length_km.toPlainText())
         standard_type = self.standard_type.currentText()
         name = self.name.toPlainText()

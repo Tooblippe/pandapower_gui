@@ -11,25 +11,17 @@ import os
 import time
 import json
 import sip
-
-
 from itertools import combinations
 from functools import partial
-
 from PyQt5 import uic
 from PyQt5 import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-print("Using PyQt 5")
-_WHICH_QT = "5"
-_GUI_VERSION = "dev 0"
-
 # interpreter
 #from qtconsole.rich_ipython_widget import RichJupyterWidget as RichIPythonWidget
 from qtconsole.rich_jupyter_widget import RichJupyterWidget
-
 from qtconsole.inprocess import QtInProcessKernelManager
 from IPython.lib import guisupport
 
@@ -47,6 +39,9 @@ from pandapower.html import _net_to_html as to_html
 import matplotlib.pyplot as plt
 
 #from sa_line_types import create_sa_line_types as new_types
+print("Using PyQt 5")
+_WHICH_QT = "5"
+_GUI_VERSION = "dev 0"
 
 class QIPythonWidget(RichJupyterWidget):
     """ Convenience class for a live IPython console widget.
@@ -88,11 +83,11 @@ class QIPythonWidget(RichJupyterWidget):
         """ Execute a command in the frame of the console widget """
         self._execute(command, False)
 
-class add_ext_grid_window(QWidget):
+class extGridDialog(QWidget):
     """ add external grid window """
 
     def __init__(self, net):
-        super(add_ext_grid_window, self).__init__()
+        super(extGridDialog, self).__init__()
         uic.loadUi('resources/ui/add_ext_grid.ui', self)
         self.add_ext_grid.clicked.connect(self.add_ext_grid_clicked)
         self.net = net
@@ -137,11 +132,11 @@ class add_bus_window(QWidget):
         self.close()
 
 
-class add_s_line_window(QWidget):
+class addStandardLineDialog(QWidget):
     """ add a standard line """
 
     def __init__(self, net):
-        super(add_s_line_window, self).__init__()
+        super(addStandardLineDialog, self).__init__()
         uic.loadUi('resources/ui/add_s_line.ui', self)
         for stdLineType in pp.std_types.available_std_types(net).index:
             self.standard_type.addItem(stdLineType)
@@ -164,11 +159,10 @@ class add_s_line_window(QWidget):
         self.close()
 
 
-class add_load_window(QWidget):
+class addLoadDialog(QWidget):
     """ load window """
-
     def __init__(self, net):
-        super(add_load_window, self).__init__()
+        super(addLoadDialog, self).__init__()
         uic.loadUi('resources/ui/add_load.ui', self)
         self.add_load.clicked.connect(self.add_load_clicked)
         self.net = net
@@ -181,38 +175,39 @@ class add_load_window(QWidget):
         print(message)
 
 
-class pandapower_main_window(QMainWindow):
+class mainWindow(QMainWindow):
     """ Create main window """
     def __init__(self, net):
-        super(pandapower_main_window, self).__init__()
+        super(mainWindow, self).__init__()
         uic.loadUi('resources/ui/builder.ui', self)
+        
         self.net = net
-        self.main_print_message("Welcome to pandapower version: " +
+        self.mainPrintMessage("Welcome to pandapower version: " +
                                   pp.__version__ + "\nQt vesrion: " + _WHICH_QT +
                                   "\nGUI version: "+_GUI_VERSION  + "\n"
                                   "\nNetwork variable stored in : net")
 
-        self.main_print_message(str(self.net))
-        self.embed_interpreter()
+        self.mainPrintMessage(str(self.net))
+        self.embedIpythonInterpreter()
 
         # collections builder setup
-        self.last_bus = None
-        self.create_main_collections_builder_frame()
-        self.initialize_collections_plot()
-        self.doubleclick = False
+        self.lastBusSelected = None
+        self.embedCollectionsBuilder()
+        self.initialiseCollectionsPlot()
+        self.collectionsDoubleClick = False
         # set firtst tab
         self.tabWidget.setCurrentIndex(0)
         self.show()
 
         # signals
         # main
-        self.main_empty.clicked.connect(self.main_empty_clicked)
-        self.main_load.clicked.connect(self.main_load_clicked)
-        self.main_save.clicked.connect(self.main_save_clicked)
-        self.main_solve.clicked.connect(self.main_solve_clicked)
+        self.main_empty.clicked.connect(self.mainEmptyClicked)
+        self.main_load.clicked.connect(self.mainLoadClicked)
+        self.main_save.clicked.connect(self.mainSaveClicked)
+        self.main_solve.clicked.connect(self.mainSolveClicked)
         # temp assign to losses
         # self.main_basic.clicked.connect(self.main_basic_clicked)
-        self.main_losses.clicked.connect(self.losses_summary)
+        self.main_losses.clicked.connect(self.lossesSummary)
 
         # inspect
         self.inspect_bus.clicked.connect(self.inspect_bus_clicked)
@@ -233,7 +228,7 @@ class pandapower_main_window(QMainWindow):
             self.inspect_measurement_clicked)
 
         # html
-        self.html_show.clicked.connect(self.show_report)
+        self.html_show.clicked.connect(self.showNetHtml)
 
         # results
         self.res_bus.clicked.connect(self.res_bus_clicked)
@@ -253,41 +248,39 @@ class pandapower_main_window(QMainWindow):
         # self.res_measurement.clicked.connect(self.res_measurement_clicked)
 
         # build
-        self.build_ext_grid.clicked.connect(self.build_ext_grid_clicked)
-        self.build_bus.clicked.connect(self.build_bus_clicked)
-        self.build_load.clicked.connect(self.build_load_clicked)
-        # need to split lines and parameter lines.. change the form to deal
-        # with it
-        self.build_lines.clicked.connect(self.build_s_line_clicked)
+        self.build_ext_grid.clicked.connect(self.buildExtGridClicked)
+        self.build_bus.clicked.connect(self.buildBusClicked)
+        self.build_load.clicked.connect(self.buildLoadClicked)
+        self.build_lines.clicked.connect(self.buildSLineClicked)
 
-    def print_line_seperator(self, ch="=", n=40):
+    def printLineSeperator(self, ch="=", n=40):
         """ prints some characters """
         return ch*n+"\n"
 
-    def main_print_message(self, message):
-        #self.main_message.append(self.print_line_seperator())
+    def mainPrintMessage(self, message):
+        #self.main_message.append(self.printLineSeperator())
         self.main_message.append(message)
-        self.main_message.append(self.print_line_seperator())
+        self.main_message.append(self.printLineSeperator())
 
-    def embed_interpreter(self):
+    def embedIpythonInterpreter(self):
         """ embed an Ipyton QT Console Interpreter """
         self.ipyConsole = QIPythonWidget(
             customBanner="Welcome to the pandapower console\nType whos to get lit of variables \n =========== \n")
         self.interpreter_vbox.addWidget(self.ipyConsole)
         self.ipyConsole.pushVariables({"net": self.net, "pp": pp})
 
-    def embed_collections_builder(self):
+    def embedCollectionsBuilder(self):
         self.network_builder = QNetworkBuilderWidget(self.net)
         self.build_vbox.addWidget(self.network_builder)
 
-    def main_empty_clicked(self):
+    def mainEmptyClicked(self):
         self.net = pp.create_empty_network()
-        self.clear_main_collection_builder()
+        self.clearMainCollectionBuilder()
         self.ipyConsole.pushVariables({"net": self.net})
-        self.main_print_message("New empty network created and available in variable 'net' ")
+        self.mainPrintMessage("New empty network created and available in variable 'net' ")
 
 
-    def main_load_clicked(self):
+    def mainLoadClicked(self):
         file_to_open = ""
         file_to_open = QFileDialog.getOpenFileName()
         print(file_to_open[0])
@@ -301,34 +294,34 @@ class pandapower_main_window(QMainWindow):
             self.ipyConsole.printText("-"*40+"\n\n")
             self.ipyConsole.pushVariables({"net": self.net})
             self.ipyConsole.executeCommand("net")
-            self.main_print_message(file_to_open[0] + " loaded")
-            self.main_print_message(str(self.net))
+            self.mainPrintMessage(file_to_open[0] + " loaded")
+            self.mainPrintMessage(str(self.net))
 
-    def main_save_clicked(self):
+    def mainSaveClicked(self):
         #filename = QFileDialog.getOpenFileName()
         filename = QFileDialog.getSaveFileName(self, 'Save net')
         print(filename[0])
         try:
             pp.to_excel(self.net, filename[0])
-            self.main_print_message("Saved case to: "+ filename[0])
+            self.mainPrintMessage("Saved case to: "+ filename[0])
         except:
-            self.main_print_message("Case not saved, maybe empty?")
+            self.mainPrintMessage("Case not saved, maybe empty?")
 
-    def main_solve_clicked(self):
+    def mainSolveClicked(self):
         try:
             if not pp.runpp(self.net):
-                self.main_print_message(str(self.net))
+                self.mainPrintMessage(str(self.net))
             else:
-                self.main_print_message("Case dit not solve")
+                self.mainPrintMessage("Case dit not solve")
         except:
-            self.main_print_message("Case not solved, or empty case?")
+            self.mainPrintMessage("Case not solved, or empty case?")
 
     # def main_basic_losses(self):
     #     self.main_message.setText(str(pandapower.lf_info(self.net)))
     #     #pandapower.lf_info(self.net)
-    #     self.main_print_message( "Losses report generated. Check Report tab.")
+    #     self.mainPrintMessage( "Losses report generated. Check Report tab.")
 
-    def losses_summary(self):
+    def lossesSummary(self):
         """ print the losses in each element that has losses """
         # get total losses
         losses = 0.0
@@ -356,7 +349,7 @@ class pandapower_main_window(QMainWindow):
         self.report_message.append("% losses")
         loss_pct = losses / total_load_kw['p_kw']
         self.report_message.append(str(abs(loss_pct * 100)))
-        self.main_print_message( "Losses report generated. Check Report tab.")
+        self.mainPrintMessage("Losses report generated. Check Report tab.")
 
 
     # inspect
@@ -403,7 +396,7 @@ class pandapower_main_window(QMainWindow):
         self.inspect_message.setText(str(self.net.measurement.to_html()))
 
     # html
-    def show_report(self):
+    def showNetHtml(self):
         self.html_webview.setHtml(to_html(self.net))
 
     # res
@@ -450,144 +443,144 @@ class pandapower_main_window(QMainWindow):
     #    self.res_message.setHtml(str(self.net.res_measurement.to_html()))
 
     # build
-    def build_ext_grid_clicked(self):
-        self.build_ext_grid_window = add_ext_grid_window(self.net)
+    def buildExtGridClicked(self):
+        self.build_ext_grid_window = extGridDialog(self.net)
         self.build_ext_grid_window.show()
 
-    def build_bus_clicked(self, geodata, index=None):
+    def buildBusClicked(self, geodata, index=None):
         self.build_bus_window = add_bus_window(self.net, geodata=geodata, index=index,
-                                               update=self.update_bus_collection)
+                                               update=self.updateBusCollection)
         self.build_bus_window.show()
 
-    def build_load_clicked(self):
-        self.build_load_window = add_load_window(self.net)
+    def buildLoadClicked(self):
+        self.build_load_window = addLoadDialog(self.net)
         self.build_load_window.show()
 
-    def build_s_line_clicked(self):
-        self.build_s_line_window = add_s_line_window(self.net)
+    def buildSLineClicked(self):
+        self.build_s_line_window = addStandardLineDialog(self.net)
         self.build_s_line_window.show()
 
     # collections
-    def initialize_collections_plot(self):
+    def initialiseCollectionsPlot(self):
         self.collections = {}
-        # if not self.last_bus is None:
-        self.update_bus_collection()
-        self.update_line_collection()
-        self.update_trafo_collections()
-        self.update_load_collections()
-        self.draw_collections()
+        # if not self.lastBusSelected is None:
+        self.updateBusCollection()
+        self.updateLineCollection()
+        self.updateTrafoCollections()
+        self.updateLoadCollections()
+        self.drawCollections()
         self.ax.xaxis.set_visible(False)
         self.ax.yaxis.set_visible(False)
         self.ax.set_aspect('equal', 'datalim')
         self.ax.autoscale_view(True, True, True)
 
-    def draw_collections(self):
+    def drawCollections(self):
         self.ax.clear()
         for name, c in self.collections.items():
             self.ax.add_collection(c)
         self.canvas.draw()
 
-    def update_bus_collection(self, redraw=False):
+    def updateBusCollection(self, redraw=False):
         self.collections["bus"] = plot.create_bus_collection(self.net, size=0.15, zorder=2, picker=True,
                                                              color="k",patch_type="rect", infofunc=lambda x: ("bus", x))
         if redraw:
-            self.draw_collections()
+            self.drawCollections()
             
-    def update_line_collection(self):
+    def updateLineCollection(self):
         self.collections["line"] = plot.create_line_collection(self.net, zorder=1, linewidths=1,
                                                                picker=False, use_line_geodata=False, color="k")
 
-    def update_trafo_collections(self):
+    def updateTrafoCollections(self):
         t1, t2 = plot.create_trafo_symbol_collection(self.net, size=0.2)
         self.collections["trafo1"] = t1
         self.collections["trafo2"] = t2
 
-    def update_load_collections(self):
+    def updateLoadCollections(self):
         l1, l2 = plot.create_load_symbol_collection(self.net,size=0.25)
         self.collections["load1"] = l1
         self.collections["load2"] = l2
                         
-    def clear_main_collection_builder(self):
+    def clearMainCollectionBuilder(self):
         self.ax.clear()
         print("figure cleared")
         self.collections = {}
-        self.draw_collections()
+        self.drawCollections()
         
 
-    def create_main_collections_builder_frame(self):
+    def embedCollectionsBuilder(self):
         self.dpi = 100
         self.fig = plt.Figure()
         self.canvas = FigureCanvas(self.fig)
         self.ax = self.fig.add_subplot(111)
 #        self.ax.set_axis_bgcolor("white")
         # when a button is pressed on the canvas?
-        self.canvas.mpl_connect('button_press_event', self.on_press)
-        self.canvas.mpl_connect('pick_event', self.on_pick)
+        self.canvas.mpl_connect('button_press_event', self.onCollectionsClick)
+        self.canvas.mpl_connect('pick_event', self.onCollectionsPick)
         mpl_toolbar = NavigationToolbar(self.canvas, self.main_build_frame)
         self.gridLayout.addWidget(self.canvas)
         self.gridLayout.addWidget(mpl_toolbar)
         self.fig.subplots_adjust(
             left=0.0, right=1, top=1, bottom=0, wspace=0.02, hspace=0.04)
 
-    def on_press(self, event):
-        self.doubleclick = event.dblclick
+    def onCollectionsClick(self, event):
+        self.collectionsDoubleClick = event.dblclick
         self.last = "clicked"
         if self.create_bus.isChecked():
-            self.build_bus_clicked(geodata=(event.xdata, event.ydata))
+            self.buildBusClicked(geodata=(event.xdata, event.ydata))
 
-    def on_pick(self, event):
-        if self.doubleclick == False:
+    def onCollectionsPick(self, event):
+        if self.collectionsDoubleClick == False:
             QTimer.singleShot(500,
-                               partial(self.performSingleClickAction, event))
+                               partial(self.performcollectionsSingleClickActions, event))
 
-    def performSingleClickAction(self, event):
+    def performcollectionsSingleClickActions(self, event):
         collection = event.artist
         element, index = collection.info[event.ind[0]]
-        if self.doubleclick:
-            #ignore second click of doubleclick
+        if self.collectionsDoubleClick:
+            #ignore second click of collectionsDoubleClick
             if self.last == "doublecklicked":
                 self.last = "clicked"
             else:
-                self.DoubleClickAction(event, element, index)
+                self.collectionsDoubleClickAction(event, element, index)
         else:
-            self.SingleClickAction(event, element, index)
+            self.collectionsSingleClickActions(event, element, index)
 
 
-    def DoubleClickAction(self, event, element, index):
+    def collectionsDoubleClickAction(self, event, element, index):
         #what to do when double clicking on an element
         self.last = "doublecklicked"
         if element == "bus":
-            self.build_bus_clicked(geodata=None, index=index)
+            self.buildBusClicked(geodata=None, index=index)
         if element == "line":
-            self.build_s_line_clicked()
+            self.buildSLineClicked()
 
-    def SingleClickAction(self, event, element, index):
+    def collectionsSingleClickActions(self, event, element, index):
         #what to do when single clicking on an element
         if element != "bus":
             return
         if self.create_line.isChecked():
-            if self.last_bus is None:
-                self.last_bus = index
-            elif self.last_bus != index:
-                #pp.create_line(self.net, self.last_bus, index, length_km=1.0, std_type="NAYY 4x50 SE")
-                self.build_message.setText(str(self.last_bus)+"-"+str(index))
-                self.build_s_line_clicked()
-                self.last_bus = None
-                self.update_line_collection()
-                self.draw_collections()
+            if self.lastBusSelected is None:
+                self.lastBusSelected = index
+            elif self.lastBusSelected != index:
+                #pp.create_line(self.net, self.lastBusSelected, index, length_km=1.0, std_type="NAYY 4x50 SE")
+                self.build_message.setText(str(self.lastBusSelected)+"-"+str(index))
+                self.buildSLineClicked()
+                self.lastBusSelected = None
+                self.updateLineCollection()
+                self.drawCollections()
         if self.create_trafo.isChecked():
-            if self.last_bus is None:
-                self.last_bus = index
-            elif self.last_bus != index:
-                pp.create_transformer(self.net, self.last_bus, index, std_type="0.25 MVA 10/0.4 kV")
-                self.last_bus = None
-                self.update_trafo_collections()
-                self.draw_collections()
+            if self.lastBusSelected is None:
+                self.lastBusSelected = index
+            elif self.lastBusSelected != index:
+                pp.create_transformer(self.net, self.lastBusSelected, index, std_type="0.25 MVA 10/0.4 kV")
+                self.lastBusSelected = None
+                self.updateTrafoCollections()
+                self.drawCollections()
 
 
 
-def splash(n=2):
-     # Create and display the splash screen
+def displaySplashScreen(n=2):
+    """ Create and display the splash screen """
     splash_pix = QPixmap('resources/icons_components/splash.png')
     splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
     splash.setMask(splash_pix.mask())
@@ -597,7 +590,7 @@ def splash(n=2):
     splash.hide()
 
 
-def create_dummy_collection():
+def createSampleNetwork():
     net = pp.create_empty_network()
     b1 = pp.create_bus(net, vn_kv=20., name="HV", geodata=(5, 30))
     b2 = pp.create_bus(net, vn_kv=0.4, name="MV", geodata=(5, 28))
@@ -617,6 +610,6 @@ def create_dummy_collection():
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    splash()
-    window = pandapower_main_window(create_dummy_collection())
+    displaySplashScreen()
+    window = mainWindow(createSampleNetwork())
     sys.exit(app.exec_())

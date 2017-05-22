@@ -2,7 +2,6 @@
 A Graphical User Interface for the open source [pandapower](https://github.com/lthurner/pandapower) load flow program.
 
 ## Installation
-=======
 * Download this repo
 * Using git clone
 

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1023</width>
+    <width>1411</width>
     <height>702</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1011</width>
+      <width>1411</width>
       <height>661</height>
      </rect>
     </property>
@@ -27,7 +27,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>8</number>
+        <number>5</number>
        </property>
        <widget class="QWidget" name="main">
         <attribute name="title">
@@ -1344,13 +1344,26 @@
         <widget class="QWidget" name="verticalLayoutWidget_2">
          <property name="geometry">
           <rect>
-           <x>120</x>
+           <x>10</x>
            <y>30</y>
-           <width>711</width>
+           <width>1391</width>
            <height>561</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="interpreter_vbox"/>
+        </widget>
+        <widget class="QPushButton" name="runTests">
+         <property name="geometry">
+          <rect>
+           <x>1290</x>
+           <y>0</y>
+           <width>101</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Run System Tests</string>
+         </property>
         </widget>
        </widget>
        <widget class="QWidget" name="report">
@@ -1456,7 +1469,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1023</width>
+     <width>1411</width>
      <height>21</height>
     </rect>
    </property>

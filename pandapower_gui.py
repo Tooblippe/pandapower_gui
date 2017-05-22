@@ -177,8 +177,8 @@ class mainWindow(QMainWindow):
 
         self.net = net
         self.mainPrintMessage("Welcome to pandapower version: " +
-                              pp.__version__ + 
-                              "\nQt vesrion: " + 
+                              pp.__version__ +
+                              "\nQt vesrion: " +
                               _WHICH_QT +
                               "\nGUI version: " +
                               _GUI_VERSION  + "\n" +
@@ -246,6 +246,9 @@ class mainWindow(QMainWindow):
         self.build_load.clicked.connect(self.buildLoadClicked)
         self.build_lines.clicked.connect(self.buildSLineClicked)
 
+        #interpreter
+        self.runTests.clicked.connect(self.runPandapowerTests)
+
     def printLineSeperator(self, ch="=", n=40):
         """ prints some characters """
         return ch*n+"\n"
@@ -256,10 +259,10 @@ class mainWindow(QMainWindow):
         self.main_message.append(self.printLineSeperator())
 
     def embedIpythonInterpreter(self):
-        """ embed an Ipyton QT Console Interpreter """
+        """ embed an IPyton QT Console Interpreter """
         self.ipyConsole = QIPythonWidget(
-            customBanner="""Welcome to the pandapower console\nType
-                            whos to get lit of variables
+            customBanner="""Welcome to the console\nType \
+                            whos to get lit of variables \
                             \n =========== \n""")
 
         self.interpreter_vbox.addWidget(self.ipyConsole)
@@ -450,6 +453,12 @@ class mainWindow(QMainWindow):
         self.build_s_line_window = addStandardLineDialog(self.net)
         self.build_s_line_window.show()
 
+    # interpreter
+    def runPandapowerTests(self):
+        self.ipyConsole.executeCommand("import pandapower.test as test")
+        self.ipyConsole.executeCommand("print('Running tests ...')")
+        #self.ipyConsole.executeCommand("test.run_all_tests()")
+    
     # collections
     def initialiseCollectionsPlot(self):
         self.collections = {}
@@ -473,11 +482,11 @@ class mainWindow(QMainWindow):
     def updateBusCollection(self, redraw=False):
         self.collections["bus"] = \
         plot.create_bus_collection(self.net, size=0.15, zorder=2, picker=True,
-                                   color="k", patch_type="rect", 
+                                   color="k", patch_type="rect",
                                    infofunc=lambda x: ("bus", x))
         if redraw:
             self.drawCollections()
-            
+
     def updateLineCollection(self):
         self.collections["line"] = plot.create_line_collection(self.net, zorder=1, linewidths=1,
                                                                picker=False, use_line_geodata=False, color="k")
@@ -491,13 +500,13 @@ class mainWindow(QMainWindow):
         l1, l2 = plot.create_load_symbol_collection(self.net,size=0.25)
         self.collections["load1"] = l1
         self.collections["load2"] = l2
-                        
+
     def clearMainCollectionBuilder(self):
         self.ax.clear()
         print("figure cleared")
         self.collections = {}
         self.drawCollections()
-        
+
 
     def embedCollectionsBuilder(self):
         self.dpi = 100
@@ -523,7 +532,7 @@ class mainWindow(QMainWindow):
     def onCollectionsPick(self, event):
         if self.collectionsDoubleClick == False:
             QTimer.singleShot(500,
-                               partial(self.performcollectionsSingleClickActions, event))
+                              partial(self.performcollectionsSingleClickActions, event))
 
     def performcollectionsSingleClickActions(self, event):
         collection = event.artist
@@ -596,8 +605,8 @@ def createSampleNetwork():
     tid = pp.create_transformer(net, hv_bus=b1, lv_bus=b2, std_type="0.4 MVA 20/0.4 kV",
                                 name="Trafo")
     pp.create_line(net, from_bus=b2, to_bus=b3, length_km=0.1, name="Line",
-                std_type="NAYY 4x50 SE")
-    
+                   std_type="NAYY 4x50 SE")
+
     return net
 
 if __name__ == '__main__':

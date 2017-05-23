@@ -244,7 +244,7 @@ class mainWindow(QMainWindow):
         self.build_ext_grid.clicked.connect(self.buildExtGridClicked)
         self.build_bus.clicked.connect(self.buildBusClicked)
         self.build_load.clicked.connect(self.buildLoadClicked)
-        self.build_lines.clicked.connect(self.buildSLineClicked)
+        self.build_lines.clicked.connect(self.buildStandardLineClicked)
 
         #interpreter
         self.runTests.clicked.connect(self.runPandapowerTests)
@@ -449,7 +449,7 @@ class mainWindow(QMainWindow):
         self.build_load_window = addLoadDialog(self.net)
         self.build_load_window.show()
 
-    def buildSLineClicked(self):
+    def buildStandardLineClicked(self):
         self.build_s_line_window = addStandardLineDialog(self.net)
         self.build_s_line_window.show()
 
@@ -461,6 +461,7 @@ class mainWindow(QMainWindow):
     
     # collections
     def initialiseCollectionsPlot(self):
+        print("Inialise Collections")
         self.collections = {}
         # if not self.lastBusSelected is None:
         self.updateBusCollection()
@@ -472,8 +473,10 @@ class mainWindow(QMainWindow):
         self.ax.yaxis.set_visible(False)
         self.ax.set_aspect('equal', 'datalim')
         self.ax.autoscale_view(True, True, True)
+        print(self.collections)
 
     def drawCollections(self):
+        print("Draw Collections")
         self.ax.clear()
         for name, c in self.collections.items():
             self.ax.add_collection(c)
@@ -489,15 +492,17 @@ class mainWindow(QMainWindow):
 
     def updateLineCollection(self):
         self.collections["line"] = plot.create_line_collection(self.net, zorder=1, linewidths=1,
-                                                               picker=False, use_line_geodata=False, color="k")
+                                                    picker=True, use_line_geodata=False, color="k",
+                                                    infofunc=lambda x: ("line", x))
 
     def updateTrafoCollections(self):
-        t1, t2 = plot.create_trafo_symbol_collection(self.net, size=0.2)
+        t1, t2 = plot.create_trafo_symbol_collection(self.net, size= 0.2, picker=True,
+                                                     infofunc=lambda x: ("trafo", x))
         self.collections["trafo1"] = t1
         self.collections["trafo2"] = t2
 
     def updateLoadCollections(self):
-        l1, l2 = plot.create_load_symbol_collection(self.net,size=0.25)
+        l1, l2 = plot.create_load_symbol_collection(self.net, size= 0.25, picker=True, infofunc=lambda x: ("load", x))
         self.collections["load1"] = l1
         self.collections["load2"] = l2
 
@@ -516,18 +521,22 @@ class mainWindow(QMainWindow):
 #        self.ax.set_axis_bgcolor("white")
         # when a button is pressed on the canvas?
         self.canvas.mpl_connect('button_press_event', self.onCollectionsClick)
+        #self.canvas.mpl_connect('button_release_event', self.onCollectionsClick)
         self.canvas.mpl_connect('pick_event', self.onCollectionsPick)
         mpl_toolbar = NavigationToolbar(self.canvas, self.main_build_frame)
         self.gridLayout.addWidget(self.canvas)
         self.gridLayout.addWidget(mpl_toolbar)
         self.fig.subplots_adjust(
             left=0.0, right=1, top=1, bottom=0, wspace=0.02, hspace=0.04)
+        self.dragged = None
 
     def onCollectionsClick(self, event):
+        print("clicked")
         self.collectionsDoubleClick = event.dblclick
         self.last = "clicked"
         if self.create_bus.isChecked():
             self.buildBusClicked(geodata=(event.xdata, event.ydata))
+
 
     def onCollectionsPick(self, event):
         if self.collectionsDoubleClick == False:
@@ -535,8 +544,18 @@ class mainWindow(QMainWindow):
                               partial(self.performcollectionsSingleClickActions, event))
 
     def performcollectionsSingleClickActions(self, event):
+        print("picked")
         collection = event.artist
-        element, index = collection.info[event.ind[0]]
+        try:
+            element, index = collection.info[event.ind[0]]
+            print("====", event.ind[0])
+            print("====", collection)
+        except:
+            element = collection
+            index = None
+            print("====", collection)
+    
+        print("single")
         if self.collectionsDoubleClick:
             #ignore second click of collectionsDoubleClick
             if self.last == "doublecklicked":
@@ -549,23 +568,26 @@ class mainWindow(QMainWindow):
 
     def collectionsDoubleClickAction(self, event, element, index):
         #what to do when double clicking on an element
+        print("Double Clicked a ", element)
         self.last = "doublecklicked"
         if element == "bus":
+            print("will build bus")
             self.buildBusClicked(geodata=None, index=index)
         if element == "line":
-            self.buildSLineClicked()
+            print("will bild line line")
+            self.buildStandardLineClicked()
 
     def collectionsSingleClickActions(self, event, element, index):
         #what to do when single clicking on an element
-        if element != "bus":
-            return
+        #if element != "bus":
+        #    return
         if self.create_line.isChecked():
             if self.lastBusSelected is None:
                 self.lastBusSelected = index
             elif self.lastBusSelected != index:
                 #pp.create_line(self.net, self.lastBusSelected, index, length_km=1.0, std_type="NAYY 4x50 SE")
                 self.build_message.setText(str(self.lastBusSelected)+"-"+str(index))
-                self.buildSLineClicked()
+                self.buildStandardLineClicked()
                 self.lastBusSelected = None
                 self.updateLineCollection()
                 self.drawCollections()

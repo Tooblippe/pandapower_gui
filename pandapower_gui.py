@@ -493,14 +493,14 @@ class mainWindow(QMainWindow):
     def updateBusCollection(self, redraw=False):
         self.collections["bus"] = \
         plot.create_bus_collection(self.net, size=0.15, zorder=2, picker=True,
-                                   color="k", patch_type="rect",
+                                   color="black", patch_type="rect",
                                    infofunc=lambda x: ("bus", x))
         if redraw:
             self.drawCollections()
 
     def updateLineCollection(self):
         self.collections["line"] = plot.create_line_collection(self.net, zorder=1, linewidths=1,
-                                                    picker=True, use_line_geodata=False, color="k",
+                                                    picker=True, use_line_geodata=False, color="green",
                                                     infofunc=lambda x: ("line", x))
 
     def updateTrafoCollections(self):

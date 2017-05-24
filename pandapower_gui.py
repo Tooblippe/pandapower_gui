@@ -13,6 +13,7 @@ import json
 import sip
 from itertools import combinations
 from functools import partial
+
 from PyQt5 import uic
 from PyQt5 import *
 from PyQt5.QtGui import *
@@ -29,8 +30,13 @@ from IPython.lib import guisupport
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 
-#Ui_MainWindow, QMainWindow = loadUiType('_dev_branch/builder_collections.ui')
-import pandapower.plotting as plot
+try:
+    import plotting as plot
+    print("Using local copy plotting for now")
+except ImportError:
+    import pandapower.plotting as plot
+    print("Using pandapower module plotting")
+
 import pandapower as pp
 import pandapower.networks as pn
 from pandapower.html import _net_to_html as to_html
@@ -132,7 +138,7 @@ class addBusDialog(QWidget):
 
 class addStandardLineDialog(QWidget):
     """ add a standard line """
-    def __init__(self, net):
+    def __init__(self, net, from_bus=None, to_bus=None):
         super(addStandardLineDialog, self).__init__()
         uic.loadUi('resources/ui/add_s_line.ui', self)
         for stdLineType in pp.std_types.available_std_types(net).index:
@@ -449,8 +455,10 @@ class mainWindow(QMainWindow):
         self.build_load_window = addLoadDialog(self.net)
         self.build_load_window.show()
 
-    def buildStandardLineClicked(self):
-        self.build_s_line_window = addStandardLineDialog(self.net)
+    def buildStandardLineClicked(self, from_bus=None, to_bus=None):
+        self.build_s_line_window = addStandardLineDialog(self.net,
+                                                         from_bus=None,
+                                                         to_bus=None)
         self.build_s_line_window.show()
 
     # interpreter
@@ -579,8 +587,8 @@ class mainWindow(QMainWindow):
 
     def collectionsSingleClickActions(self, event, element, index):
         #what to do when single clicking on an element
-        #if element != "bus":
-        #    return
+        if element != "bus":
+            return
         if self.create_line.isChecked():
             if self.lastBusSelected is None:
                 self.lastBusSelected = index

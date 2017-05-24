@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1411</width>
-    <height>702</height>
+    <width>990</width>
+    <height>694</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>5</number>
+        <number>6</number>
        </property>
        <widget class="QWidget" name="main">
         <attribute name="title">
@@ -1129,8 +1129,8 @@
           <rect>
            <x>240</x>
            <y>0</y>
-           <width>801</width>
-           <height>581</height>
+           <width>721</width>
+           <height>551</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -1345,9 +1345,9 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>30</y>
-           <width>1391</width>
-           <height>561</height>
+           <y>20</y>
+           <width>961</width>
+           <height>531</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="interpreter_vbox"/>
@@ -1469,7 +1469,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1411</width>
+     <width>990</width>
      <height>21</height>
     </rect>
    </property>

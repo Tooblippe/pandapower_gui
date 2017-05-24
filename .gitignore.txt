@@ -13,6 +13,7 @@ doc/_build/*
 tutorials/.ipynb_checkpoints
 .cache
 *__pycache__*
+*__pycache__/*
 .vs
 .vscode
 .vscode/
@@ -23,6 +24,8 @@ tutorials/.ipynb_checkpoints
 *.bak
 *.orig
 *.bat
+plotting/
+plotting/*
 resources/sa_std_types/*
 sa_mv_types.py
 pandapower/*

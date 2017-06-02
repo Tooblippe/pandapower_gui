@@ -13,6 +13,7 @@ import json
 import sip
 from itertools import combinations
 from functools import partial
+
 from PyQt5 import uic
 from PyQt5 import *
 from PyQt5.QtGui import *
@@ -29,8 +30,13 @@ from IPython.lib import guisupport
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 
-#Ui_MainWindow, QMainWindow = loadUiType('_dev_branch/builder_collections.ui')
-import pandapower.plotting as plot
+try:
+    import plotting as plot
+    print("Using local copy plotting for now")
+except ImportError:
+    import pandapower.plotting as plot
+    print("Using pandapower module plotting")
+
 import pandapower as pp
 import pandapower.networks as pn
 from pandapower.html import _net_to_html as to_html
@@ -521,14 +527,14 @@ class mainWindow(QMainWindow):
     def updateBusCollection(self, redraw=False):
         self.collections["bus"] = \
         plot.create_bus_collection(self.net, size=0.15, zorder=2, picker=True,
-                                   color="k", patch_type="rect",
+                                   color="black", patch_type="rect",
                                    infofunc=lambda x: ("bus", x))
         if redraw:
             self.drawCollections()
 
     def updateLineCollection(self, redraw=False):
         self.collections["line"] = plot.create_line_collection(self.net, zorder=1, linewidths=1,
-                                                    picker=True, use_line_geodata=False, color="k",
+                                                    picker=True, use_line_geodata=False, color="green",
                                                     infofunc=lambda x: ("line", x))
         if redraw:
             self.drawCollections()
@@ -619,8 +625,8 @@ class mainWindow(QMainWindow):
             
     def collectionsSingleClickActions(self, event, element, index):
         #what to do when single clicking on an element
-        #if element != "bus":
-        #    return
+        if element != "bus":
+            return
         if self.create_line.isChecked():
             if self.lastBusSelected is None:
                 self.lastBusSelected = index

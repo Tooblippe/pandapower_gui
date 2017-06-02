@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Add Bus</string>
+   <string>Bus</string>
   </property>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -39,15 +39,15 @@
       </rect>
      </property>
      <property name="text">
-      <string>Bus Voltage - vn_kv</string>
+      <string>Bus Voltage</string>
      </property>
     </widget>
     <widget class="QTextEdit" name="vn_kv">
      <property name="geometry">
       <rect>
-       <x>130</x>
+       <x>80</x>
        <y>10</y>
-       <width>131</width>
+       <width>41</width>
        <height>21</height>
       </rect>
      </property>
@@ -77,7 +77,7 @@
     <widget class="QTextEdit" name="name">
      <property name="geometry">
       <rect>
-       <x>130</x>
+       <x>80</x>
        <y>40</y>
        <width>131</width>
        <height>21</height>
@@ -93,14 +93,14 @@
     <widget class="QLabel" name="vn_kv_label_2">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>10</y>
+       <x>127</x>
+       <y>15</y>
        <width>121</width>
-       <height>16</height>
+       <height>10</height>
       </rect>
      </property>
      <property name="text">
-      <string>[kV]</string>
+      <string>kV</string>
      </property>
     </widget>
    </widget>

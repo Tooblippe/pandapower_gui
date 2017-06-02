@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Add Standard Line</string>
+   <string>Line</string>
   </property>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">

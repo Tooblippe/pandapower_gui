@@ -116,23 +116,30 @@ class addBusDialog(QWidget):
         self.net = net
         self.update = update
         if self.index is not None:
-            self.vn_kv.setText(str(self.net.bus.vn_kv.at[self.index]))
-            self.name.setText(str(self.net.bus.name.at[self.index]))
+            param = self.net.bus.loc[self.index]
+            self.vn_kv.setText(str(param["vn_kv"]))
+            self.name.setText(str(param["name"]))
+            
     def busOkAction(self):
         """ Add a bus """
-        vn_kv = self.vn_kv.toPlainText()
-        name = self.name.toPlainText()
+        print("collecting bus parameters")
+        param = {"vn_kv": float(self.vn_kv.toPlainText()),
+                 "name": self.name.toPlainText()}
+        print("collected bus parameters")
         if self.index is None:
-            pp.create_bus(self.net, vn_kv=vn_kv, name=name, geodata=self.geodata)
+            self.index = pp.create_bus(self.net, geodata=self.geodata, **param)
+            print("created bus")
             self.update(True)
+            print("updated collections")
         else:
-            self.net.bus.loc[self.index, ["vn_kv", "name"]] = [vn_kv, name]
+            self.net.bus.loc[self.index, param.keys()] = param.values()
+            print("updated bus parameters")
         self.close()
 
 
 class addStandardLineDialog(QWidget):
     """ add a standard line """
-    def __init__(self, net):
+    def __init__(self, net, update_function, index=None):
         super(addStandardLineDialog, self).__init__()
         uic.loadUi('resources/ui/add_s_line.ui', self)
         for stdLineType in pp.std_types.available_std_types(net).index:
@@ -141,17 +148,36 @@ class addStandardLineDialog(QWidget):
             self.from_bus.addItem(str(availableBus))
             self.to_bus.addItem(str(availableBus))
         self.ok.clicked.connect(self.standardLineOkAction)
+#        self.name.returnPressed.connect(self.standardLineOkAction)
+        self.index = index
+        self.update_function = update_function
         self.net = net
+        if index is not None:
+            param = self.net.line.loc[self.index]
+            self.name.setText(str(param["name"]))
+            self.length_km.setText(str(param["length_km"]))
+            to_bus = self.to_bus.findText(str(param["to_bus"]))
+            self.to_bus.setCurrentIndex(to_bus)
+            from_bus = self.from_bus.findText(str(param["from_bus"]))
+            self.from_bus.setCurrentIndex(from_bus)
+            std_type = self.standard_type.findText(str(param["std_type"]))
+            self.standard_type.setCurrentIndex(std_type)
+        
     def standardLineOkAction(self):
         """ Adds a line """
-        from_bus = int(self.from_bus.currentText())
-        to_bus = int(self.to_bus.currentText())
-        length_km = float(self.length_km.toPlainText())
-        standard_type = self.standard_type.currentText()
-        name = self.name.toPlainText()
-        message = pp.create_line(self.net, from_bus=from_bus, to_bus=to_bus,
-                                 length_km=length_km, std_type=standard_type, name=name)
-        print(message)
+        param = {"from_bus": int(self.from_bus.currentText()),
+                      "to_bus": int(self.to_bus.currentText()),
+                      "length_km": float(self.length_km.toPlainText()),
+                      "std_type": self.standard_type.currentText(),
+                      "name": self.name.toPlainText()}
+        if self.index is None:
+            self.index = pp.create_line(self.net, **param)
+            print("created line")
+        else:
+            self.net.line.loc[self.index, param.keys()] = param.values()                   
+            print("updated line parameters")
+        self.update_function(True)
+        print("updated collections")
         self.close()
 
 
@@ -280,10 +306,19 @@ class mainWindow(QMainWindow):
 
     def mainLoadClicked(self):
         file_to_open = ""
-        file_to_open = QFileDialog.getOpenFileName()
-        print(file_to_open[0])
+        file_to_open = QFileDialog.getOpenFileName(filter="*.xlsx, *.p")
         if file_to_open[0] != "":
-            self.net = pp.from_excel(file_to_open[0], convert=True)
+            fn = file_to_open[0]
+            if fn.endswith(".xlsx"):
+                try:
+                    self.net = pp.from_excel(file_to_open[0], convert=True)
+                except:
+                    print("couldn't open %s"%fn)
+            elif file_to_open[0].endswith(".p"):
+                try:
+                    self.net = pp.from_pickle(file_to_open[0], convert=True) 
+                except:
+                    print("couldn't open %s"%fn)
             #self.net = pn.case1888rte()
             self.ipyConsole.executeCommand("del(net)")
             #self.ipyConsole.clearTerminal()
@@ -449,8 +484,9 @@ class mainWindow(QMainWindow):
         self.build_load_window = addLoadDialog(self.net)
         self.build_load_window.show()
 
-    def buildStandardLineClicked(self):
-        self.build_s_line_window = addStandardLineDialog(self.net)
+    def buildStandardLineClicked(self, index=None):
+        self.build_s_line_window = addStandardLineDialog(self.net, index=index,
+                                 update_function=self.updateLineCollection)
         self.build_s_line_window.show()
 
     # interpreter
@@ -490,19 +526,24 @@ class mainWindow(QMainWindow):
         if redraw:
             self.drawCollections()
 
-    def updateLineCollection(self):
+    def updateLineCollection(self, redraw=False):
         self.collections["line"] = plot.create_line_collection(self.net, zorder=1, linewidths=1,
                                                     picker=True, use_line_geodata=False, color="k",
                                                     infofunc=lambda x: ("line", x))
-
+        if redraw:
+            self.drawCollections()
+            
     def updateTrafoCollections(self):
         t1, t2 = plot.create_trafo_symbol_collection(self.net, size= 0.2, picker=True,
                                                      infofunc=lambda x: ("trafo", x))
         self.collections["trafo1"] = t1
         self.collections["trafo2"] = t2
+        print(t1.info)
 
     def updateLoadCollections(self):
-        l1, l2 = plot.create_load_symbol_collection(self.net, size= 0.25, picker=True, infofunc=lambda x: ("load", x))
+        l1, l2 = plot.create_load_symbol_collection(self.net, size= 0.25,
+                                                    picker=True,
+                                                    infofunc=lambda x: ("load", x))
         self.collections["load1"] = l1
         self.collections["load2"] = l2
 
@@ -546,15 +587,9 @@ class mainWindow(QMainWindow):
     def performcollectionsSingleClickActions(self, event):
         print("picked")
         collection = event.artist
-        try:
-            element, index = collection.info[event.ind[0]]
-            print("====", event.ind[0])
-            print("====", collection)
-        except:
-            element = collection
-            index = None
-            print("====", collection)
-    
+        element, index = collection.info[event.ind[0]]
+        print("====", event.ind[0])
+        print("====", collection)   
         print("single")
         if self.collectionsDoubleClick:
             #ignore second click of collectionsDoubleClick
@@ -573,10 +608,15 @@ class mainWindow(QMainWindow):
         if element == "bus":
             print("will build bus")
             self.buildBusClicked(geodata=None, index=index)
-        if element == "line":
+        elif element == "line":
             print("will bild line line")
-            self.buildStandardLineClicked()
-
+            print(index)
+            self.buildStandardLineClicked(index=index)
+        elif element == "load":
+            print("load doubleclicked")
+        elif element == "trafo":
+            print("trafo doubleclicked")
+            
     def collectionsSingleClickActions(self, event, element, index):
         #what to do when single clicking on an element
         #if element != "bus":

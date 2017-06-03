@@ -16,6 +16,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+import numpy as np
+
 # interpreter
 #from qtconsole.rich_ipython_widget import RichJupyterWidget as RichIPythonWidget
 from qtconsole.rich_jupyter_widget import RichJupyterWidget
@@ -88,24 +90,6 @@ class QIPythonWidget(RichJupyterWidget):
         """ Execute a command in the frame of the console widget """
         self._execute(command, False)
 
-class addExtGridDialog(QWidget):
-    """ add external grid window """
-    def __init__(self, net):
-        super(addExtGridDialog, self).__init__()
-        uic.loadUi('resources/ui/add_ext_grid.ui', self)
-        self.add_ext_grid.clicked.connect(self.gridOkAction)
-        self.net = net
-    def gridOkAction(self):
-        """ Add the external grid """
-        #(0,0) = (1,1)
-        bus = self.parameter_table.item(1, 2)
-        vm_pu = self.parameter_table.item(2, 2)
-        # print(bus.text())
-        # print(vm_pu.text())
-        message = pp.create_ext_grid(self.net, bus=int(
-            bus.text()), vm_pu=float(vm_pu.text()))
-        print(message)   
-
 class mainWindow(QMainWindow):
     """ Create main window """
     def __init__(self, net):
@@ -128,6 +112,11 @@ class mainWindow(QMainWindow):
         self.lastBusSelected = None
         self.embedCollectionsBuilder()
         self.initialiseCollectionsPlot()
+        self.ax.xaxis.set_visible(False)
+        self.ax.yaxis.set_visible(False)
+        self.ax.set_aspect('equal', 'datalim')
+        self.ax.autoscale_view(True, True, True)
+        
         self.collectionsDoubleClick = False
         # set firtst tab
         self.tabWidget.setCurrentIndex(0)
@@ -219,11 +208,13 @@ class mainWindow(QMainWindow):
                     self.net = pp.from_excel(file_to_open[0], convert=True)
                 except:
                     print("couldn't open %s"%fn)
+                    return
             elif file_to_open[0].endswith(".p"):
                 try:
                     self.net = pp.from_pickle(file_to_open[0], convert=True) 
                 except:
                     print("couldn't open %s"%fn)
+                    return
             #self.net = pn.case1888rte()
             self.ipyConsole.executeCommand("del(net)")
             #self.ipyConsole.clearTerminal()
@@ -232,6 +223,7 @@ class mainWindow(QMainWindow):
             self.ipyConsole.printText("-"*40+"\n\n")
             self.ipyConsole.pushVariables({"net": self.net})
             self.ipyConsole.executeCommand("net")
+            self.initialiseCollectionsPlot()
             self.mainPrintMessage(file_to_open[0] + " loaded")
             self.mainPrintMessage(str(self.net))
 
@@ -372,14 +364,6 @@ class mainWindow(QMainWindow):
     def res_dcline_clicked(self):
         self.res_message.setHtml(str(self.net.res_dcline.to_html()))
 
-    # def res_measurement_clicked(self):
-    #    self.res_message.setHtml(str(self.net.res_measurement.to_html()))
-
-    # build
-    def buildExtGridClicked(self):
-        self.build_ext_grid_window = addExtGridDialog(self.net)
-        self.build_ext_grid_window.show()
-
     # interpreter
     def runPandapowerTests(self):
         self.ipyConsole.executeCommand("import pandapower.test as test")
@@ -389,47 +373,56 @@ class mainWindow(QMainWindow):
     # collections
     def initialiseCollectionsPlot(self):
         print("Inialise Collections")
+        self.xmin = self.net.bus_geodata.x.min()
+        self.xmax = self.net.bus_geodata.x.max()
+        self.ymin = self.net.bus_geodata.y.min()
+        self.ymax = self.net.bus_geodata.y.max()
+        self.scale = max((self.xmax - self.xmin), (self.ymax - self.ymin))
+        print(self.scale)
         self.collections = {}
-        # if not self.lastBusSelected is None:
         self.updateBusCollection()
         self.updateLineCollection()
         self.updateTrafoCollections()
         self.updateLoadCollections()
-        self.drawCollections()
-        self.ax.xaxis.set_visible(False)
-        self.ax.yaxis.set_visible(False)
-        self.ax.set_aspect('equal', 'datalim')
-        self.ax.autoscale_view(True, True, True)
         print(self.collections)
+        self.drawCollections()
+
 
     def drawCollections(self):
-        print("Draw Collections")
         self.ax.clear()
         for name, c in self.collections.items():
-            self.ax.add_collection(c)
+            if c is not None:
+                self.ax.add_collection(c)
+        self.ax.set_xlim((self.xmin*0.98, self.xmax*1.02))
+        self.ax.set_ylim((self.ymin*0.98, self.ymax*1.02))
         self.canvas.draw()
+        print("Drew Collections")
 
     def updateBusCollection(self, redraw=False):
-        self.collections["bus"] = \
-        plot.create_bus_collection(self.net, size=0.15, zorder=2, picker=True,
-                                   color="black", patch_type="rect",
-                                   infofunc=lambda x: ("bus", x))
+        bc = plot.create_bus_collection(self.net, size=self.scale*0.01,
+                zorder=2, picker=True, color="black",  patch_type="rect", 
+                infofunc=lambda x: ("bus", x))
+        self.collections["bus"] = bc
+
         if redraw:
             self.drawCollections()
 
     def updateLineCollection(self, redraw=False):
-        self.collections["line"] = plot.create_line_collection(self.net, zorder=1, linewidths=1,
-                                                    picker=True, use_line_geodata=False, color="green",
-                                                    infofunc=lambda x: ("line", x))
+        lc = plot.create_line_collection(self.net, zorder=1, linewidths=1,
+                 picker=True, use_line_geodata=False, color="green",
+                 infofunc=lambda x: ("line", x))
+        self.collections["line"] = lc
         if redraw:
             self.drawCollections()
             
-    def updateTrafoCollections(self):
-        t1, t2 = plot.create_trafo_symbol_collection(self.net, size= 0.2, picker=True,
-                                                     infofunc=lambda x: ("trafo", x))
+    def updateTrafoCollections(self, redraw=False):
+        t1, t2 = plot.create_trafo_symbol_collection(self.net, picker=True,
+                         size=self.scale*0.02, infofunc=lambda x: ("trafo", x))
         self.collections["trafo1"] = t1
         self.collections["trafo2"] = t2
-
+        if redraw:
+            self.drawCollections()
+            
     def updateLoadCollections(self, redraw=False):
         l1, l2 = plot.create_load_symbol_collection(self.net, size= 0.25,
                                                     picker=True,
@@ -585,11 +578,6 @@ def createSampleNetwork():
     return net
 
 if __name__ == '__main__':
-#    import pandapower.networks as nw
-#    net = nw.mv_oberrhein()
-#    print("a")
-#    lw = LineWindow(net, mainWindow.updateLineCollection)
-#    lw.show()
     app = QApplication(sys.argv)
     displaySplashScreen()
     window = mainWindow(createSampleNetwork())

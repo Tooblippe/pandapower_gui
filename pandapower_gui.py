@@ -7,11 +7,7 @@
 
 
 import sys
-import os
 import time
-import json
-import sip
-from itertools import combinations
 from functools import partial
 
 from PyQt5 import uic
@@ -29,6 +25,8 @@ from IPython.lib import guisupport
 # collections and plotting from turner
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+
+from element_windows import *
 
 try:
     import plotting as plot
@@ -106,86 +104,7 @@ class addExtGridDialog(QWidget):
         # print(vm_pu.text())
         message = pp.create_ext_grid(self.net, bus=int(
             bus.text()), vm_pu=float(vm_pu.text()))
-        print(message)
-
-
-class addBusDialog(QWidget):
-    """ add a bus """
-    def __init__(self, net, geodata, update, index=None):
-        super(addBusDialog, self).__init__()
-        uic.loadUi('resources/ui/add_bus.ui', self)
-        self.ok.clicked.connect(self.busOkAction)
-        self.cancel.clicked.connect(self.close)
-        #if not  geodata: geodata = (10,10)
-        self.geodata = geodata
-        self.index = index
-        self.net = net
-        self.update = update
-        if self.index is not None:
-            param = self.net.bus.loc[self.index]
-            self.vn_kv.setText(str(param["vn_kv"]))
-            self.name.setText(str(param["name"]))
-            
-    def busOkAction(self):
-        """ Add a bus """
-        print("collecting bus parameters")
-        param = {"vn_kv": float(self.vn_kv.toPlainText()),
-                 "name": self.name.toPlainText()}
-        print("collected bus parameters")
-        if self.index is None:
-            self.index = pp.create_bus(self.net, geodata=self.geodata, **param)
-            print("created bus")
-            self.update(True)
-            print("updated collections")
-        else:
-            self.net.bus.loc[self.index, param.keys()] = param.values()
-            print("updated bus parameters")
-        self.close()
-
-
-class addStandardLineDialog(QWidget):
-    """ add a standard line """
-    def __init__(self, net, update_function, index=None):
-        super(addStandardLineDialog, self).__init__()
-        uic.loadUi('resources/ui/add_s_line.ui', self)
-        for stdLineType in pp.std_types.available_std_types(net).index:
-            self.standard_type.addItem(stdLineType)
-        for availableBus in net.bus.index:
-            self.from_bus.addItem(str(availableBus))
-            self.to_bus.addItem(str(availableBus))
-        self.ok.clicked.connect(self.standardLineOkAction)
-#        self.name.returnPressed.connect(self.standardLineOkAction)
-        self.index = index
-        self.update_function = update_function
-        self.net = net
-        if index is not None:
-            param = self.net.line.loc[self.index]
-            self.name.setText(str(param["name"]))
-            self.length_km.setText(str(param["length_km"]))
-            to_bus = self.to_bus.findText(str(param["to_bus"]))
-            self.to_bus.setCurrentIndex(to_bus)
-            from_bus = self.from_bus.findText(str(param["from_bus"]))
-            self.from_bus.setCurrentIndex(from_bus)
-            std_type = self.standard_type.findText(str(param["std_type"]))
-            self.standard_type.setCurrentIndex(std_type)
-        
-    def standardLineOkAction(self):
-        """ Adds a line """
-        param = {"from_bus": int(self.from_bus.currentText()),
-                      "to_bus": int(self.to_bus.currentText()),
-                      "length_km": float(self.length_km.toPlainText()),
-                      "std_type": self.standard_type.currentText(),
-                      "name": self.name.toPlainText()}
-        if self.index is None:
-            self.index = pp.create_line(self.net, **param)
-            print("created line")
-        else:
-            self.net.line.loc[self.index, param.keys()] = param.values()                   
-            print("updated line parameters")
-        self.update_function(True)
-        print("updated collections")
-        self.close()
-
+        print(message)   
 
 class addLoadDialog(QWidget):
     """ load window """
@@ -274,9 +193,9 @@ class mainWindow(QMainWindow):
 
         # build
         self.build_ext_grid.clicked.connect(self.buildExtGridClicked)
-        self.build_bus.clicked.connect(self.buildBusClicked)
+#        self.build_bus.clicked.connect(self.buildBusClicked)
         self.build_load.clicked.connect(self.buildLoadClicked)
-        self.build_lines.clicked.connect(self.buildStandardLineClicked)
+#        self.build_lines.clicked.connect(self.buildStandardLineClicked)
 
         #interpreter
         self.runTests.clicked.connect(self.runPandapowerTests)
@@ -481,19 +400,9 @@ class mainWindow(QMainWindow):
         self.build_ext_grid_window = addExtGridDialog(self.net)
         self.build_ext_grid_window.show()
 
-    def buildBusClicked(self, geodata, index=None):
-        self.build_bus_window = addBusDialog(self.net, geodata=geodata, index=index,
-                                              update=self.updateBusCollection)
-        self.build_bus_window.show()
-
     def buildLoadClicked(self):
         self.build_load_window = addLoadDialog(self.net)
         self.build_load_window.show()
-
-    def buildStandardLineClicked(self, index=None):
-        self.build_s_line_window = addStandardLineDialog(self.net, index=index,
-                                 update_function=self.updateLineCollection)
-        self.build_s_line_window.show()
 
     # interpreter
     def runPandapowerTests(self):
@@ -544,7 +453,6 @@ class mainWindow(QMainWindow):
                                                      infofunc=lambda x: ("trafo", x))
         self.collections["trafo1"] = t1
         self.collections["trafo2"] = t2
-        print(t1.info)
 
     def updateLoadCollections(self):
         l1, l2 = plot.create_load_symbol_collection(self.net, size= 0.25,
@@ -582,7 +490,13 @@ class mainWindow(QMainWindow):
         self.collectionsDoubleClick = event.dblclick
         self.last = "clicked"
         if self.create_bus.isChecked():
-            self.buildBusClicked(geodata=(event.xdata, event.ydata))
+            geodata = (event.xdata, event.ydata)
+            try:
+                self.bus_window = BusWindow(self.net
+                                            , self.updateBusCollection
+                                            , geodata=geodata)
+            except Exception as inst:
+                print(inst)
 
 
     def onCollectionsPick(self, event):
@@ -613,11 +527,15 @@ class mainWindow(QMainWindow):
         self.last = "doublecklicked"
         if element == "bus":
             print("will build bus")
-            self.buildBusClicked(geodata=None, index=index)
+            self.bus_window = BusWindow(self.net
+                                        , self.updateBusCollection
+                                        , index=index)
         elif element == "line":
-            print("will bild line line")
+            print("will bild line")
             print(index)
-            self.buildStandardLineClicked(index=index)
+            self.line_window = LineWindow(self.net,
+                                              self.updateLineCollection,
+                                              index=index)               
         elif element == "load":
             print("load doubleclicked")
         elif element == "trafo":
@@ -633,7 +551,10 @@ class mainWindow(QMainWindow):
             elif self.lastBusSelected != index:
                 #pp.create_line(self.net, self.lastBusSelected, index, length_km=1.0, std_type="NAYY 4x50 SE")
                 self.build_message.setText(str(self.lastBusSelected)+"-"+str(index))
-                self.buildStandardLineClicked()
+                self.line_window = LineWindow(self.net,
+                                              self.updateLineCollection,
+                                              from_bus=self.lastBusSelected,
+                                              to_bus=index)
                 self.lastBusSelected = None
                 self.updateLineCollection()
                 self.drawCollections()
@@ -678,6 +599,11 @@ def createSampleNetwork():
     return net
 
 if __name__ == '__main__':
+#    import pandapower.networks as nw
+#    net = nw.mv_oberrhein()
+#    print("a")
+#    lw = LineWindow(net, mainWindow.updateLineCollection)
+#    lw.show()
     app = QApplication(sys.argv)
     displaySplashScreen()
     window = mainWindow(createSampleNetwork())

@@ -106,20 +106,6 @@ class addExtGridDialog(QWidget):
             bus.text()), vm_pu=float(vm_pu.text()))
         print(message)   
 
-class addLoadDialog(QWidget):
-    """ load window """
-    def __init__(self, net):
-        super(addLoadDialog, self).__init__()
-        uic.loadUi('resources/ui/add_load.ui', self)
-        self.add_load.clicked.connect(self.loadOkAction)
-        self.net = net
-    def loadOkAction(self):
-        """ add a load """
-        print(self.net.bus)
-        message = pp.create_load(net=self.net, bus=int(self.bus_number.toPlainText()),
-                                 p_kw=self.p_kw.toPlainText(), q_kvar=self.q_kvar.toPlainText())
-        print(message)
-
 class mainWindow(QMainWindow):
     """ Create main window """
     def __init__(self, net):
@@ -190,12 +176,6 @@ class mainWindow(QMainWindow):
         self.res_ward.clicked.connect(self.res_ward_clicked)
         self.res_xward.clicked.connect(self.res_xward_clicked)
         self.res_dcline.clicked.connect(self.res_dcline_clicked)
-
-        # build
-        self.build_ext_grid.clicked.connect(self.buildExtGridClicked)
-#        self.build_bus.clicked.connect(self.buildBusClicked)
-        self.build_load.clicked.connect(self.buildLoadClicked)
-#        self.build_lines.clicked.connect(self.buildStandardLineClicked)
 
         #interpreter
         self.runTests.clicked.connect(self.runPandapowerTests)
@@ -400,10 +380,6 @@ class mainWindow(QMainWindow):
         self.build_ext_grid_window = addExtGridDialog(self.net)
         self.build_ext_grid_window.show()
 
-    def buildLoadClicked(self):
-        self.build_load_window = addLoadDialog(self.net)
-        self.build_load_window.show()
-
     # interpreter
     def runPandapowerTests(self):
         self.ipyConsole.executeCommand("import pandapower.test as test")
@@ -454,12 +430,14 @@ class mainWindow(QMainWindow):
         self.collections["trafo1"] = t1
         self.collections["trafo2"] = t2
 
-    def updateLoadCollections(self):
+    def updateLoadCollections(self, redraw=False):
         l1, l2 = plot.create_load_symbol_collection(self.net, size= 0.25,
                                                     picker=True,
                                                     infofunc=lambda x: ("load", x))
         self.collections["load1"] = l1
         self.collections["load2"] = l2
+        if redraw:
+            self.drawCollections()
 
     def clearMainCollectionBuilder(self):
         self.ax.clear()
@@ -501,7 +479,7 @@ class mainWindow(QMainWindow):
 
     def onCollectionsPick(self, event):
         if self.collectionsDoubleClick == False:
-            QTimer.singleShot(500,
+            QTimer.singleShot(200,
                               partial(self.performcollectionsSingleClickActions, event))
 
     def performcollectionsSingleClickActions(self, event):
@@ -537,7 +515,9 @@ class mainWindow(QMainWindow):
                                               self.updateLineCollection,
                                               index=index)               
         elif element == "load":
-            print("load doubleclicked")
+            self.load_window = LoadWindow(self.net,
+                                              self.updateLoadCollections,
+                                              index=index)
         elif element == "trafo":
             print("trafo doubleclicked")
             
@@ -556,9 +536,7 @@ class mainWindow(QMainWindow):
                                               from_bus=self.lastBusSelected,
                                               to_bus=index)
                 self.lastBusSelected = None
-                self.updateLineCollection()
-                self.drawCollections()
-        if self.create_trafo.isChecked():
+        elif self.create_trafo.isChecked():
             if self.lastBusSelected is None:
                 self.lastBusSelected = index
             elif self.lastBusSelected != index:
@@ -566,6 +544,14 @@ class mainWindow(QMainWindow):
                 self.lastBusSelected = None
                 self.updateTrafoCollections()
                 self.drawCollections()
+        elif self.create_load.isChecked():
+            try:
+                self.load_window = LoadWindow(self.net,
+                                              self.updateLoadCollections,
+                                              bus=index)
+            except Exception as e:
+                print(e)
+            self.lastBusSelected = None            
 
 
 

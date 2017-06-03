@@ -13,6 +13,8 @@ from PyQt5.QtCore import *
 
 import pandapower as pp
 
+# Base Element Window Class
+
 class ElementWindow(QWidget):   
     def __init__(self, net, element, create_function,
                  update_collection_function, **kwargs):
@@ -50,11 +52,13 @@ class ElementWindow(QWidget):
         print("created %s"%self.element)
     
     def update_element(self):
+        print("getting")
         param = self.get_parameters()
+        print(param)
         self.net[self.element].loc[self.index, param.keys()] = param.values()
         print("updated %s parameters"%self.element)        
     
-
+# Line Window Class
 class LineWindow(ElementWindow):
     """ add a standard line """
     def __init__(self, net, update_function, **kwargs):
@@ -87,6 +91,34 @@ class LineWindow(ElementWindow):
         self.from_bus.setCurrentIndex(from_bus)
         std_type = self.standard_type.findText(kwargs.get("std_type", ""))
         self.standard_type.setCurrentIndex(std_type)
+
+class LoadWindow(ElementWindow):
+    """ add a standard line """
+    def __init__(self, net, update_function, **kwargs):
+        super(LoadWindow, self).__init__(net, "load"
+                                         , update_collection_function=update_function
+                                         , create_function=pp.create_load
+                                         , **kwargs)
+    
+    def initialize_window(self):
+        uic.loadUi('resources/ui/add_load.ui', self)
+        for availableBus in self.net.bus.index:
+            self.bus.addItem(str(availableBus))
+            
+    def get_parameters(self):
+        return {"bus": int(self.bus.currentText()),
+                "p_kw": float(self.p_kw.toPlainText()),
+                "q_kvar": float(self.q_kvar.toPlainText()),
+                 "name": self.name.toPlainText()}
+
+    def set_parameters(self, **kwargs):
+        self.name.setText(kwargs.get("name", ""))
+        bus = self.bus.findText(str(kwargs.get("bus", "")))
+        self.bus.setCurrentIndex(bus)
+        self.p_kw.setText(str(kwargs.get("p_kw", 0)))
+        self.q_kvar.setText(str(kwargs.get("q_kvar", 0)))
+
+# Bus Window Class
 
 class BusWindow(ElementWindow):
     def __init__(self, net, update_function, **kwargs):

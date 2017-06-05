@@ -131,22 +131,21 @@ class mainWindow(QMainWindow):
         self.main_losses.clicked.connect(self.lossesSummary)
 
         # inspect
-        self.inspect_bus.clicked.connect(self.inspect_bus_clicked)
-        self.inspect_lines.clicked.connect(self.inspect_lines_clicked)
-        self.inspect_switch.clicked.connect(self.inspect_switch_clicked)
-        self.inspect_load.clicked.connect(self.inspect_load_clicked)
-        self.inspect_sgen.clicked.connect(self.inspect_sgen_clicked)
-        self.inspect_ext_grid.clicked.connect(self.inspect_ext_grid_clicked)
-        self.inspect_trafo.clicked.connect(self.inspect_trafo_clicked)
-        self.inspect_trafo3w.clicked.connect(self.inspect_trafo3w_clicked)
-        self.inspect_gen.clicked.connect(self.inspect_gen_clicked)
-        self.inspect_shunt.clicked.connect(self.inspect_shunt_clicked)
-        self.inspect_impedance.clicked.connect(self.inspect_sgen_clicked)
-        self.inspect_ward.clicked.connect(self.inspect_ward_clicked)
-        self.inspect_xward.clicked.connect(self.inspect_xward_clicked)
-        self.inspect_dcline.clicked.connect(self.inspect_dcline_clicked)
-        self.inspect_measurement.clicked.connect(
-            self.inspect_measurement_clicked)
+        self.inspect_bus.clicked.connect(partial(self.show_table, "bus" ))
+        self.inspect_lines.clicked.connect(partial(self.show_table, "line" ))
+        self.inspect_load.clicked.connect(partial(self.show_table, "load"))
+        self.inspect_switch.clicked.connect(partial(self.show_table, "switch" ))
+        self.inspect_sgen.clicked.connect(partial(self.show_table, "sgen" ))
+        self.inspect_ext_grid.clicked.connect(partial(self.show_table, "ext_grid" ))
+        self.inspect_trafo.clicked.connect(partial(self.show_table, "trafo" ))
+        self.inspect_trafo3w.clicked.connect(partial(self.show_table, "trafo3w"))
+        self.inspect_gen.clicked.connect(partial(self.show_table, "gen" ))
+        self.inspect_shunt.clicked.connect(partial(self.show_table, "shunt"))
+        self.inspect_impedance.clicked.connect(partial(self.show_table, "impedance" ))
+        self.inspect_ward.clicked.connect(partial(self.show_table, "ward" ))
+        self.inspect_xward.clicked.connect(partial(self.show_table, "xward" ))
+        self.inspect_dcline.clicked.connect(partial(self.show_table, "dcline"))
+        self.inspect_measurement.clicked.connect(partial(self.show_table, "measurement" ))
 
         # html
         self.html_show.clicked.connect(self.showHtmlReport)
@@ -277,48 +276,31 @@ class mainWindow(QMainWindow):
         self.mainPrintMessage("Losses report generated. Check Report tab.")
 
 
-    # inspect
-    def inspect_bus_clicked(self):
-        self.inspect_message.setText(str(self.net.bus.to_html()))
+    def show_table(self, element):
+        table = self.net[element]
+        self.net_table.setColumnCount(len(table.columns) + 1)
+        self.net_table.setRowCount(len(table))
+        header = ["index"] + table.columns.tolist()
+        self.net_table.setHorizontalHeaderLabels(header)
+        for i, (idx, row) in enumerate(table.iterrows()):
+            self.net_table.setItem(i, 0, QTableWidgetItem(str(idx)))
+            for k, value in enumerate(row.values, 1):
+                print(i, k, value)
+                self.net_table.setItem(i, k, QTableWidgetItem(str(value)))
+        self.net_table.doubleClicked.connect(partial(self.table_doubleclicked,
+                                                     element))
 
-    def inspect_lines_clicked(self):
-        self.inspect_message.setText(str(self.net.line.to_html()))
-
-    def inspect_switch_clicked(self):
-        self.inspect_message.setText(str(self.net.switch.to_html()))
-
-    def inspect_load_clicked(self):
-        self.inspect_message.setText(str(self.net.load.to_html()))
-
-    def inspect_sgen_clicked(self):
-        self.inspect_message.setText(str(self.net.sgen.to_html()))
-
-    def inspect_ext_grid_clicked(self):
-        self.inspect_message.setText(str(self.net.ext_grid.to_html()))
-
-    def inspect_trafo_clicked(self):
-        self.inspect_message.setText(str(self.net.trafo.to_html()))
-
-    def inspect_trafo3w_clicked(self):
-        self.inspect_message.setText(str(self.net.trafo3w.to_html()))
-
-    def inspect_gen_clicked(self):
-        self.inspect_message.setText(str(self.net.gen.to_html()))
-
-    def inspect_shunt_clicked(self):
-        self.inspect_message.setText(str(self.net.shunt.to_html()))
-
-    def inspect_ward_clicked(self):
-        self.inspect_message.setText(str(self.net.ward.to_html()))
-
-    def inspect_xward_clicked(self):
-        self.inspect_message.setText(str(self.net.xward.to_html()))
-
-    def inspect_dcline_clicked(self):
-        self.inspect_message.setText(str(self.net.dcline.to_html()))
-
-    def inspect_measurement_clicked(self):
-        self.inspect_message.setText(str(self.net.measurement.to_html()))
+    def table_doubleclicked(self, element, cell):
+        index = int(self.net_table.item(cell.row(), 0).text())
+        if element == "bus":
+            self.element_window = BusWindow(self.net, self.updateBusCollection,
+                                        index=index)
+        elif element == "line":
+            self.element_window = LineWindow(self.net, self.updateLineCollection,
+                                        index=index)
+        elif element == "load":
+            self.element_window = LoadWindow(self.net, self.updateLoadCollections,
+                                             index=index)
 
     # html
     def showHtmlReport(self):

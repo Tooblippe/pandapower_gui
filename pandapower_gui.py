@@ -366,6 +366,7 @@ class mainWindow(QMainWindow):
         self.updateLineCollection()
         self.updateTrafoCollections()
         self.updateLoadCollections()
+        self.updateExtGridCollections()
         print(self.collections)
         self.drawCollections()
 
@@ -385,10 +386,19 @@ class mainWindow(QMainWindow):
                 zorder=2, picker=True, color="black",  patch_type="rect", 
                 infofunc=lambda x: ("bus", x))
         self.collections["bus"] = bc
-
         if redraw:
             self.drawCollections()
-
+            
+    def updateExtGridCollections(self, redraw=False):
+        eg1, eg2 = plot.create_ext_grid_symbol_collection(self.net,
+                                                    size=self.scale*0.05,
+                zorder=2, picker=True,
+                infofunc=lambda x: ("ext_grid", x))
+        self.collections["ext_grid1"] = eg1
+        self.collections["ext_grid2"] = eg2
+        if redraw:
+            self.drawCollections()
+            
     def updateLineCollection(self, redraw=False):
         lc = plot.create_line_collection(self.net, zorder=1, linewidths=1,
                  picker=True, use_line_geodata=False, color="green",
@@ -406,7 +416,7 @@ class mainWindow(QMainWindow):
             self.drawCollections()
             
     def updateLoadCollections(self, redraw=False):
-        l1, l2 = plot.create_load_symbol_collection(self.net, size= 0.25,
+        l1, l2 = plot.create_load_symbol_collection(self.net, size=self.scale*0.02,
                                                     picker=True,
                                                     infofunc=lambda x: ("load", x))
         self.collections["load1"] = l1

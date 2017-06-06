@@ -187,10 +187,6 @@ class mainWindow(QMainWindow):
         self.interpreter_vbox.addWidget(self.ipyConsole)
         self.ipyConsole.pushVariables({"net": self.net, "pp": pp})
 
-    def embedCollectionsBuilder(self):
-        self.network_builder = QNetworkBuilderWidget(self.net)
-        self.build_vbox.addWidget(self.network_builder)
-
     def mainEmptyClicked(self):
         self.net = pp.create_empty_network()
         self.clearMainCollectionBuilder()
@@ -292,15 +288,7 @@ class mainWindow(QMainWindow):
 
     def table_doubleclicked(self, element, cell):
         index = int(self.net_table.item(cell.row(), 0).text())
-        if element == "bus":
-            self.element_window = BusWindow(self.net, self.updateBusCollection,
-                                        index=index)
-        elif element == "line":
-            self.element_window = LineWindow(self.net, self.updateLineCollection,
-                                        index=index)
-        elif element == "load":
-            self.element_window = LoadWindow(self.net, self.updateLoadCollections,
-                                             index=index)
+        self.open_element_window(element, index)
 
     # html
     def showHtmlReport(self):
@@ -360,7 +348,6 @@ class mainWindow(QMainWindow):
         self.ymin = self.net.bus_geodata.y.min()
         self.ymax = self.net.bus_geodata.y.max()
         self.scale = max((self.xmax - self.xmin), (self.ymax - self.ymin))
-        print(self.scale)
         self.collections = {}
         self.updateBusCollection()
         self.updateLineCollection()
@@ -461,7 +448,6 @@ class mainWindow(QMainWindow):
             except Exception as inst:
                 print(inst)
 
-
     def onCollectionsPick(self, event):
         if self.collectionsDoubleClick == False:
             QTimer.singleShot(200,
@@ -479,28 +465,27 @@ class mainWindow(QMainWindow):
             if self.last == "doublecklicked":
                 self.last = "clicked"
             else:
-                self.collectionsDoubleClickAction(event, element, index)
+                self.last = "doublecklicked"
+                print("Double Clicked a ", element)
+                self.open_element_window(element, index)
         else:
             self.collectionsSingleClickActions(event, element, index)
 
-
-    def collectionsDoubleClickAction(self, event, element, index):
-        #what to do when double clicking on an element
-        print("Double Clicked a ", element)
-        self.last = "doublecklicked"
+        
+    def open_element_window(self, element, index):
         if element == "bus":
             print("will build bus")
-            self.bus_window = BusWindow(self.net
+            self.element_window = BusWindow(self.net
                                         , self.updateBusCollection
                                         , index=index)
         elif element == "line":
             print("will bild line")
             print(index)
-            self.line_window = LineWindow(self.net,
+            self.element_window = LineWindow(self.net,
                                               self.updateLineCollection,
                                               index=index)               
         elif element == "load":
-            self.load_window = LoadWindow(self.net,
+            self.element_window = LoadWindow(self.net,
                                               self.updateLoadCollections,
                                               index=index)
         elif element == "trafo":

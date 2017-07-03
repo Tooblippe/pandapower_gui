@@ -5,23 +5,35 @@ Created on Sat Jun 03 17:57:27 2017
 @author: thurner
 """
 
-from PyQt5 import uic
-from PyQt5 import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
+try:
+    from PyQt5 import uic
+    from PyQt5 import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
+    from PyQt5.QtCore import *
+    from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+    from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+    _QT_VERSION = "5"
+except ImportError:
+    from PyQt4 import uic
+    from PyQt4 import *
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+    from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+    from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+    _QT_VERSION = "4"
 
 import pandapower as pp
 
 # Base Element Window Class
 
-class ElementWindow(QWidget):   
+class ElementWindow(QWidget):
     def __init__(self, net, element, create_function,
                  update_collection_function, **kwargs):
         super(ElementWindow, self).__init__()
         self.update_collection_function = update_collection_function
         self.create_function = create_function
-        self.net = net      
+        self.net = net
         self.element = element
         self.initialize_window()
         self.initialize_parameters(**kwargs)
@@ -50,14 +62,14 @@ class ElementWindow(QWidget):
         param = self.get_parameters()
         self.index = self.create_function(self.net, **param)
         print("created %s"%self.element)
-    
+
     def update_element(self):
         print("getting")
         param = self.get_parameters()
         print(param)
         self.net[self.element].loc[self.index, param.keys()] = param.values()
-        print("updated %s parameters"%self.element)        
-    
+        print("updated %s parameters"%self.element)
+
 # Line Window Class
 class LineWindow(ElementWindow):
     """ add a standard line """
@@ -66,7 +78,7 @@ class LineWindow(ElementWindow):
                                          , update_collection_function=update_function
                                          , create_function=pp.create_line
                                          , **kwargs)
-    
+
     def initialize_window(self):
         uic.loadUi('resources/ui/add_s_line.ui', self)
         for stdLineType in pp.std_types.available_std_types(self.net).index:
@@ -74,7 +86,7 @@ class LineWindow(ElementWindow):
         for availableBus in self.net.bus.index:
             self.from_bus.addItem(str(availableBus))
             self.to_bus.addItem(str(availableBus))
-            
+
     def get_parameters(self):
         return {"from_bus": int(self.from_bus.currentText()),
                 "to_bus": int(self.to_bus.currentText()),
@@ -99,12 +111,12 @@ class LoadWindow(ElementWindow):
                                          , update_collection_function=update_function
                                          , create_function=pp.create_load
                                          , **kwargs)
-    
+
     def initialize_window(self):
         uic.loadUi('resources/ui/add_load.ui', self)
         for availableBus in self.net.bus.index:
             self.bus.addItem(str(availableBus))
-            
+
     def get_parameters(self):
         return {"bus": int(self.bus.currentText()),
                 "p_kw": float(self.p_kw.toPlainText()),
@@ -153,11 +165,11 @@ class BusWindow(ElementWindow):
                  "name": self.name.toPlainText(),
                  "geodata": (float(self.x_coord.toPlainText()),
                               float(self.y_coord.toPlainText()))}
-        
+
     def update_element(self):
         param = self.get_parameters()
         geo_param = {"x": param["geodata"][0], "y": param["geodata"][1]}
         del param["geodata"]
         self.net[self.element].loc[self.index, param.keys()] = param.values()
         self.net["%s_geodata"%self.element].loc[self.index, geo_param.keys()] = geo_param.values()
-        print("updated %s parameters"%self.element) 
+        print("updated %s parameters"%self.element)

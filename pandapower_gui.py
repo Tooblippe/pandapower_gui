@@ -6,47 +6,45 @@
 # File created by Tobie Nortje ---
 
 
+#general
 import sys
 import time
 from functools import partial
+import matplotlib.pyplot as plt
 
-from PyQt5 import uic
-from PyQt5 import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
+#pandapower
+import pandapower.plotting as plot
+import pandapower as pp
+import pandapower.networks as pnw
 
-import numpy as np
+#pandapower gui
+from element_windows import *
 
-# interpreter
-#from qtconsole.rich_ipython_widget import RichJupyterWidget as RichIPythonWidget
+#qt
+try:
+    from PyQt5 import uic
+    from PyQt5 import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtWidgets import *
+    from PyQt5.QtCore import *
+    from PyQt5.QtWebKit import QWebView
+    from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+    from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+    QT_VERSION = "5"
+except ImportError:
+    from PyQt4 import uic
+    from PyQt4 import *
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import *
+    from PyQt4.QtWebKit import QWebView
+    from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+    from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+    QT_VERSION = "4"
+
 from qtconsole.rich_jupyter_widget import RichJupyterWidget
 from qtconsole.inprocess import QtInProcessKernelManager
 from IPython.lib import guisupport
 
-# collections and plotting from turner
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
-
-from element_windows import *
-
-try:
-    import plotting as plot
-    print("Using local copy plotting for now")
-except ImportError:
-    import pandapower.plotting as plot
-    print("Using pandapower module plotting")
-
-import pandapower as pp
-import pandapower.networks as pn
-from pandapower.html import _net_to_html as to_html
-
-#plotting
-import matplotlib.pyplot as plt
-
-#from sa_line_types import create_sa_line_types as new_types
-print("Using PyQt 5")
-_WHICH_QT = "5"
 _GUI_VERSION = "dev 0"
 
 class QIPythonWidget(RichJupyterWidget):
@@ -94,13 +92,13 @@ class mainWindow(QMainWindow):
     """ Create main window """
     def __init__(self, net):
         super(mainWindow, self).__init__()
-        uic.loadUi('resources/ui/builder.ui', self)
+        uic.loadUi('resources/ui/main.ui', self)
 
         self.net = net
         self.mainPrintMessage("Welcome to pandapower version: " +
                               pp.__version__ +
                               "\nQt vesrion: " +
-                              _WHICH_QT +
+                              QT_VERSION +
                               "\nGUI version: " +
                               _GUI_VERSION  + "\n" +
                               "\nNetwork variable stored in : net")
@@ -116,57 +114,78 @@ class mainWindow(QMainWindow):
         self.ax.yaxis.set_visible(False)
         self.ax.set_aspect('equal', 'datalim')
         self.ax.autoscale_view(True, True, True)
-        
-        self.collectionsDoubleClick = False
-        # set firtst tab
-        self.tabWidget.setCurrentIndex(0)
-        self.show()
 
-        # signals
-        # main
-        self.main_empty.clicked.connect(self.mainEmptyClicked)
-        self.main_load.clicked.connect(self.mainLoadClicked)
-        self.main_save.clicked.connect(self.mainSaveClicked)
+        self.collectionsDoubleClick = False
+        self.tabWidget.setCurrentIndex(0) #set firtst tab
+
+        # toolbar
+        self.actionNew_Network.triggered.connect(self.mainEmptyClicked)
+        self.actionLoad.triggered.connect(self.mainLoadClicked)
+        self.actionSave.triggered.connect(self.mainSaveClicked)
+
+        self.actionMV_oberrhein.triggered.connect(partial(self.load_pandapower_network, pnw.mv_oberrhein, "MV Oberrhein"))
+        self.actionCase9.triggered.connect(partial(self.load_pandapower_network, pnw.case9, "IEEE Case 9"))
+
+        self.actionAbout.triggered.connect(self.show_license)
+        self.actionDocumentation.triggered.connect(self.show_docs)
+
+        #main
         self.main_solve.clicked.connect(self.mainSolveClicked)
-        self.main_losses.clicked.connect(self.lossesSummary)
 
         # inspect
-        self.inspect_bus.clicked.connect(partial(self.show_table, "bus" ))
-        self.inspect_lines.clicked.connect(partial(self.show_table, "line" ))
-        self.inspect_load.clicked.connect(partial(self.show_table, "load"))
-        self.inspect_switch.clicked.connect(partial(self.show_table, "switch" ))
-        self.inspect_sgen.clicked.connect(partial(self.show_table, "sgen" ))
-        self.inspect_ext_grid.clicked.connect(partial(self.show_table, "ext_grid" ))
-        self.inspect_trafo.clicked.connect(partial(self.show_table, "trafo" ))
-        self.inspect_trafo3w.clicked.connect(partial(self.show_table, "trafo3w"))
-        self.inspect_gen.clicked.connect(partial(self.show_table, "gen" ))
-        self.inspect_shunt.clicked.connect(partial(self.show_table, "shunt"))
-        self.inspect_impedance.clicked.connect(partial(self.show_table, "impedance" ))
-        self.inspect_ward.clicked.connect(partial(self.show_table, "ward" ))
-        self.inspect_xward.clicked.connect(partial(self.show_table, "xward" ))
-        self.inspect_dcline.clicked.connect(partial(self.show_table, "dcline"))
-        self.inspect_measurement.clicked.connect(partial(self.show_table, "measurement" ))
-
-        # html
-        self.html_show.clicked.connect(self.showHtmlReport)
+        self.inspect_bus.clicked.connect(partial(self.show_element_table, "bus" ))
+        self.inspect_lines.clicked.connect(partial(self.show_element_table, "line" ))
+        self.inspect_load.clicked.connect(partial(self.show_element_table, "load"))
+        self.inspect_switch.clicked.connect(partial(self.show_element_table, "switch" ))
+        self.inspect_sgen.clicked.connect(partial(self.show_element_table, "sgen" ))
+        self.inspect_ext_grid.clicked.connect(partial(self.show_element_table, "ext_grid" ))
+        self.inspect_trafo.clicked.connect(partial(self.show_element_table, "trafo" ))
+        self.inspect_trafo3w.clicked.connect(partial(self.show_element_table, "trafo3w"))
+        self.inspect_gen.clicked.connect(partial(self.show_element_table, "gen" ))
+        self.inspect_shunt.clicked.connect(partial(self.show_element_table, "shunt"))
+        self.inspect_impedance.clicked.connect(partial(self.show_element_table, "impedance" ))
+        self.inspect_ward.clicked.connect(partial(self.show_element_table, "ward" ))
+        self.inspect_xward.clicked.connect(partial(self.show_element_table, "xward" ))
+        self.inspect_dcline.clicked.connect(partial(self.show_element_table, "dcline"))
+        self.inspect_measurement.clicked.connect(partial(self.show_element_table, "measurement" ))
 
         # results
-        self.res_bus.clicked.connect(self.res_bus_clicked)
-        self.res_lines.clicked.connect(self.res_lines_clicked)
-        self.res_load.clicked.connect(self.res_load_clicked)
-        self.res_sgen.clicked.connect(self.res_sgen_clicked)
-        self.res_ext_grid.clicked.connect(self.res_ext_grid_clicked)
-        self.res_trafo.clicked.connect(self.res_trafo_clicked)
-        self.res_trafo3w.clicked.connect(self.res_trafo3w_clicked)
-        self.res_gen.clicked.connect(self.res_gen_clicked)
-        self.res_shunt.clicked.connect(self.res_shunt_clicked)
-        self.res_impedance.clicked.connect(self.res_sgen_clicked)
-        self.res_ward.clicked.connect(self.res_ward_clicked)
-        self.res_xward.clicked.connect(self.res_xward_clicked)
-        self.res_dcline.clicked.connect(self.res_dcline_clicked)
+        self.res_bus.clicked.connect(partial(self.show_result_table, "res_bus"))
+        self.res_lines.clicked.connect(partial(self.show_result_table, "res_line"))
+        self.res_load.clicked.connect(partial(self.show_result_table, "res_load"))
+        self.res_sgen.clicked.connect(partial(self.show_result_table, "res_sgen"))
+        self.res_ext_grid.clicked.connect(partial(self.show_result_table, "res_ext_grid"))
+        self.res_trafo.clicked.connect(partial(self.show_result_table, "res_trafo"))
+        self.res_trafo3w.clicked.connect(partial(self.show_result_table, "res_trafo3w"))
+        self.res_gen.clicked.connect(partial(self.show_result_table, "res_gen"))
+        self.res_shunt.clicked.connect(partial(self.show_result_table, "res_shunt"))
+        self.res_impedance.clicked.connect(partial(self.show_result_table, "res_sgen"))
+        self.res_ward.clicked.connect(partial(self.show_result_table, "res_ward"))
+        self.res_xward.clicked.connect(partial(self.show_result_table, "res_xward"))
+        self.res_dcline.clicked.connect(partial(self.show_result_table, "res_dcline"))
 
         #interpreter
         self.runTests.clicked.connect(self.runPandapowerTests)
+
+        self.show()
+
+    def show_license(self):
+        license_text = open("LICENSE", "r")
+        self.license = QMessageBox()
+        self.license.setIcon(QMessageBox.Information)
+        self.license.setWindowTitle("pandapower GUI")
+        self.license.setText(license_text.read())
+        self.license.show()
+
+    def load_pandapower_network(self, network_function, name):
+        net = network_function()
+        self.load_network(net, name)
+
+    def show_docs(self):
+        self.docs = QWebView()
+        self.docs.load(QUrl("https://pandapower.readthedocs.io"))
+        self.docs.setWindowTitle("pandapower Documentation")
+        self.docs.show()
 
     def printLineSeperator(self, ch="=", n=40):
         """ prints some characters """
@@ -188,10 +207,8 @@ class mainWindow(QMainWindow):
         self.ipyConsole.pushVariables({"net": self.net, "pp": pp})
 
     def mainEmptyClicked(self):
-        self.net = pp.create_empty_network()
-        self.clearMainCollectionBuilder()
-        self.ipyConsole.pushVariables({"net": self.net})
-        self.mainPrintMessage("New empty network created and available in variable 'net' ")
+        net = pp.create_empty_network()
+        self.load_network(net, "Empty Network")
 
     def mainLoadClicked(self):
         file_to_open = ""
@@ -200,27 +217,32 @@ class mainWindow(QMainWindow):
             fn = file_to_open[0]
             if fn.endswith(".xlsx"):
                 try:
-                    self.net = pp.from_excel(file_to_open[0], convert=True)
+                    net = pp.from_excel(file_to_open[0], convert=True)
                 except:
                     print("couldn't open %s"%fn)
                     return
             elif file_to_open[0].endswith(".p"):
                 try:
-                    self.net = pp.from_pickle(file_to_open[0], convert=True) 
+                    net = pp.from_pickle(file_to_open[0], convert=True)
                 except:
                     print("couldn't open %s"%fn)
                     return
-            #self.net = pn.case1888rte()
-            self.ipyConsole.executeCommand("del(net)")
-            #self.ipyConsole.clearTerminal()
-            self.ipyConsole.printText("\n\n"+"-"*40)
-            self.ipyConsole.printText("\nNew net loaded \n")
-            self.ipyConsole.printText("-"*40+"\n\n")
-            self.ipyConsole.pushVariables({"net": self.net})
-            self.ipyConsole.executeCommand("net")
-            self.initialiseCollectionsPlot()
-            self.mainPrintMessage(file_to_open[0] + " loaded")
-            self.mainPrintMessage(str(self.net))
+            self.load_network(net)
+
+    def load_network(self, net, name):
+        self.net = net
+        self.ipyConsole.executeCommand("del(net)")
+        #self.ipyConsole.clearTerminal()
+        self.ipyConsole.printText("\n\n"+"-"*40)
+        self.ipyConsole.printText("\nNew net loaded \n")
+        self.ipyConsole.printText("-"*40+"\n\n")
+        self.ipyConsole.pushVariables({"net": self.net})
+        self.ipyConsole.executeCommand("net")
+        self.initialiseCollectionsPlot()
+        self.mainPrintMessage(name + " loaded")
+        self.mainPrintMessage(str(self.net))
+        self.result_table.clear()
+        self.element_table.clear()
 
     def mainSaveClicked(self):
         #filename = QFileDialog.getOpenFileName()
@@ -272,27 +294,28 @@ class mainWindow(QMainWindow):
         self.mainPrintMessage("Losses report generated. Check Report tab.")
 
 
-    def show_table(self, element):
+    def show_element_table(self, element):
+        self.show_table(element, self.element_table)
+
+    def show_result_table(self, element):
+        self.show_table(element, self.result_table)
+
+    def show_table(self, element, table_widget):
         table = self.net[element]
-        self.net_table.setColumnCount(len(table.columns) + 1)
-        self.net_table.setRowCount(len(table))
+        table_widget.setColumnCount(len(table.columns) + 1)
+        table_widget.setRowCount(len(table))
         header = ["index"] + table.columns.tolist()
-        self.net_table.setHorizontalHeaderLabels(header)
+        table_widget.setHorizontalHeaderLabels(header)
         for i, (idx, row) in enumerate(table.iterrows()):
-            self.net_table.setItem(i, 0, QTableWidgetItem(str(idx)))
+            table_widget.setItem(i, 0, QTableWidgetItem(str(idx)))
             for k, value in enumerate(row.values, 1):
                 print(i, k, value)
-                self.net_table.setItem(i, k, QTableWidgetItem(str(value)))
-        self.net_table.doubleClicked.connect(partial(self.table_doubleclicked,
-                                                     element))
+                table_widget.setItem(i, k, QTableWidgetItem(str(value)))
+        table_widget.doubleClicked.connect(partial(self.table_doubleclicked, element))
 
     def table_doubleclicked(self, element, cell):
         index = int(self.net_table.item(cell.row(), 0).text())
         self.open_element_window(element, index)
-
-    # html
-    def showHtmlReport(self):
-        self.html_webview.setHtml(to_html(self.net))
 
     # res
     def res_bus_clicked(self):
@@ -339,7 +362,7 @@ class mainWindow(QMainWindow):
         self.ipyConsole.executeCommand("import pandapower.test as test")
         self.ipyConsole.executeCommand("print('Running tests ...')")
         #self.ipyConsole.executeCommand("test.run_all_tests()")
-    
+
     # collections
     def initialiseCollectionsPlot(self):
         print("Inialise Collections")
@@ -357,7 +380,6 @@ class mainWindow(QMainWindow):
         print(self.collections)
         self.drawCollections()
 
-
     def drawCollections(self):
         self.ax.clear()
         for name, c in self.collections.items():
@@ -370,12 +392,12 @@ class mainWindow(QMainWindow):
 
     def updateBusCollection(self, redraw=False):
         bc = plot.create_bus_collection(self.net, size=self.scale*0.01,
-                zorder=2, picker=True, color="black",  patch_type="rect", 
+                zorder=2, picker=True, color="black",  patch_type="rect",
                 infofunc=lambda x: ("bus", x))
         self.collections["bus"] = bc
         if redraw:
             self.drawCollections()
-            
+
     def updateExtGridCollections(self, redraw=False):
         eg1, eg2 = plot.create_ext_grid_symbol_collection(self.net,
                                                     size=self.scale*0.05,
@@ -385,7 +407,7 @@ class mainWindow(QMainWindow):
         self.collections["ext_grid2"] = eg2
         if redraw:
             self.drawCollections()
-            
+
     def updateLineCollection(self, redraw=False):
         lc = plot.create_line_collection(self.net, zorder=1, linewidths=1,
                  picker=True, use_line_geodata=False, color="green",
@@ -393,7 +415,7 @@ class mainWindow(QMainWindow):
         self.collections["line"] = lc
         if redraw:
             self.drawCollections()
-            
+
     def updateTrafoCollections(self, redraw=False):
         t1, t2 = plot.create_trafo_symbol_collection(self.net, picker=True,
                          size=self.scale*0.02, infofunc=lambda x: ("trafo", x))
@@ -401,7 +423,7 @@ class mainWindow(QMainWindow):
         self.collections["trafo2"] = t2
         if redraw:
             self.drawCollections()
-            
+
     def updateLoadCollections(self, redraw=False):
         l1, l2 = plot.create_load_symbol_collection(self.net, size=self.scale*0.02,
                                                     picker=True,
@@ -458,7 +480,7 @@ class mainWindow(QMainWindow):
         collection = event.artist
         element, index = collection.info[event.ind[0]]
         print("====", event.ind[0])
-        print("====", collection)   
+        print("====", collection)
         print("single")
         if self.collectionsDoubleClick:
             #ignore second click of collectionsDoubleClick
@@ -471,7 +493,7 @@ class mainWindow(QMainWindow):
         else:
             self.collectionsSingleClickActions(event, element, index)
 
-        
+
     def open_element_window(self, element, index):
         if element == "bus":
             print("will build bus")
@@ -483,14 +505,14 @@ class mainWindow(QMainWindow):
             print(index)
             self.element_window = LineWindow(self.net,
                                               self.updateLineCollection,
-                                              index=index)               
+                                              index=index)
         elif element == "load":
             self.element_window = LoadWindow(self.net,
                                               self.updateLoadCollections,
                                               index=index)
         elif element == "trafo":
             print("trafo doubleclicked")
-            
+
     def collectionsSingleClickActions(self, event, element, index):
         #what to do when single clicking on an element
         if element != "bus":
@@ -521,7 +543,7 @@ class mainWindow(QMainWindow):
                                               bus=index)
             except Exception as e:
                 print(e)
-            self.lastBusSelected = None            
+            self.lastBusSelected = None
 
 
 
@@ -555,6 +577,7 @@ def createSampleNetwork():
     return net
 
 if __name__ == '__main__':
+    app = 0
     app = QApplication(sys.argv)
     displaySplashScreen()
     window = mainWindow(createSampleNetwork())

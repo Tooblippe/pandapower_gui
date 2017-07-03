@@ -465,7 +465,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="inspect">
      <attribute name="title">
@@ -552,7 +552,7 @@
          <string>Ward</string>
         </property>
        </widget>
-       <widget class="QTableWidget" name="net_table">
+       <widget class="QTableWidget" name="element_table">
         <property name="geometry">
          <rect>
           <x>120</x>
@@ -863,7 +863,7 @@
         <x>0</x>
         <y>3</y>
         <width>1081</width>
-        <height>461</height>
+        <height>591</height>
        </rect>
       </property>
       <property name="currentIndex">
@@ -873,7 +873,7 @@
        <attribute name="title">
         <string>Result Tables</string>
        </attribute>
-       <widget class="QPushButton" name="res_lines_2">
+       <widget class="QPushButton" name="res_lines">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -886,7 +886,7 @@
          <string>Lines</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="res_trafo_2">
+       <widget class="QPushButton" name="res_trafo">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -899,7 +899,7 @@
          <string>Transformer</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="res_shunt_2">
+       <widget class="QPushButton" name="res_shunt">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -912,7 +912,7 @@
          <string>Shunt</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="res_bus_2">
+       <widget class="QPushButton" name="res_bus">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -925,7 +925,7 @@
          <string>Bus</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="res_ward_2">
+       <widget class="QPushButton" name="res_ward">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -938,7 +938,7 @@
          <string>Ward</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="res_trafo3w_2">
+       <widget class="QPushButton" name="res_trafo3w">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -951,7 +951,7 @@
          <string>3W-Transformer</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="res_xward_2">
+       <widget class="QPushButton" name="res_xward">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -964,7 +964,7 @@
          <string>Extended Ward</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="res_impedance_2">
+       <widget class="QPushButton" name="res_impedance">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -977,7 +977,7 @@
          <string>Impedance</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="res_ext_grid_2">
+       <widget class="QPushButton" name="res_ext_grid">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -990,7 +990,7 @@
          <string>External Grid</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="res_dcline_2">
+       <widget class="QPushButton" name="res_dcline">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -1003,7 +1003,7 @@
          <string>DC Line</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="res_gen_2">
+       <widget class="QPushButton" name="res_gen">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -1016,31 +1016,7 @@
          <string>Generator</string>
         </property>
        </widget>
-       <widget class="QWebView" name="res_message_2">
-        <property name="geometry">
-         <rect>
-          <x>110</x>
-          <y>10</y>
-          <width>861</width>
-          <height>391</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">
-            table       {border-collapse: collapse;width: 100%;}
-            tr:first    {background:#e1e1e1;}
-            th,td       {text-align:left; border:1px solid #e1e1e1;}
-            th          {background-color: #4CAF50;color: white;}
-            tr:nth-child(even){background-color: #f2f2f2;}
-          </string>
-        </property>
-        <property name="url">
-         <url>
-          <string>about:blank</string>
-         </url>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="res_sgen_2">
+       <widget class="QPushButton" name="res_sgen">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -1053,7 +1029,7 @@
          <string>Stat Gen</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="res_load_2">
+       <widget class="QPushButton" name="res_load">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -1065,6 +1041,19 @@
         <property name="text">
          <string>Load</string>
         </property>
+       </widget>
+       <widget class="QTableWidget" name="result_table">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>0</y>
+          <width>941</width>
+          <height>471</height>
+         </rect>
+        </property>
+        <attribute name="verticalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
        </widget>
       </widget>
       <widget class="QWidget" name="tab_4">
@@ -1148,12 +1137,11 @@
      <property name="title">
       <string>pandapower networks</string>
      </property>
-     <addaction name="actionMv_oberrhein"/>
+     <addaction name="actionMV_oberrhein"/>
      <addaction name="actionCase9"/>
-     <addaction name="actionEtc"/>
     </widget>
     <addaction name="actionNew_Network"/>
-    <addaction name="actionOpen"/>
+    <addaction name="actionLoad"/>
     <addaction name="actionSave"/>
     <addaction name="actionSave_as"/>
     <addaction name="menuPandapower_networks"/>
@@ -1163,16 +1151,15 @@
      <string>Info</string>
     </property>
     <addaction name="actionAbout"/>
-    <addaction name="actionLicense"/>
     <addaction name="actionDocumentation"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuInfo"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionOpen">
+  <action name="actionLoad">
    <property name="text">
-    <string>Open</string>
+    <string>Load</string>
    </property>
   </action>
   <action name="actionSave">
@@ -1185,7 +1172,7 @@
     <string>Save as..</string>
    </property>
   </action>
-  <action name="actionMv_oberrhein">
+  <action name="actionMV_oberrhein">
    <property name="text">
     <string>mv_oberrhein</string>
    </property>
@@ -1221,13 +1208,6 @@
    </property>
   </action>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QWebView</class>
-   <extends>QWidget</extends>
-   <header>QtWebKitWidgets/QWebView</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

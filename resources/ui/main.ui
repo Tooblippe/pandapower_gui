@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1123</width>
-    <height>1057</height>
+    <width>1096</width>
+    <height>1041</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,10 @@
    <widget class="QTextBrowser" name="main_message">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>666</y>
+      <x>0</x>
+      <y>625</y>
       <width>1091</width>
-      <height>331</height>
+      <height>330</height>
      </rect>
     </property>
     <property name="palette">
@@ -458,8 +458,8 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>40</y>
+      <x>0</x>
+      <y>0</y>
       <width>1091</width>
       <height>621</height>
      </rect>
@@ -471,386 +471,381 @@
      <attribute name="title">
       <string>Network Model</string>
      </attribute>
-     <widget class="QTabWidget" name="tabWidget_2">
+     <widget class="QTableWidget" name="element_table">
       <property name="geometry">
        <rect>
-        <x>-1</x>
-        <y>5</y>
-        <width>1081</width>
-        <height>591</height>
+        <x>130</x>
+        <y>10</y>
+        <width>941</width>
+        <height>471</height>
        </rect>
       </property>
-      <property name="currentIndex">
-       <number>0</number>
+      <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>101</width>
+        <height>461</height>
+       </rect>
       </property>
-      <widget class="QWidget" name="tab_2">
-       <attribute name="title">
-        <string>Element Tables</string>
-       </attribute>
-       <widget class="QPushButton" name="inspect_bus">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>10</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Bus</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="inspect_trafo3w">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>220</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>3W-Transformer</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="inspect_sgen">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>130</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Stat Gen</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="inspect_dcline">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>400</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>DC Line</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="inspect_ward">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>340</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Ward</string>
-        </property>
-       </widget>
-       <widget class="QTableWidget" name="element_table">
-        <property name="geometry">
-         <rect>
-          <x>120</x>
-          <y>20</y>
-          <width>941</width>
-          <height>471</height>
-         </rect>
-        </property>
-        <attribute name="verticalHeaderVisible">
-         <bool>false</bool>
-        </attribute>
-       </widget>
-       <widget class="QPushButton" name="inspect_xward">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>370</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Extended Ward</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="inspect_switch">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>70</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Switch</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="inspect_lines">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>40</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Lines</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="inspect_shunt">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>280</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Shunt</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="inspect_gen">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>250</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Generator</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="inspect_load">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>100</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Load</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="inspect_trafo">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>190</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Transformer</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="inspect_ext_grid">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>160</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>External Grid</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="inspect_measurement">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>430</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Measurement</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="inspect_impedance">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>310</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Impedance</string>
-        </property>
-       </widget>
+      <property name="title">
+       <string/>
+      </property>
+      <widget class="QPushButton" name="inspect_xward">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>365</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Extended Ward</string>
+       </property>
       </widget>
-      <widget class="QWidget" name="tab_3">
-       <attribute name="title">
-        <string>Network Graph</string>
-       </attribute>
-       <widget class="QGroupBox" name="groupBox">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>10</y>
-          <width>121</width>
-          <height>281</height>
-         </rect>
-        </property>
-        <property name="title">
-         <string>Mode</string>
-        </property>
-        <widget class="QRadioButton" name="create_bus">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>50</y>
-           <width>82</width>
-           <height>17</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Create Bus</string>
-         </property>
-        </widget>
-        <widget class="QRadioButton" name="create_line">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>80</y>
-           <width>82</width>
-           <height>17</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Create Line</string>
-         </property>
-        </widget>
-        <widget class="QRadioButton" name="create_trafo">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>110</y>
-           <width>82</width>
-           <height>17</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Create Trafo</string>
-         </property>
-        </widget>
-        <widget class="QRadioButton" name="create_edit_elements">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>20</y>
-           <width>82</width>
-           <height>17</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Edit Elements</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-        <widget class="QRadioButton" name="create_ext_grid">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>140</y>
-           <width>101</width>
-           <height>17</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Create Ext grid</string>
-         </property>
-        </widget>
-        <widget class="QRadioButton" name="create_load">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>170</y>
-           <width>82</width>
-           <height>17</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Create Load</string>
-         </property>
-        </widget>
-        <widget class="QRadioButton" name="create_gen">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>200</y>
-           <width>82</width>
-           <height>17</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Create Gen</string>
-         </property>
-        </widget>
-        <widget class="QRadioButton" name="create_sgen">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>230</y>
-           <width>82</width>
-           <height>17</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Create sGen</string>
-         </property>
-        </widget>
-       </widget>
-       <widget class="QTextBrowser" name="build_message">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>390</y>
-          <width>221</width>
-          <height>161</height>
-         </rect>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::Box</enum>
-        </property>
-       </widget>
-       <widget class="QWidget" name="main_build_frame" native="true">
-        <property name="geometry">
-         <rect>
-          <x>250</x>
-          <y>0</y>
-          <width>811</width>
-          <height>551</height>
-         </rect>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <layout class="QVBoxLayout" name="gridLayout"/>
-       </widget>
+      <widget class="QPushButton" name="inspect_measurement">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>425</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Measurement</string>
+       </property>
       </widget>
+      <widget class="QPushButton" name="inspect_ward">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>335</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Ward</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="inspect_sgen">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>125</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Stat Gen</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="inspect_dcline">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>395</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>DC Line</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="inspect_trafo">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>185</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Transformer</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="inspect_load">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>95</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Load</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="inspect_shunt">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>275</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Shunt</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="inspect_impedance">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>305</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Impedance</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="inspect_trafo3w">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>215</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>3W-Transformer</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="inspect_lines">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>35</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Lines</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="inspect_bus">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>5</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Bus</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="inspect_ext_grid">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>155</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>External Grid</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="inspect_switch">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>65</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Switch</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="inspect_gen">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>245</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Generator</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Network Graph</string>
+     </attribute>
+     <widget class="QTextBrowser" name="build_message">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>400</y>
+        <width>221</width>
+        <height>161</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+     </widget>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>121</width>
+        <height>281</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Mode</string>
+      </property>
+      <widget class="QRadioButton" name="create_bus">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>50</y>
+         <width>82</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Create Bus</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="create_line">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>80</y>
+         <width>82</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Create Line</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="create_trafo">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>110</y>
+         <width>82</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Create Trafo</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="create_edit_elements">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>82</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Edit Elements</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="create_ext_grid">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>140</y>
+         <width>101</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Create Ext grid</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="create_load">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>170</y>
+         <width>82</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Create Load</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="create_gen">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>200</y>
+         <width>82</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Create Gen</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="create_sgen">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>230</y>
+         <width>82</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Create sGen</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="main_build_frame" native="true">
+      <property name="geometry">
+       <rect>
+        <x>250</x>
+        <y>10</y>
+        <width>811</width>
+        <height>551</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <layout class="QVBoxLayout" name="gridLayout"/>
      </widget>
     </widget>
     <widget class="QWidget" name="res">
@@ -1106,26 +1101,13 @@
      </widget>
     </widget>
    </widget>
-   <widget class="QPushButton" name="main_solve">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>4</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Solve (runpp)</string>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1123</width>
+     <width>1096</width>
      <height>21</height>
     </rect>
    </property>
@@ -1157,6 +1139,20 @@
    <addaction name="menuInfo"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionrunpp"/>
+   <addaction name="actionrunppOptions"/>
+   <addaction name="separator"/>
+  </widget>
   <action name="actionLoad">
    <property name="text">
     <string>Load</string>
@@ -1182,9 +1178,16 @@
     <string>case9</string>
    </property>
   </action>
-  <action name="actionEtc">
+  <action name="actionrunpp">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/powerflow/runpp.svg</normaloff>:/powerflow/runpp.svg</iconset>
+   </property>
    <property name="text">
-    <string>etc.</string>
+    <string>runpp</string>
+   </property>
+   <property name="toolTip">
+    <string>Runs a Power Flow</string>
    </property>
   </action>
   <action name="actionAbout">
@@ -1207,7 +1210,17 @@
     <string>New Network</string>
    </property>
   </action>
+  <action name="actionrunppOptions">
+   <property name="text">
+    <string>actionrunppOptions</string>
+   </property>
+   <property name="toolTip">
+    <string>Power Flow Options</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../icons/icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -130,7 +130,10 @@ class mainWindow(QMainWindow):
         self.actionDocumentation.triggered.connect(self.show_docs)
 
         #main
-        self.main_solve.clicked.connect(self.mainSolveClicked)
+        self.actionrunpp.triggered.connect(self.runpp)
+        self.actionrunpp.setIcon(QIcon('resources/icons/runpp.png'))
+
+        self.actionrunppOptions.setIcon(QIcon('resources/icons/runpp_options.png'))
 
         # inspect
         self.inspect_bus.clicked.connect(partial(self.show_element_table, "bus" ))
@@ -254,7 +257,7 @@ class mainWindow(QMainWindow):
         except:
             self.mainPrintMessage("Case not saved, maybe empty?")
 
-    def mainSolveClicked(self):
+    def runpp(self):
         try:
             if not pp.runpp(self.net):
                 self.mainPrintMessage(str(self.net))

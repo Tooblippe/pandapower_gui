@@ -10,10 +10,8 @@
 import sys
 import time
 from functools import partial
-import matplotlib.pyplot as plt
 
 #pandapower
-import pandapower.plotting as plot
 import pandapower as pp
 import pandapower.networks as pnw
 
@@ -27,7 +25,7 @@ try:
     from PyQt5.QtGui import *
     from PyQt5.QtWidgets import *
     from PyQt5.QtCore import *
-    from PyQt5.QtWebKit import QWebView
+    from PyQt5.QtWebKitWidgets import QWebView
     from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
     from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
     QT_VERSION = "5"
@@ -40,6 +38,9 @@ except ImportError:
     from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
     from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
     QT_VERSION = "4"
+
+import pandapower.plotting as plot
+import matplotlib.pyplot as plt
 
 from qtconsole.rich_jupyter_widget import RichJupyterWidget
 from qtconsole.inprocess import QtInProcessKernelManager
@@ -90,11 +91,10 @@ class QIPythonWidget(RichJupyterWidget):
 
 class mainWindow(QMainWindow):
     """ Create main window """
-    def __init__(self, net):
+    def __init__(self):
         super(mainWindow, self).__init__()
         uic.loadUi('resources/ui/main.ui', self)
 
-        self.net = net
         self.mainPrintMessage("Welcome to pandapower version: " +
                               pp.__version__ +
                               "\nQt vesrion: " +
@@ -102,13 +102,12 @@ class mainWindow(QMainWindow):
                               "\nGUI version: " +
                               _GUI_VERSION  + "\n" +
                               "\nNetwork variable stored in : net")
-
-        self.mainPrintMessage(str(self.net))
         self.embedIpythonInterpreter()
 
         # collections builder setup
         self.lastBusSelected = None
         self.embedCollectionsBuilder()
+        self.load_pandapower_network(createSampleNetwork, "GUI Example Network")
         self.initialiseCollectionsPlot()
         self.ax.xaxis.set_visible(False)
         self.ax.yaxis.set_visible(False)
@@ -133,6 +132,7 @@ class mainWindow(QMainWindow):
         self.actionrunpp.triggered.connect(self.runpp)
         self.actionrunpp.setIcon(QIcon('resources/icons/runpp.png'))
 
+        self.actionrunppOptions.triggered.connect(self.runpp_options)
         self.actionrunppOptions.setIcon(QIcon('resources/icons/runpp_options.png'))
 
         # inspect
@@ -170,6 +170,7 @@ class mainWindow(QMainWindow):
         #interpreter
         self.runTests.clicked.connect(self.runPandapowerTests)
 
+
         self.show()
 
     def show_license(self):
@@ -203,11 +204,11 @@ class mainWindow(QMainWindow):
         """ embed an IPyton QT Console Interpreter """
         self.ipyConsole = QIPythonWidget(
             customBanner="""Welcome to the console\nType \
-                            whos to get lit of variables \
+                            whos to get list of variables \
                             \n =========== \n""")
 
         self.interpreter_vbox.addWidget(self.ipyConsole)
-        self.ipyConsole.pushVariables({"net": self.net, "pp": pp})
+        self.ipyConsole.pushVariables({"pp": pp})
 
     def mainEmptyClicked(self):
         net = pp.create_empty_network()
@@ -234,7 +235,9 @@ class mainWindow(QMainWindow):
 
     def load_network(self, net, name):
         self.net = net
-        self.ipyConsole.executeCommand("del(net)")
+        if not "_runpp_options" in self.net:
+            self.net._runpp_options = dict()
+#        self.ipyConsole.executeCommand("del(net)")
         #self.ipyConsole.clearTerminal()
         self.ipyConsole.printText("\n\n"+"-"*40)
         self.ipyConsole.printText("\nNew net loaded \n")
@@ -259,12 +262,20 @@ class mainWindow(QMainWindow):
 
     def runpp(self):
         try:
-            if not pp.runpp(self.net):
-                self.mainPrintMessage(str(self.net))
-            else:
-                self.mainPrintMessage("Case dit not solve")
+            pp.runpp(self.net, **self.net._runpp_options)
+            self.mainPrintMessage(str(self.net))
+        except pp.LoadflowNotConverged:
+            self.mainPrintMessage("Power Flow did not Converge!")
         except:
-            self.mainPrintMessage("Case not solved, or empty case?")
+            self.mainPrintMessage("Error occured - empty network?")
+
+
+    def runpp_options(self):
+        try:
+            runppOptions(self.net, parent=self)
+#            self.options.show()
+        except Exception as e:
+            print(e)
 
     def lossesSummary(self):
         """ print the losses in each element that has losses """
@@ -314,11 +325,14 @@ class mainWindow(QMainWindow):
             for k, value in enumerate(row.values, 1):
                 print(i, k, value)
                 table_widget.setItem(i, k, QTableWidgetItem(str(value)))
-        table_widget.doubleClicked.connect(partial(self.table_doubleclicked, element))
+        table_widget.doubleClicked.connect(partial(self.table_doubleclicked, element, table_widget))
 
-    def table_doubleclicked(self, element, cell):
-        index = int(self.net_table.item(cell.row(), 0).text())
-        self.open_element_window(element, index)
+    def table_doubleclicked(self, element, table_widget, cell):
+        try:
+            index = int(table_widget.item(cell.row(), 0).text())
+            self.open_element_window(element, index)
+        except Exception as e:
+            print(e)
 
     # res
     def res_bus_clicked(self):
@@ -549,6 +563,34 @@ class mainWindow(QMainWindow):
             self.lastBusSelected = None
 
 
+class runppOptions(QDialog):
+    def __init__(self, net, parent=None):
+        super(runppOptions, self).__init__(parent=parent)
+        uic.loadUi('resources/ui/runpp_options.ui', self)
+        self.net = net
+        self.inits = {"flat": self.InitFlat, "dc": self.InitDC, "results": self.InitResults,
+                      "auto":self.InitAuto}
+        self.set_parameters(**self.net._runpp_options)
+        self.ok_button.clicked.connect(partial(self.exit_window, True, False))
+        self.cancel_button.clicked.connect(partial(self.exit_window, False, False))
+        self.run_button.clicked.connect(partial(self.exit_window, True, True))
+        self.show()
+
+    def set_parameters(self, **kwargs):
+        init = kwargs.get("init", "flat")
+        self.inits[init].setChecked(True)
+
+    def get_parameters(self):
+        for init, widget in self.inits.items():
+            if widget.isChecked():
+                self.net._runpp_options["init"] = init
+
+    def exit_window(self, save, run):
+        if save:
+            self.get_parameters()
+        if run:
+            self.parent().runpp()
+        self.close()
 
 def displaySplashScreen(n=2):
     """ Create and display the splash screen """
@@ -583,5 +625,5 @@ if __name__ == '__main__':
     app = 0
     app = QApplication(sys.argv)
     displaySplashScreen()
-    window = mainWindow(createSampleNetwork())
+    window = mainWindow()
     sys.exit(app.exec_())

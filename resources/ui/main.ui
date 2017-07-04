@@ -465,7 +465,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="inspect">
      <attribute name="title">
@@ -508,6 +508,12 @@
        <property name="text">
         <string>Extended Ward</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
       <widget class="QPushButton" name="inspect_measurement">
        <property name="geometry">
@@ -521,6 +527,12 @@
        <property name="text">
         <string>Measurement</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
       <widget class="QPushButton" name="inspect_ward">
        <property name="geometry">
@@ -534,6 +546,12 @@
        <property name="text">
         <string>Ward</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
       <widget class="QPushButton" name="inspect_sgen">
        <property name="geometry">
@@ -547,6 +565,12 @@
        <property name="text">
         <string>Stat Gen</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
       <widget class="QPushButton" name="inspect_dcline">
        <property name="geometry">
@@ -560,6 +584,12 @@
        <property name="text">
         <string>DC Line</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
       <widget class="QPushButton" name="inspect_trafo">
        <property name="geometry">
@@ -573,6 +603,12 @@
        <property name="text">
         <string>Transformer</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
       <widget class="QPushButton" name="inspect_load">
        <property name="geometry">
@@ -586,6 +622,12 @@
        <property name="text">
         <string>Load</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
       <widget class="QPushButton" name="inspect_shunt">
        <property name="geometry">
@@ -599,6 +641,12 @@
        <property name="text">
         <string>Shunt</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
       <widget class="QPushButton" name="inspect_impedance">
        <property name="geometry">
@@ -612,6 +660,12 @@
        <property name="text">
         <string>Impedance</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
       <widget class="QPushButton" name="inspect_trafo3w">
        <property name="geometry">
@@ -625,6 +679,12 @@
        <property name="text">
         <string>3W-Transformer</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
       <widget class="QPushButton" name="inspect_lines">
        <property name="geometry">
@@ -638,6 +698,12 @@
        <property name="text">
         <string>Lines</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
       <widget class="QPushButton" name="inspect_bus">
        <property name="geometry">
@@ -651,6 +717,12 @@
        <property name="text">
         <string>Bus</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
       <widget class="QPushButton" name="inspect_ext_grid">
        <property name="geometry">
@@ -664,6 +736,12 @@
        <property name="text">
         <string>External Grid</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
       <widget class="QPushButton" name="inspect_switch">
        <property name="geometry">
@@ -677,6 +755,12 @@
        <property name="text">
         <string>Switch</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
       <widget class="QPushButton" name="inspect_gen">
        <property name="geometry">
@@ -690,8 +774,31 @@
        <property name="text">
         <string>Generator</string>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">buttonGroup</string>
+       </attribute>
       </widget>
      </widget>
+     <zorder>element_table</zorder>
+     <zorder>groupBox_2</zorder>
+     <zorder>inspect_measurement</zorder>
+     <zorder>inspect_gen</zorder>
+     <zorder>inspect_load</zorder>
+     <zorder>inspect_lines</zorder>
+     <zorder>inspect_trafo3w</zorder>
+     <zorder>inspect_switch</zorder>
+     <zorder>inspect_xward</zorder>
+     <zorder>inspect_trafo</zorder>
+     <zorder>inspect_impedance</zorder>
+     <zorder>inspect_ext_grid</zorder>
+     <zorder>inspect_dcline</zorder>
+     <zorder>inspect_ward</zorder>
+     <zorder>inspect_shunt</zorder>
+     <zorder>inspect_sgen</zorder>
+     <zorder>inspect_bus</zorder>
     </widget>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -1223,4 +1330,7 @@
   <include location="../icons/icons.qrc"/>
  </resources>
  <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
 </ui>

@@ -570,6 +570,9 @@ class runppOptions(QDialog):
         self.net = net
         self.inits = {"flat": self.InitFlat, "dc": self.InitDC, "results": self.InitResults,
                       "auto":self.InitAuto}
+        self.algos = {"nr": self.NewtonRaphson, "bf": self.BackwardForward}
+        self.voltage_angles = {True: self.VoltageAnglesTrue, False: self.VoltageAnglesFalse,
+                               "auto": self.VoltageAnglesAuto}
         self.set_parameters(**self.net._runpp_options)
         self.ok_button.clicked.connect(partial(self.exit_window, True, False))
         self.cancel_button.clicked.connect(partial(self.exit_window, False, False))
@@ -577,13 +580,30 @@ class runppOptions(QDialog):
         self.show()
 
     def set_parameters(self, **kwargs):
-        init = kwargs.get("init", "flat")
+        init = kwargs.get("init", "auto")
+        algorithm = kwargs.get("algorithm", "nr")
+        voltage_angles = kwargs.get("calculate_voltage_angles", "auto")
+        enforce_q_lims = kwargs.get("enforce_q_lims", False)
+        voltage_dependent_loads = kwargs.get("voltage_dependent_loads", True)
+
         self.inits[init].setChecked(True)
+        self.algos[algorithm].setChecked(True)
+        self.voltage_angles[voltage_angles].setChecked(True)
+        self.EnforceQLims.setChecked(enforce_q_lims)
+        self.VoltageDependent.setChecked(voltage_dependent_loads)
 
     def get_parameters(self):
         for init, widget in self.inits.items():
             if widget.isChecked():
                 self.net._runpp_options["init"] = init
+        for algorithm, widget in self.algos.items():
+            if widget.isChecked():
+                self.net._runpp_options["algorithm"] = algorithm
+        for voltage_angles, widget in self.voltage_angles.items():
+            if widget.isChecked():
+                self.net._runpp_options["calculate_voltage_angles"] = voltage_angles
+        self.net._runpp_options["enforce_q_lims"] = self.EnforceQLims.isChecked()
+        self.net._runpp_options["voltage_dependent_loads"] = self.VoltageDependent.isChecked()
 
     def exit_window(self, save, run):
         if save:

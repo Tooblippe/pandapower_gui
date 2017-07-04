@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>PowerFlowOptions</class>
+ <widget class="QWidget" name="PowerFlowOptions">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>358</width>
+    <height>282</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>pandapower Power Flow Options</string>
   </property>
   <widget class="QGroupBox" name="InitBox">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>10</x>
      <y>20</y>
      <width>331</width>
      <height>51</height>
@@ -81,8 +81,8 @@
   <widget class="QPushButton" name="ok_button">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>250</y>
+     <x>12</x>
+     <y>242</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -94,8 +94,8 @@
   <widget class="QPushButton" name="cancel_button">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>250</y>
+     <x>92</x>
+     <y>242</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -107,8 +107,8 @@
   <widget class="QPushButton" name="run_button">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>250</y>
+     <x>172</x>
+     <y>242</y>
      <width>91</width>
      <height>23</height>
     </rect>
@@ -116,6 +116,123 @@
    <property name="text">
     <string>Run Power Flow</string>
    </property>
+  </widget>
+  <widget class="QCheckBox" name="EnforceQLims">
+   <property name="geometry">
+    <rect>
+     <x>13</x>
+     <y>205</y>
+     <width>190</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Enforce Reactive Power Limits</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="VoltageDependent">
+   <property name="geometry">
+    <rect>
+     <x>193</x>
+     <y>205</y>
+     <width>190</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Voltage Dependent Loads</string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="InitBox_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>140</y>
+     <width>331</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Algorithm</string>
+   </property>
+   <widget class="QRadioButton" name="NewtonRaphson">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>111</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Newton-Raphson</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="BackwardForward">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>20</y>
+      <width>161</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Backward/Forward Sweep</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="InitBox_3">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>80</y>
+     <width>331</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Calculate Voltage Angles</string>
+   </property>
+   <widget class="QRadioButton" name="VoltageAnglesAuto">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>111</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Automatic</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="VoltageAnglesTrue">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>20</y>
+      <width>61</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>True</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="VoltageAnglesFalse">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>20</y>
+      <width>61</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>False</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

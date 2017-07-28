@@ -49,29 +49,6 @@ from IPython.lib import guisupport
 
 _GUI_VERSION = "dev 0"
 
-def clickable(widget):
-
-    class Filter(QObject):
-
-        clicked = pyqtSignal()
-
-        def eventFilter(self, obj, event):
-
-            if obj == widget:
-                if event.type() == QEvent.MouseButtonRelease:
-                    if obj.rect().contains(event.pos()):
-                        self.clicked.emit()
-                        # The developer can opt for .emit(obj) to get the object within the slot.
-                        return True
-
-            return False
-
-    filter = Filter(widget)
-    widget.installEventFilter(filter)
-    return filter.clicked
-
-
-#         print("tab clicked!")
 
 class QIPythonWidget(RichJupyterWidget):
     """
@@ -175,54 +152,6 @@ class mainWindow(QMainWindow):
         self.show_result_table()
         self.tabWidget_result.currentChanged.connect(self.show_result_table)
         # self.tabWidget_result.currentChanged.connect(self.set_table_tabs_inactive)
-
-        # inspect
-        # self.inspect_bus.clicked.connect(partial(self.show_element_table, "bus" ))
-        # self.inspect_lines.clicked.connect(partial(self.show_element_table, "line" ))
-        # self.inspect_load.clicked.connect(partial(self.show_element_table, "load"))
-        # self.inspect_switch.clicked.connect(partial(self.show_element_table, "switch" ))
-        # self.inspect_sgen.clicked.connect(partial(self.show_element_table, "sgen" ))
-        # self.inspect_ext_grid.clicked.connect(partial(self.show_element_table, "ext_grid" ))
-        # self.inspect_trafo.clicked.connect(partial(self.show_element_table, "trafo" ))
-        # self.inspect_trafo3w.clicked.connect(partial(self.show_element_table, "trafo3w"))
-        # self.inspect_gen.clicked.connect(partial(self.show_element_table, "gen" ))
-        # self.inspect_shunt.clicked.connect(partial(self.show_element_table, "shunt"))
-        # self.inspect_impedance.clicked.connect(partial(self.show_element_table, "impedance" ))
-        # self.inspect_ward.clicked.connect(partial(self.show_element_table, "ward" ))
-        # self.inspect_xward.clicked.connect(partial(self.show_element_table, "xward" ))
-        # self.inspect_dcline.clicked.connect(partial(self.show_element_table, "dcline"))
-        # self.inspect_measurement.clicked.connect(partial(self.show_element_table, "measurement" ))
-
-        # self.inspect_bus.clicked.connect(partial(self.select_tab, "bus" ))
-        # self.inspect_lines.clicked.connect(partial(self.select_tab, "line" ))
-        # self.inspect_load.clicked.connect(partial(self.select_tab, "load"))
-        # self.inspect_switch.clicked.connect(partial(self.select_tab, "switch" ))
-        # self.inspect_sgen.clicked.connect(partial(self.select_tab, "sgen" ))
-        # self.inspect_ext_grid.clicked.connect(partial(self.select_tab, "ext_grid" ))
-        # self.inspect_trafo.clicked.connect(partial(self.select_tab, "trafo" ))
-        # self.inspect_trafo3w.clicked.connect(partial(self.select_tab, "trafo3w"))
-        # self.inspect_gen.clicked.connect(partial(self.select_tab, "gen" ))
-        # self.inspect_shunt.clicked.connect(partial(self.select_tab, "shunt"))
-        # self.inspect_impedance.clicked.connect(partial(self.select_tab, "impedance" ))
-        # self.inspect_ward.clicked.connect(partial(self.select_tab, "ward" ))
-        # self.inspect_xward.clicked.connect(partial(self.select_tab, "xward" ))
-        # self.inspect_dcline.clicked.connect(partial(self.select_tab, "dcline"))
-        # self.inspect_measurement.clicked.connect(partial(self.select_tab, "measurement" ))
-
-        # # results
-        # self.res_bus.clicked.connect(partial(self.show_result_table, "res_bus"))
-        # self.res_lines.clicked.connect(partial(self.show_result_table, "res_line"))
-        # self.res_load.clicked.connect(partial(self.show_result_table, "res_load"))
-        # self.res_sgen.clicked.connect(partial(self.show_result_table, "res_sgen"))
-        # self.res_ext_grid.clicked.connect(partial(self.show_result_table, "res_ext_grid"))
-        # self.res_trafo.clicked.connect(partial(self.show_result_table, "res_trafo"))
-        # self.res_trafo3w.clicked.connect(partial(self.show_result_table, "res_trafo3w"))
-        # self.res_gen.clicked.connect(partial(self.show_result_table, "res_gen"))
-        # self.res_shunt.clicked.connect(partial(self.show_result_table, "res_shunt"))
-        # self.res_impedance.clicked.connect(partial(self.show_result_table, "res_sgen"))
-        # self.res_ward.clicked.connect(partial(self.show_result_table, "res_ward"))
-        # self.res_xward.clicked.connect(partial(self.show_result_table, "res_xward"))
-        # self.res_dcline.clicked.connect(partial(self.show_result_table, "res_dcline"))
 
         #interpreter
         self.runTests.clicked.connect(self.runPandapowerTests)

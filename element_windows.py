@@ -173,3 +173,29 @@ class BusWindow(ElementWindow):
         self.net[self.element].loc[self.index, param.keys()] = param.values()
         self.net["%s_geodata"%self.element].loc[self.index, geo_param.keys()] = geo_param.values()
         print("updated %s parameters"%self.element)
+
+
+
+class GenWindow(ElementWindow):
+    """ add a standard gen """
+    def __init__(self, net, update_function, **kwargs):
+        super(GenWindow, self).__init__(net, "gen",
+                                        update_collection_function=update_function,
+                                        create_function=pp.create_gen,
+                                        **kwargs)
+
+    def initialize_window(self):
+        uic.loadUi('resources/ui/add_gen.ui', self)
+        for availableBus in self.net.bus.index:
+            self.bus.addItem(str(availableBus))
+
+    def get_parameters(self):
+        return {"bus": int(self.bus.currentText()),
+                "p_kw": float(self.p_kw.toPlainText()),
+                 "name": self.name.toPlainText()}
+
+    def set_parameters(self, **kwargs):
+        self.name.setText(kwargs.get("name", ""))
+        bus = self.bus.findText(str(kwargs.get("bus", "")))
+        self.bus.setCurrentIndex(bus)
+        self.p_kw.setText(str(kwargs.get("p_kw", 0)))

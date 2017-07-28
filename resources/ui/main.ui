@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1096</width>
-    <height>1041</height>
+    <width>1089</width>
+    <height>905</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,9 +18,9 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>625</y>
+      <y>594</y>
       <width>1091</width>
-      <height>330</height>
+      <height>231</height>
      </rect>
     </property>
     <property name="palette">
@@ -461,7 +461,7 @@
       <x>0</x>
       <y>0</y>
       <width>1091</width>
-      <height>621</height>
+      <height>591</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -471,334 +471,137 @@
      <attribute name="title">
       <string>Network Model</string>
      </attribute>
+     <widget class="QTabWidget" name="tabWidget_inspect">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>1071</width>
+        <height>551</height>
+       </rect>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::TabFocus</enum>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="tabPosition">
+       <enum>QTabWidget::North</enum>
+      </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
+      <property name="currentIndex">
+       <number>14</number>
+      </property>
+      <property name="elideMode">
+       <enum>Qt::ElideNone</enum>
+      </property>
+      <property name="documentMode">
+       <bool>false</bool>
+      </property>
+      <property name="movable">
+       <bool>false</bool>
+      </property>
+      <property name="tabBarAutoHide">
+       <bool>false</bool>
+      </property>
+      <widget class="QWidget" name="inspect_bus_tab">
+       <attribute name="title">
+        <string>Bus</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="inspect_line_tab">
+       <attribute name="title">
+        <string>Lines</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="inspect_switch_tab">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <attribute name="title">
+        <string>Switch</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="inspect_load_tab">
+       <attribute name="title">
+        <string>Load</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="inspect_sgen_tab">
+       <attribute name="title">
+        <string>Stat Gen</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="inspect_ext_grid_tab_2">
+       <attribute name="title">
+        <string>External Grid</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="inspect_transformer_tab">
+       <attribute name="title">
+        <string>Transformer</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="inspect_transformer3w_tab">
+       <attribute name="title">
+        <string>3W-Transformer</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="inspect_gen_tab">
+       <attribute name="title">
+        <string>Generator</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="inspect_shunt_tab">
+       <attribute name="title">
+        <string>Shunt</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="inspect_impedance_tab">
+       <attribute name="title">
+        <string>Impedance</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="inspect_ward_tab">
+       <attribute name="title">
+        <string>Ward</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="inspect_xward_tab">
+       <attribute name="title">
+        <string>Extended Ward</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="inspect_dcline_tab">
+       <attribute name="title">
+        <string>DC Line</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="inspect_measurement_tab">
+       <attribute name="title">
+        <string>Measurement</string>
+       </attribute>
+      </widget>
+     </widget>
      <widget class="QTableWidget" name="element_table">
       <property name="geometry">
        <rect>
-        <x>130</x>
-        <y>10</y>
-        <width>941</width>
-        <height>471</height>
+        <x>30</x>
+        <y>50</y>
+        <width>1031</width>
+        <height>491</height>
        </rect>
       </property>
       <attribute name="verticalHeaderVisible">
        <bool>false</bool>
       </attribute>
      </widget>
-     <widget class="QGroupBox" name="groupBox_2">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>101</width>
-        <height>461</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string/>
-      </property>
-      <widget class="QPushButton" name="inspect_xward">
-       <property name="geometry">
-        <rect>
-         <x>8</x>
-         <y>365</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Extended Ward</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">buttonGroup</string>
-       </attribute>
-      </widget>
-      <widget class="QPushButton" name="inspect_measurement">
-       <property name="geometry">
-        <rect>
-         <x>8</x>
-         <y>425</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Measurement</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">buttonGroup</string>
-       </attribute>
-      </widget>
-      <widget class="QPushButton" name="inspect_ward">
-       <property name="geometry">
-        <rect>
-         <x>8</x>
-         <y>335</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Ward</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">buttonGroup</string>
-       </attribute>
-      </widget>
-      <widget class="QPushButton" name="inspect_sgen">
-       <property name="geometry">
-        <rect>
-         <x>8</x>
-         <y>125</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Stat Gen</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">buttonGroup</string>
-       </attribute>
-      </widget>
-      <widget class="QPushButton" name="inspect_dcline">
-       <property name="geometry">
-        <rect>
-         <x>8</x>
-         <y>395</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>DC Line</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">buttonGroup</string>
-       </attribute>
-      </widget>
-      <widget class="QPushButton" name="inspect_trafo">
-       <property name="geometry">
-        <rect>
-         <x>8</x>
-         <y>185</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Transformer</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">buttonGroup</string>
-       </attribute>
-      </widget>
-      <widget class="QPushButton" name="inspect_load">
-       <property name="geometry">
-        <rect>
-         <x>8</x>
-         <y>95</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Load</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">buttonGroup</string>
-       </attribute>
-      </widget>
-      <widget class="QPushButton" name="inspect_shunt">
-       <property name="geometry">
-        <rect>
-         <x>8</x>
-         <y>275</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Shunt</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">buttonGroup</string>
-       </attribute>
-      </widget>
-      <widget class="QPushButton" name="inspect_impedance">
-       <property name="geometry">
-        <rect>
-         <x>8</x>
-         <y>305</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Impedance</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">buttonGroup</string>
-       </attribute>
-      </widget>
-      <widget class="QPushButton" name="inspect_trafo3w">
-       <property name="geometry">
-        <rect>
-         <x>8</x>
-         <y>215</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>3W-Transformer</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">buttonGroup</string>
-       </attribute>
-      </widget>
-      <widget class="QPushButton" name="inspect_lines">
-       <property name="geometry">
-        <rect>
-         <x>8</x>
-         <y>35</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Lines</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">buttonGroup</string>
-       </attribute>
-      </widget>
-      <widget class="QPushButton" name="inspect_bus">
-       <property name="geometry">
-        <rect>
-         <x>8</x>
-         <y>5</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Bus</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">buttonGroup</string>
-       </attribute>
-      </widget>
-      <widget class="QPushButton" name="inspect_ext_grid">
-       <property name="geometry">
-        <rect>
-         <x>8</x>
-         <y>155</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>External Grid</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">buttonGroup</string>
-       </attribute>
-      </widget>
-      <widget class="QPushButton" name="inspect_switch">
-       <property name="geometry">
-        <rect>
-         <x>8</x>
-         <y>65</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Switch</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">buttonGroup</string>
-       </attribute>
-      </widget>
-      <widget class="QPushButton" name="inspect_gen">
-       <property name="geometry">
-        <rect>
-         <x>8</x>
-         <y>245</y>
-         <width>91</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Generator</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">buttonGroup</string>
-       </attribute>
-      </widget>
-     </widget>
-     <zorder>element_table</zorder>
-     <zorder>groupBox_2</zorder>
-     <zorder>inspect_measurement</zorder>
-     <zorder>inspect_gen</zorder>
-     <zorder>inspect_load</zorder>
-     <zorder>inspect_lines</zorder>
-     <zorder>inspect_trafo3w</zorder>
-     <zorder>inspect_switch</zorder>
-     <zorder>inspect_xward</zorder>
-     <zorder>inspect_trafo</zorder>
-     <zorder>inspect_impedance</zorder>
-     <zorder>inspect_ext_grid</zorder>
-     <zorder>inspect_dcline</zorder>
-     <zorder>inspect_ward</zorder>
-     <zorder>inspect_shunt</zorder>
-     <zorder>inspect_sgen</zorder>
-     <zorder>inspect_bus</zorder>
     </widget>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -959,223 +762,118 @@
      <attribute name="title">
       <string>Load Flow Results</string>
      </attribute>
-     <widget class="QTabWidget" name="tabWidget_3">
+     <widget class="QTabWidget" name="tabWidget_result">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="geometry">
        <rect>
-        <x>0</x>
-        <y>3</y>
-        <width>1081</width>
-        <height>591</height>
+        <x>10</x>
+        <y>10</y>
+        <width>1071</width>
+        <height>551</height>
        </rect>
       </property>
-      <property name="currentIndex">
-       <number>0</number>
+      <property name="focusPolicy">
+       <enum>Qt::TabFocus</enum>
       </property>
-      <widget class="QWidget" name="tab_5">
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="tabPosition">
+       <enum>QTabWidget::North</enum>
+      </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
+      <property name="currentIndex">
+       <number>3</number>
+      </property>
+      <property name="elideMode">
+       <enum>Qt::ElideNone</enum>
+      </property>
+      <property name="documentMode">
+       <bool>false</bool>
+      </property>
+      <property name="movable">
+       <bool>false</bool>
+      </property>
+      <property name="tabBarAutoHide">
+       <bool>false</bool>
+      </property>
+      <widget class="QWidget" name="results_bus_tab">
        <attribute name="title">
-        <string>Result Tables</string>
+        <string>Bus</string>
        </attribute>
-       <widget class="QPushButton" name="res_lines">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>40</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Lines</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="res_trafo">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>160</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Transformer</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="res_shunt">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>250</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Shunt</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="res_bus">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>10</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Bus</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="res_ward">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>310</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Ward</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="res_trafo3w">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>190</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>3W-Transformer</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="res_xward">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>340</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Extended Ward</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="res_impedance">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>280</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Impedance</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="res_ext_grid">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>130</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>External Grid</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="res_dcline">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>370</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>DC Line</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="res_gen">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>220</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Generator</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="res_sgen">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>100</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Stat Gen</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="res_load">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>70</y>
-          <width>91</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Load</string>
-        </property>
-       </widget>
-       <widget class="QTableWidget" name="result_table">
-        <property name="geometry">
-         <rect>
-          <x>110</x>
-          <y>0</y>
-          <width>941</width>
-          <height>471</height>
-         </rect>
-        </property>
-        <attribute name="verticalHeaderVisible">
-         <bool>false</bool>
-        </attribute>
-       </widget>
       </widget>
-      <widget class="QWidget" name="tab_4">
+      <widget class="QWidget" name="results_line_tab">
        <attribute name="title">
-        <string>Report</string>
+        <string>Lines</string>
        </attribute>
-       <widget class="QTextBrowser" name="report_message">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>13</y>
-          <width>851</width>
-          <height>541</height>
-         </rect>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::Box</enum>
-        </property>
-       </widget>
       </widget>
+      <widget class="QWidget" name="results_load_tab">
+       <attribute name="title">
+        <string>Load</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="results_sgen_tab">
+       <attribute name="title">
+        <string>Stat Gen</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="results_ext_grid_tab">
+       <attribute name="title">
+        <string>External Grid</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="results_transformer_tab">
+       <attribute name="title">
+        <string>Transformer</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="results_transformer3w_tab">
+       <attribute name="title">
+        <string>3W-Transformer</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="results_gen_tab">
+       <attribute name="title">
+        <string>Generator</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="results_shunt_tab">
+       <attribute name="title">
+        <string>Shunt</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="results_ward_tab">
+       <attribute name="title">
+        <string>Ward</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="results_xward_tab">
+       <attribute name="title">
+        <string>Extended Ward</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="results_dcline_tab">
+       <attribute name="title">
+        <string>DC Line</string>
+       </attribute>
+      </widget>
+     </widget>
+     <widget class="QTableWidget" name="result_table">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>50</y>
+        <width>1031</width>
+        <height>491</height>
+       </rect>
+      </property>
+      <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
      </widget>
     </widget>
     <widget class="QWidget" name="interpreter">
@@ -1214,7 +912,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1096</width>
+     <width>1089</width>
      <height>21</height>
     </rect>
    </property>
@@ -1326,11 +1024,6 @@
    </property>
   </action>
  </widget>
- <resources>
-  <include location="../icons/icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
- <buttongroups>
-  <buttongroup name="buttonGroup"/>
- </buttongroups>
 </ui>

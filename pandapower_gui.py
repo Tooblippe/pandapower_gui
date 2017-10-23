@@ -9,6 +9,7 @@
 #general
 import sys
 import time
+import pandas as pd
 from functools import partial
 
 #pandapower
@@ -47,6 +48,7 @@ from qtconsole.inprocess import QtInProcessKernelManager
 from IPython.lib import guisupport
 
 _GUI_VERSION = "dev 0"
+
 
 class QIPythonWidget(RichJupyterWidget):
     """
@@ -130,46 +132,29 @@ class mainWindow(QMainWindow):
 
         #main
         self.actionrunpp.triggered.connect(self.runpp)
+        self.actionrunpp.triggered.connect(self.lossesSummary)
         self.actionrunpp.setIcon(QIcon('resources/icons/runpp.png'))
 
         self.actionrunppOptions.triggered.connect(self.runpp_options)
         self.actionrunppOptions.setIcon(QIcon('resources/icons/runpp_options.png'))
 
-        # inspect
-        self.inspect_bus.clicked.connect(partial(self.show_element_table, "bus" ))
-        self.inspect_lines.clicked.connect(partial(self.show_element_table, "line" ))
-        self.inspect_load.clicked.connect(partial(self.show_element_table, "load"))
-        self.inspect_switch.clicked.connect(partial(self.show_element_table, "switch" ))
-        self.inspect_sgen.clicked.connect(partial(self.show_element_table, "sgen" ))
-        self.inspect_ext_grid.clicked.connect(partial(self.show_element_table, "ext_grid" ))
-        self.inspect_trafo.clicked.connect(partial(self.show_element_table, "trafo" ))
-        self.inspect_trafo3w.clicked.connect(partial(self.show_element_table, "trafo3w"))
-        self.inspect_gen.clicked.connect(partial(self.show_element_table, "gen" ))
-        self.inspect_shunt.clicked.connect(partial(self.show_element_table, "shunt"))
-        self.inspect_impedance.clicked.connect(partial(self.show_element_table, "impedance" ))
-        self.inspect_ward.clicked.connect(partial(self.show_element_table, "ward" ))
-        self.inspect_xward.clicked.connect(partial(self.show_element_table, "xward" ))
-        self.inspect_dcline.clicked.connect(partial(self.show_element_table, "dcline"))
-        self.inspect_measurement.clicked.connect(partial(self.show_element_table, "measurement" ))
+        # show initialised and updated element tables
+        self.tabWidget_inspect.setCurrentIndex(0)
+        self.show_element_table()
+        self.set_table_tabs_inactive()
+        self.tabWidget.currentChanged.connect(self.show_element_table)
+        self.tabWidget.currentChanged.connect(self.set_table_tabs_inactive)
+        self.tabWidget_inspect.currentChanged.connect(self.show_element_table)
+        # self.tabWidget_inspect.currentChanged.connect(self.set_table_tabs_inactive)
 
-        # results
-        self.res_bus.clicked.connect(partial(self.show_result_table, "res_bus"))
-        self.res_lines.clicked.connect(partial(self.show_result_table, "res_line"))
-        self.res_load.clicked.connect(partial(self.show_result_table, "res_load"))
-        self.res_sgen.clicked.connect(partial(self.show_result_table, "res_sgen"))
-        self.res_ext_grid.clicked.connect(partial(self.show_result_table, "res_ext_grid"))
-        self.res_trafo.clicked.connect(partial(self.show_result_table, "res_trafo"))
-        self.res_trafo3w.clicked.connect(partial(self.show_result_table, "res_trafo3w"))
-        self.res_gen.clicked.connect(partial(self.show_result_table, "res_gen"))
-        self.res_shunt.clicked.connect(partial(self.show_result_table, "res_shunt"))
-        self.res_impedance.clicked.connect(partial(self.show_result_table, "res_sgen"))
-        self.res_ward.clicked.connect(partial(self.show_result_table, "res_ward"))
-        self.res_xward.clicked.connect(partial(self.show_result_table, "res_xward"))
-        self.res_dcline.clicked.connect(partial(self.show_result_table, "res_dcline"))
+        # show initialised and updated results tables
+        self.tabWidget_result.setCurrentIndex(0)
+        self.show_result_table()
+        self.tabWidget_result.currentChanged.connect(self.show_result_table)
+        # self.tabWidget_result.currentChanged.connect(self.set_table_tabs_inactive)
 
         #interpreter
         self.runTests.clicked.connect(self.runPandapowerTests)
-
 
         self.show()
 
@@ -280,38 +265,55 @@ class mainWindow(QMainWindow):
     def lossesSummary(self):
         """ print the losses in each element that has losses """
         # get total losses
+        self.mainPrintMessage("Losses report generated:")
         losses = 0.0
         for i in self.net:
             if 'res' in i:
                 if 'pl_kw' in self.net[i]:
                     if not self.net[i]['pl_kw'].empty:
                         print(i)
-                        # self.report_message.append(i)
-                        self.report_message.append(i)
-                        self.report_message.append(
+                        # self.main_message.append(i)
+                        self.main_message.append(i)
+                        self.main_message.append(
                             self.net[i]['pl_kw'].to_string())
                         print(self.net[i]['pl_kw'])
                         losses += self.net[i]['pl_kw'].sum()
-        self.report_message.append("Total Losses (kW)")
-        self.report_message.append(str(losses))
+        self.main_message.append("Total Losses (kW)")
+        self.main_message.append(str(losses))
 
         # get total load
         total_load_kw = self.net.res_gen.sum() + self.net.res_sgen.sum() + \
             self.net.res_ext_grid.sum()
-        self.report_message.append("Total nett load flowing in network")
-        self.report_message.append(str(total_load_kw['p_kw']))
+        self.main_message.append("Total nett load flowing in network")
+        self.main_message.append(str(total_load_kw['p_kw']))
 
         # losses percentage
-        self.report_message.append("% losses")
+        self.main_message.append("% losses")
         loss_pct = losses / total_load_kw['p_kw']
-        self.report_message.append(str(abs(loss_pct * 100)))
-        self.mainPrintMessage("Losses report generated. Check Report tab.")
+        self.main_message.append(str(abs(loss_pct * 100)))
 
+    def get_element_index(self):
+        index = self.tabWidget_inspect.currentIndex()
+        tab_list = {0: 'bus', 1: 'line', 2: 'switch', 3: 'load', 4: 'sgen', 5: 'ext_grid',
+                    6: 'trafo', 7: 'trafo3w', 8: 'gen', 9: 'shunt', 10: 'impedance', 11: 'ward',
+                    12: 'xward', 13: 'dcline', 14: 'measurement'}
+        element = tab_list[index]
+        return element
 
-    def show_element_table(self, element):
+    def get_result_index(self):
+        index = self.tabWidget_result.currentIndex()
+        tab_list = {0: 'res_bus', 1: 'res_line', 2: 'res_load', 3: 'res_sgen', 4: 'res_ext_grid',
+                    5: 'res_trafo', 6: 'res_trafo3w', 7: 'res_gen', 8: 'res_shunt', 9: 'res_ward',
+                    10: 'res_xward', 11: 'res_dcline'}
+        element = tab_list[index]
+        return element
+
+    def show_element_table(self):
+        element = self.get_element_index()
         self.show_table(element, self.element_table)
 
-    def show_result_table(self, element):
+    def show_result_table(self):
+        element = self.get_result_index()
         self.show_table(element, self.result_table)
 
     def show_table(self, element, table_widget):
@@ -326,6 +328,38 @@ class mainWindow(QMainWindow):
                 print(i, k, value)
                 table_widget.setItem(i, k, QTableWidgetItem(str(value)))
         table_widget.doubleClicked.connect(partial(self.table_doubleclicked, element, table_widget))
+
+    def set_table_tabs_inactive(self):
+        """
+        Sets the tabs for selecting the tables inactive for all elements that are empty in net
+        """
+        par = []
+        res = []
+        for tb in list(self.net.keys()):
+            if isinstance(self.net[tb], pd.DataFrame) and len(self.net[tb]) > 0:
+                if 'res_' in tb:
+                    res.append(tb)
+                else:
+                    par.append(tb)
+
+        tab_list = {
+            'bus': 0, 'dcline': 13, 'ext_grid': 5, 'gen': 8, 'impedance': 10, 'line': 1, 'load': 3,
+            'measurement': 14, 'sgen': 4, 'shunt': 9, 'switch': 2, 'trafo': 6, 'trafo3w': 7,
+            'ward': 11, 'xward': 12}
+        for element in tab_list.keys():
+            if element in par:
+                self.tabWidget_inspect.setTabEnabled(tab_list[element], True)
+            else:
+                self.tabWidget_inspect.setTabEnabled(tab_list[element], False)
+        res_tab_list = {
+            'res_bus': 0, 'res_dcline': 11, 'res_ext_grid': 4, 'res_gen': 7, 'res_line': 1,
+            'res_load': 2, 'res_sgen': 3, 'res_shunt': 8, 'res_trafo': 5, 'res_trafo3w': 6,
+            'res_ward': 9, 'res_xward': 10}
+        for result in res_tab_list.keys():
+            if result in res:
+                self.tabWidget_result.setTabEnabled(res_tab_list[result], True)
+            else:
+                self.tabWidget_result.setTabEnabled(res_tab_list[result], False)
 
     def table_doubleclicked(self, element, table_widget, cell):
         try:
@@ -450,6 +484,15 @@ class mainWindow(QMainWindow):
         if redraw:
             self.drawCollections()
 
+    def updateGenCollections(self, redraw=False):
+        l1, l2 = plot.create_gen_symbol_collection(self.net, size=self.scale*0.02,
+                                                    picker=True,
+                                                    infofunc=lambda x: ("gen", x))
+        self.collections["gen1"] = l1
+        self.collections["gen2"] = l2
+        if redraw:
+            self.drawCollections()
+
     def clearMainCollectionBuilder(self):
         self.ax.clear()
         print("figure cleared")
@@ -527,6 +570,14 @@ class mainWindow(QMainWindow):
             self.element_window = LoadWindow(self.net,
                                               self.updateLoadCollections,
                                               index=index)
+        elif element == "gen":
+            self.element_window = GenWindow(self.net,
+                                              self.updateGenCollections,
+                                              index=index)
+        elif element == "ext_grid":
+            self.element_window = ExtGridWindow(self.net,
+                                              self.updateExtGridCollections,
+                                              index=index)
         elif element == "trafo":
             print("trafo doubleclicked")
 
@@ -561,6 +612,23 @@ class mainWindow(QMainWindow):
             except Exception as e:
                 print(e)
             self.lastBusSelected = None
+        elif self.create_gen.isChecked():
+            try:
+                self.gen_window = GenWindow(self.net,
+                                              self.updateGenCollections,
+                                              bus=index)
+            except Exception as e:
+                print(e)
+            self.lastBusSelected = None
+        elif self.create_ext_grid.isChecked():
+            try:
+                self.ext_grid_window = ExtGridWindow(self.net,
+                                                     self.updateExtGridCollections,
+                                                     bus=index)
+            except Exception as e:
+                print(e)
+            self.lastBusSelected = None
+        	
 
 
 class runppOptions(QDialog):

@@ -199,3 +199,28 @@ class GenWindow(ElementWindow):
         bus = self.bus.findText(str(kwargs.get("bus", "")))
         self.bus.setCurrentIndex(bus)
         self.p_kw.setText(str(kwargs.get("p_kw", 0)))
+
+
+class ExtGridWindow(ElementWindow):
+    """ add an external grid """
+    def __init__(self, net, update_function, **kwargs):
+        super(ExtGridWindow, self).__init__(net, "ext_grid",
+                                        update_collection_function=update_function,
+                                        create_function=pp.create_gen,
+                                        **kwargs)
+
+    def initialize_window(self):
+        uic.loadUi('resources/ui/add_ext_grid_s.ui', self)
+        for availableBus in self.net.bus.index:
+            self.bus.addItem(str(availableBus))
+
+    def get_parameters(self):
+        return {"bus": int(self.bus.currentText()),
+                "vm_pu": float(self.vm_pu.toPlainText()),
+                 "name": self.name.toPlainText()}
+
+    def set_parameters(self, **kwargs):
+        self.name.setText(kwargs.get("name", ""))
+        bus = self.bus.findText(str(kwargs.get("bus", "")))
+        self.bus.setCurrentIndex(bus)
+        self.vm_pu.setText(str(kwargs.get("vm_pu", 0)))

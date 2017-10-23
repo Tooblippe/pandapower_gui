@@ -574,6 +574,10 @@ class mainWindow(QMainWindow):
             self.element_window = GenWindow(self.net,
                                               self.updateGenCollections,
                                               index=index)
+        elif element == "ext_grid":
+            self.element_window = ExtGridWindow(self.net,
+                                              self.updateExtGridCollections,
+                                              index=index)
         elif element == "trafo":
             print("trafo doubleclicked")
 
@@ -616,6 +620,15 @@ class mainWindow(QMainWindow):
             except Exception as e:
                 print(e)
             self.lastBusSelected = None
+        elif self.create_ext_grid.isChecked():
+            try:
+                self.ext_grid_window = ExtGridWindow(self.net,
+                                                     self.updateExtGridCollections,
+                                                     bus=index)
+            except Exception as e:
+                print(e)
+            self.lastBusSelected = None
+        	
 
 
 class runppOptions(QDialog):
